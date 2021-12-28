@@ -3,11 +3,15 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"rainbow-umbrella/internal/infrastruct"
 )
 
 func main() {
-	//http.ListenAndServe(":80", )
 	fmt.Println("RUN")
+
+	injector := infrastruct.NewInjector()
+	injector.InjectUserController()
 
 	http.HandleFunc("/one", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("one"))
