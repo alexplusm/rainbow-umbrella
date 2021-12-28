@@ -5,8 +5,9 @@ import (
 )
 
 type userController struct {
+	userService interfaces.IUserService
 }
 
-func NewUserController() interfaces.IUserController {
-	return &userController{}
+func NewUserController(userService interfaces.IUserService) interfaces.IUserController {
+	return &userController{userService: userService}
 }

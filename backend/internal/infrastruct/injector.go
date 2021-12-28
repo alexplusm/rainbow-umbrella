@@ -3,6 +3,7 @@ package infrastruct
 import (
 	"rainbow-umbrella/internal/controllers"
 	"rainbow-umbrella/internal/interfaces"
+	"rainbow-umbrella/internal/services"
 )
 
 type IInjector interface {
@@ -17,5 +18,11 @@ func NewInjector() IInjector {
 }
 
 func (i injector) InjectUserController() interfaces.IUserController {
-	return controllers.NewUserController()
+	return controllers.NewUserController(i.injectUserService())
+}
+
+// ---
+
+func (i injector) injectUserService() interfaces.IUserService {
+	return services.NewUserService()
 }
