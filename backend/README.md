@@ -47,3 +47,8 @@
 Пароль хранится безопасно.
 
 Рекомендуем сдать до: 11.01.2022
+
+
+### instruction
+
+https://flaviocopes.com/mysql-how-to-install/
