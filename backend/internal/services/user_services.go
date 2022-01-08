@@ -21,3 +21,7 @@ func (s userService) Register() {
 func (s userService) GenerateAvatarFileName(originalName string) string {
 	return fmt.Sprintf("avatar_%v_%v", time.Now().UnixNano(), originalName)
 }
+
+func (s userService) LoginExist(login string) (bool, error) {
+	return true, nil
+}

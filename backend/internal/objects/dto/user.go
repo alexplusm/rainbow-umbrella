@@ -6,13 +6,14 @@ import (
 )
 
 type User struct {
-	ID        string
 	Login     string
 	FirstName string
 	Lastname  string
 	Sex       string
 	City      string
 	Interests []string
+
+	AvatarURL string
 }
 
 func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {

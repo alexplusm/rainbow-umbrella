@@ -24,9 +24,15 @@ func NewUserController(userService interfaces.IUserService) interfaces.IUserCont
 
 func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseMultipartForm(1024 * 1024); err != nil {
-		log.Printf("[userController.Register][2]: %v", err.Error())
+		log.Printf("[userController.Register][1]: %v", err.Error())
 		return
 	}
+
+	defer func() {
+		if err := r.MultipartForm.RemoveAll(); err != nil {
+			log.Printf("[userController.Register][-1]: %v", err.Error())
+		}
+	}()
 
 	avatarFile := r.MultipartForm.File["avatar"]
 	formValue := r.MultipartForm.Value
@@ -35,12 +41,27 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err = w.Write([]byte(err.Error())); err != nil {
-			log.Printf("[userController.Register][1]: %v", err.Error())
+			log.Printf("[userController.Register][2]: %v", err.Error())
 			return
 		}
 	}
 
-	// TODO: check existence
+	ok, err := c.userService.LoginExist(user.Login)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Register][3]: %v", err.Error())
+		}
+	}
+
+	if !ok {
+		w.WriteHeader(http.StatusConflict)
+		if _, err := w.Write([]byte("login already exist")); err != nil {
+			log.Printf("[userController.Register][4]: %v", err.Error())
+		}
+	}
+
+	// TODO: hash password
 
 	fmt.Println("USER: formValue", formValue)
 	fmt.Printf("USER: %+v\n err: %v\n", user, err)
@@ -52,7 +73,11 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("formValue", formValue)
 
-	w.Write([]byte("kekes"))
+	w.WriteHeader(http.StatusCreated)
+	if _, err := w.Write([]byte("user created")); err != nil {
+		log.Printf("[userController.Register][10]: %v", err.Error())
+		return
+	}
 }
 
 func (c userController) saveAvatar(fileHeader *multipart.FileHeader) (string, error) {
