@@ -45,5 +45,6 @@ func NewMethodMiddleware(method string, handler http.HandlerFunc) http.HandlerFu
 				log.Println("[NewMethodMiddleware]: ", err.Error())
 			}
 		}
+		handler(writer, request)
 	}
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"time"
 
 	"rainbow-umbrella/internal/interfaces"
 )
@@ -15,4 +16,8 @@ func NewUserService() interfaces.IUserService {
 
 func (s userService) Register() {
 	fmt.Println("[userService]: register")
+}
+
+func (s userService) GenerateAvatarFileName(originalName string) string {
+	return fmt.Sprintf("avatar_%v_%v", time.Now().UnixNano(), originalName)
 }
