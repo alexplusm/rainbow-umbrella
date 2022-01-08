@@ -4,12 +4,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"rainbow-umbrella/internal/consts"
+	"rainbow-umbrella/internal/utils"
 
 	"rainbow-umbrella/internal/infrastruct"
 )
 
 func main() {
 	fmt.Println("RUN")
+
+	if err := utils.MakeDirs(consts.AppDirs); err != nil {
+		log.Fatal(err)
+	}
 
 	injector := infrastruct.NewInjector()
 	userController := injector.InjectUserController()
