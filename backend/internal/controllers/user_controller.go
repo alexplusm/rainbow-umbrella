@@ -11,6 +11,7 @@ import (
 
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
+	"rainbow-umbrella/internal/objects/dto"
 )
 
 type userController struct {
@@ -22,18 +23,30 @@ func NewUserController(userService interfaces.IUserService) interfaces.IUserCont
 }
 
 func (c userController) Register(w http.ResponseWriter, r *http.Request) {
-	// TODO: check existence
-
 	if err := r.ParseMultipartForm(1024 * 1024); err != nil {
-		err = fmt.Errorf("[userController.Register]: %v", err)
-		log.Fatal(err)
+		log.Printf("[userController.Register][2]: %v", err.Error())
+		return
 	}
 
-	file := r.MultipartForm.File["file"]
+	avatarFile := r.MultipartForm.File["avatar"]
 	formValue := r.MultipartForm.Value
 
-	if len(file) > 0 {
-		avatarPath, err := c.saveAvatar(file[0])
+	user, err := new(dto.User).BuildFromFormValue(formValue)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err = w.Write([]byte(err.Error())); err != nil {
+			log.Printf("[userController.Register][1]: %v", err.Error())
+			return
+		}
+	}
+
+	// TODO: check existence
+
+	fmt.Println("USER: formValue", formValue)
+	fmt.Printf("USER: %+v\n err: %v\n", user, err)
+
+	if len(avatarFile) > 0 {
+		avatarPath, err := c.saveAvatar(avatarFile[0])
 		fmt.Println(avatarPath, err)
 	}
 
