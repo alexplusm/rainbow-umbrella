@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"rainbow-umbrella/internal/consts"
-	"rainbow-umbrella/internal/utils"
 
+	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/infrastruct"
+	"rainbow-umbrella/internal/utils"
 )
 
 func main() {
-	fmt.Println("RUN")
+	port := "8080"
 
 	if err := utils.MakeDirs(consts.AppDirs); err != nil {
 		log.Fatal(err)
@@ -20,19 +20,12 @@ func main() {
 	injector := infrastruct.NewInjector()
 	userController := injector.InjectUserController()
 
-	//router := http.NewServeMux()
-	//router.HandleFunc()
-
 	http.HandleFunc(
 		"/api/v1/user/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
 
-	http.HandleFunc("/two",
-		NewLoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("two"))
-		}))
-
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	log.Printf("Start app on: %v", port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), nil); err != nil {
 		log.Fatal(err)
 	}
 }
