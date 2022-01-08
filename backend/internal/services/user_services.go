@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"rainbow-umbrella/internal/interfaces"
 )
 
@@ -11,4 +13,6 @@ func NewUserService() interfaces.IUserService {
 	return &userService{}
 }
 
-func (s userService) Register() {}
+func (s userService) Register() {
+	fmt.Println("[userService]: register")
+}

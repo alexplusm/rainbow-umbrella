@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"rainbow-umbrella/internal/infrastruct"
@@ -11,15 +12,39 @@ func main() {
 	fmt.Println("RUN")
 
 	injector := infrastruct.NewInjector()
-	injector.InjectUserController()
+	userController := injector.InjectUserController()
 
-	http.HandleFunc("/one", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("one"))
-	})
+	//router := http.NewServeMux()
+	//router.HandleFunc()
 
-	http.HandleFunc("/two", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("two"))
-	})
+	http.HandleFunc(
+		"/api/v1/user/register",
+		NewMethodMiddleware(http.MethodPost, userController.Register))
 
-	http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/two",
+		NewLoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("two"))
+		}))
+
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func NewLoggerMiddleware(f http.HandlerFunc) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		fmt.Println("logger!!!")
+		f(writer, request)
+	}
+}
+
+func NewMethodMiddleware(method string, handler http.HandlerFunc) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method != method {
+			writer.WriteHeader(http.StatusMethodNotAllowed)
+			if _, err := writer.Write([]byte(http.StatusText(http.StatusMethodNotAllowed))); err != nil {
+				log.Println("[NewMethodMiddleware]: ", err.Error())
+			}
+		}
+	}
 }
