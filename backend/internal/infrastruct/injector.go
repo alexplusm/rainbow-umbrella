@@ -1,6 +1,8 @@
 package infrastruct
 
 import (
+	"database/sql"
+
 	"rainbow-umbrella/internal/controllers"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/services"
@@ -11,10 +13,13 @@ type IInjector interface {
 }
 
 type injector struct {
+	dbClient *sql.DB
 }
 
 func NewInjector() IInjector {
-	return &injector{}
+	dbClient, _ := NewDBConn()
+
+	return &injector{dbClient: dbClient}
 }
 
 func (i injector) InjectUserController() interfaces.IUserController {

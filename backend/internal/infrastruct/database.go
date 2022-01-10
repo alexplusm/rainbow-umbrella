@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//https://habr.com/ru/company/oleg-bunin/blog/583558/
+// https://habr.com/ru/company/oleg-bunin/blog/583558/
 
 func NewDBConn() (*sql.DB, error) {
 	dbCredentials := "root:example@tcp(172.22.0.3:3306)/rainbow-umbrella"
