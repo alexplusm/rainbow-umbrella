@@ -13,6 +13,8 @@ import (
 func main() {
 	port := "8080"
 
+	infrastruct.NewDBConn()
+
 	if err := utils.MakeDirs(consts.AppDirs); err != nil {
 		log.Fatal(err)
 	}
