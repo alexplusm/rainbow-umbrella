@@ -5,14 +5,20 @@ CREATE TABLE IF NOT EXISTS users (
 
     "first_name"                VARCHAR     NOT NULL,
     "last_name"                 VARCHAR     NOT NULL,
-    "age"                       INT         NOT NULL,
+    "birthday"                  INT         NOT NULL, -- TODO: DATE
+    "gender"                    VARCHAR     NOT NULL,
+
     "city"                      VARCHAR     NOT NULL,
 
---      "interests"             ... MANY TO MAY ?
---      "friends"               ... MANY TO MAY ?
---      "friendship_requests"   ... MANY TO MAY ?
+--      "interests"             ... MANY TO MANY ?
+--      "friends"               ... MANY TO MANY ?
+--      "friendship_requests"   ... MANY TO MANY ?
 
     "created_at"        VARCHAR NOT NULL,
 
     PRIMARY KEY ("user_id")
 );
+
+--      "interests"             ... MANY TO MANY ?
+--      "friends"               ... MANY TO MANY ?
+--      "friendship_requests"   ... MANY TO MANY ?
