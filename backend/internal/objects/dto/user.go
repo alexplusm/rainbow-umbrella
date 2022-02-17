@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -23,6 +24,8 @@ type User struct {
 }
 
 func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
+	o.ID = uuid.NewString()
+
 	if len(form["login"]) != 0 {
 		o.Login = form["login"][0]
 	} else {

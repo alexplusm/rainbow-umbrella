@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users (
     "user_id"           VARCHAR NOT NULL,
-    "login"             VARCHAR NOT NULL,
+    "login"             VARCHAR NOT NULL, -- TODO: UNIQUE CONSTRAINT
     "hashed_password"   VARCHAR NOT NULL,
 
     "first_name"        VARCHAR     NOT NULL,

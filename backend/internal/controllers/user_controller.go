@@ -30,15 +30,13 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer func() {
+		// TODO: zochem?
 		if err := r.MultipartForm.RemoveAll(); err != nil {
 			log.Printf("[userController.Register][-1]: %v", err.Error())
 		}
 	}()
 
-	avatarFile := r.MultipartForm.File["avatar"]
 	formValue := r.MultipartForm.Value
-
-	fmt.Println("[formValue]: check", formValue)
 
 	user, err := new(dto.User).BuildFromFormValue(formValue)
 	if err != nil {
@@ -50,6 +48,7 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("[formValue]: check", formValue)
 	fmt.Println("User", user)
 
 	ok, err := c.userService.LoginExist(user.Login)
@@ -58,6 +57,7 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Printf("[userController.Register][3]: %v", err.Error())
 		}
+		return
 	}
 
 	if !ok {
@@ -65,21 +65,19 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		if _, err := w.Write([]byte("login already exist")); err != nil {
 			log.Printf("[userController.Register][4]: %v", err.Error())
 		}
+		return
 	}
 
-	// TODO: hash password
-
-	fmt.Println("USER: formValue", formValue)
-	fmt.Printf("USER: %+v\n err: %v\n", user, err)
-
-	if len(avatarFile) > 0 {
-		avatarPath, err := c.saveAvatar(avatarFile[0])
-		fmt.Println(avatarPath, err)
-	}
-
-	fmt.Println("formValue", formValue)
+	// INFO: no need -> remove later
+	//avatarFile := r.MultipartForm.File["avatar"]
+	//if len(avatarFile) > 0 {
+	//	avatarPath, err := c.saveAvatar(avatarFile[0])
+	//	fmt.Println(avatarPath, err)
+	//}
 
 	w.WriteHeader(http.StatusCreated)
+	//w.Header()
+	// TODO: write JSON with userID?
 	if _, err := w.Write([]byte("user created")); err != nil {
 		log.Printf("[userController.Register][10]: %v", err.Error())
 		return
