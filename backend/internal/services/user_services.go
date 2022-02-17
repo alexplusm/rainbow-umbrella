@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"rainbow-umbrella/internal/interfaces"
+	"rainbow-umbrella/internal/objects/bo"
 )
 
 type userService struct {
@@ -14,8 +15,9 @@ func NewUserService() interfaces.IUserService {
 	return &userService{}
 }
 
-func (s userService) Register() {
-	fmt.Println("[userService]: register")
+func (s userService) Register(user *bo.User) error {
+	fmt.Printf("[userService]: register: %+v\n", user)
+	return nil
 }
 
 func (s userService) GenerateAvatarFileName(originalName string) string {

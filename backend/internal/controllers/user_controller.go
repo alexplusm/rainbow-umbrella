@@ -59,11 +59,18 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-
 	if !ok {
 		w.WriteHeader(http.StatusConflict)
 		if _, err := w.Write([]byte("login already exist")); err != nil {
 			log.Printf("[userController.Register][4]: %v", err.Error())
+		}
+		return
+	}
+
+	if err := c.userService.Register(user.ToBO()); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Register][5]: %v", err.Error())
 		}
 		return
 	}

@@ -2,6 +2,7 @@ package dto
 
 import (
 	"fmt"
+	"rainbow-umbrella/internal/objects/bo"
 	"strings"
 
 	"github.com/google/uuid"
@@ -20,7 +21,7 @@ type User struct {
 
 	Interests []string // TODO: late
 
-	AvatarURL string // INFO: may be no need
+	//AvatarURL string // INFO: may be no need
 }
 
 func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
@@ -75,4 +76,19 @@ func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
 	}
 
 	return o, nil
+}
+
+func (o User) ToBO() *bo.User {
+	return &bo.User{
+		ID:             o.ID,
+		Login:          o.Login,
+		HashedPassword: o.HashedPassword,
+
+		FirstName: o.FirstName,
+		Lastname:  o.Lastname,
+		Gender:    o.Gender,
+		City:      o.City,
+
+		Interests: o.Interests,
+	}
 }

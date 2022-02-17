@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-    "user_id"           VARCHAR NOT NULL,
+    "user_id"           VARCHAR NOT NULL, -- TODO: use BIG SERIAL ?
     "login"             VARCHAR NOT NULL, -- TODO: UNIQUE CONSTRAINT
     "hashed_password"   VARCHAR NOT NULL,
 
