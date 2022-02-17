@@ -9,9 +9,8 @@ import (
 
 // https://habr.com/ru/company/oleg-bunin/blog/583558/
 
-func NewDBConn() (*sql.DB, error) {
-	dbCredentials := "root:example@tcp(172.22.0.3:3306)/rainbow-umbrella"
-	db, err := sql.Open("mysql", dbCredentials)
+func NewDBConn(config *DatabaseConfig) (*sql.DB, error) {
+	db, err := sql.Open("mysql", config.URL)
 	if err != nil {
 		return nil, fmt.Errorf("[NewDBConn][1]: %+v", err)
 	}

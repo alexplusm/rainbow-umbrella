@@ -13,13 +13,18 @@ import (
 func main() {
 	port := "8080"
 
-	infrastruct.NewDBConn()
+	appConfig, err := new(infrastruct.AppConfig).BuildFromEnv()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	infrastruct.NewDBConn(appConfig.DatabaseConfig)
 
 	if err := utils.MakeDirs(consts.AppDirs); err != nil {
 		log.Fatal(err)
 	}
 
-	injector := infrastruct.NewInjector()
+	injector := infrastruct.NewInjector(appConfig)
 	userController := injector.InjectUserController()
 
 	http.HandleFunc(

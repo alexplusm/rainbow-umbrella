@@ -18,8 +18,8 @@ type injector struct {
 	dbClient *sql.DB
 }
 
-func NewInjector() IInjector {
-	dbClient, err := NewDBConn()
+func NewInjector(config *AppConfig) IInjector {
+	dbClient, err := NewDBConn(config.DatabaseConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
