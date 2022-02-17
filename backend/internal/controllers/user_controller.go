@@ -23,6 +23,7 @@ func NewUserController(userService interfaces.IUserService) interfaces.IUserCont
 }
 
 func (c userController) Register(w http.ResponseWriter, r *http.Request) {
+	// TODO: why we use maxMemory param?
 	if err := r.ParseMultipartForm(1024 * 1024); err != nil {
 		log.Printf("[userController.Register][1]: %v", err.Error())
 		return
@@ -37,6 +38,8 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	avatarFile := r.MultipartForm.File["avatar"]
 	formValue := r.MultipartForm.Value
 
+	fmt.Println("[formValue]: check", formValue)
+
 	user, err := new(dto.User).BuildFromFormValue(formValue)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -44,7 +47,10 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 			log.Printf("[userController.Register][2]: %v", err.Error())
 			return
 		}
+		return
 	}
+
+	fmt.Println("User", user)
 
 	ok, err := c.userService.LoginExist(user.Login)
 	if err != nil {
