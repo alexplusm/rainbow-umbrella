@@ -16,5 +16,8 @@ func NewUserRepo(dbClient *sql.DB) interfaces.IUserRepo {
 }
 
 func (r userRepo) InsertOne(item *dao.User) error {
+
+	//r.dbClient.QueryRow()
+
 	return nil
 }

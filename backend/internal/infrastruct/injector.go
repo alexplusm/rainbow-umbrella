@@ -34,7 +34,7 @@ func (i injector) InjectUserController() interfaces.IUserController {
 // ---
 
 func (i injector) injectUserService() interfaces.IUserService {
-	return services.NewUserService()
+	return services.NewUserService(i.injectUserRepo())
 }
 
 func (i injector) injectUserRepo() interfaces.IUserRepo {

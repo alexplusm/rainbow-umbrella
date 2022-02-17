@@ -9,14 +9,17 @@ import (
 )
 
 type userService struct {
+	userRepo interfaces.IUserRepo
 }
 
-func NewUserService() interfaces.IUserService {
-	return &userService{}
+func NewUserService(userRepo interfaces.IUserRepo) interfaces.IUserService {
+	return &userService{userRepo: userRepo}
 }
 
 func (s userService) Register(user *bo.User) error {
 	fmt.Printf("[userService]: register: %+v\n", user)
+
+	s.userRepo.InsertOne(nil)
 	return nil
 }
 
