@@ -8,7 +8,10 @@ CREATE TABLE IF NOT EXISTS users (
     "age"                       INT         NOT NULL,
     "city"                      VARCHAR     NOT NULL,
 
---     "interests" ... MANY TO MAY ?
+--      "interests"             ... MANY TO MAY ?
+--      "friends"               ... MANY TO MAY ?
+--      "friendship_requests"   ... MANY TO MAY ?
+
     "created_at"        VARCHAR NOT NULL,
 
     PRIMARY KEY ("user_id")
