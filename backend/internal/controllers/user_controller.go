@@ -57,6 +57,7 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Printf("[userController.Register][3]: %v", err.Error())
 		}
+		log.Printf("[userController.Register][3.1]: %v", err.Error())
 		return
 	}
 	if !ok {
@@ -72,6 +73,7 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Printf("[userController.Register][5]: %v", err.Error())
 		}
+		log.Printf("[userController.Register][5.1]: %v", err.Error())
 		return
 	}
 

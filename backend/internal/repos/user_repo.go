@@ -19,7 +19,7 @@ func NewUserRepo(dbClient *sql.DB) interfaces.IUserRepo {
 func (r userRepo) InsertOne(item *dao.User) error {
 	q := buildInsertOneUser(item)
 
-	if _, err := r.dbClient.Exec(q.Query, q.Args); err != nil {
+	if _, err := r.dbClient.Exec(q.Query, q.Args...); err != nil {
 		return fmt.Errorf("[userRepo.InsertOne][1]: %+v", err)
 	}
 

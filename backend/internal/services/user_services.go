@@ -6,6 +6,7 @@ import (
 
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/bo"
+	"rainbow-umbrella/internal/objects/dao"
 )
 
 type userService struct {
@@ -19,7 +20,10 @@ func NewUserService(userRepo interfaces.IUserRepo) interfaces.IUserService {
 func (s userService) Register(user *bo.User) error {
 	fmt.Printf("[userService]: register: %+v\n", user)
 
-	s.userRepo.InsertOne(nil)
+	if err := s.userRepo.InsertOne(new(dao.User).FromBO(user)); err != nil {
+		return fmt.Errorf("[userService.Register][1]: %+v", err)
+	}
+
 	return nil
 }
 

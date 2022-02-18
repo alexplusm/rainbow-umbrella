@@ -2,15 +2,16 @@ package dto
 
 import (
 	"fmt"
-	"rainbow-umbrella/internal/objects/bo"
 	"strings"
+	"time"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+
+	"rainbow-umbrella/internal/objects/bo"
 )
 
 type User struct {
-	ID             string
+	ID             int64
 	Login          string
 	HashedPassword string
 
@@ -25,8 +26,6 @@ type User struct {
 }
 
 func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
-	o.ID = uuid.NewString()
-
 	if len(form["login"]) != 0 {
 		o.Login = form["login"][0]
 	} else {
@@ -86,8 +85,11 @@ func (o User) ToBO() *bo.User {
 
 		FirstName: o.FirstName,
 		LastName:  o.Lastname,
+		Birthday:  time.Now(), // TODO
 		Gender:    o.Gender,
 		City:      o.City,
+
+		CreatedAt: time.Now(),
 
 		Interests: o.Interests,
 	}
