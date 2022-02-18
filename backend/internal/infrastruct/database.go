@@ -3,6 +3,7 @@ package infrastruct
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -27,6 +28,14 @@ func NewDBConn(config *DatabaseConfig) (*sql.DB, error) {
 }
 
 func initSchema(db *sql.DB) error {
-	//db.Query()
+	fileContent, err := os.ReadFile("scripts/schema.sql")
+	if err != nil {
+		return fmt.Errorf("[initSchema][1]: %+v", err)
+	}
+
+	if _, err := db.Exec(string(fileContent)); err != nil {
+		return fmt.Errorf("[initSchema][2]: %+v", err)
+	}
+
 	return nil
 }

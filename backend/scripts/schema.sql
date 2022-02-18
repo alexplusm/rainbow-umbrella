@@ -1,21 +1,21 @@
 CREATE TABLE IF NOT EXISTS users (
-    "user_id"           VARCHAR NOT NULL, -- TODO: use BIG SERIAL ?
-    "login"             VARCHAR NOT NULL, -- TODO: UNIQUE CONSTRAINT
-    "hashed_password"   VARCHAR NOT NULL,
+    user_id           SERIAL,
+    login             VARCHAR(32)   NOT NULL UNIQUE,
+    hashed_password   VARCHAR(255)  NOT NULL,
 
-    "first_name"        VARCHAR     NOT NULL,
-    "last_name"         VARCHAR     NOT NULL,
-    "birthday"          DATE        NOT NULL,
-    "gender"            VARCHAR     NOT NULL,
-    "city"              VARCHAR     NOT NULL,
+    first_name        VARCHAR(255)  NOT NULL,
+    last_name         VARCHAR(255)  NOT NULL,
+    birthday          DATE          NOT NULL,
+    gender            VARCHAR(255)  NOT NULL,
+    city              VARCHAR(255)  NOT NULL,
 
---      "interests"             ... MANY TO MANY ?
---      "friends"               ... MANY TO MANY ?
---      "friendship_requests"   ... MANY TO MANY ?
+    created_at        TIMESTAMP     NOT NULL,
 
-    "created_at"        TIMESTAMP NOT NULL,
+    --      "interests"             ... MANY TO MANY ?
+    --      "friends"               ... MANY TO MANY ?
+    --      "friendship_requests"   ... MANY TO MANY ? // // // // //
 
-    PRIMARY KEY ("user_id")
+    PRIMARY KEY (user_id)
 );
 
 --      "interests"             ... MANY TO MANY ?
