@@ -1,14 +1,21 @@
 package bo
 
+import (
+	"time"
+)
+
 type User struct {
-	ID             string
+	ID             int64
 	Login          string
 	HashedPassword string
 
 	FirstName string
-	Lastname  string
+	LastName  string
+	Birthday  time.Time
 	Gender    string
 	City      string
+
+	CreatedAt time.Time
 
 	Interests []string // TODO: late
 }

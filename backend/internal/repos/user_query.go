@@ -18,7 +18,7 @@ INSERT INTO users (
 `
 	args := []interface{}{
 		value.Login, value.HashedPassword,
-		value.FirstName, value.Lastname, value.Birthday, value.Gender, value.City,
+		value.FirstName, value.LastName, value.Birthday, value.Gender, value.City,
 		value.CreatedAt,
 	}
 

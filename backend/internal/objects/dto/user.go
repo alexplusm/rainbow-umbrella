@@ -85,7 +85,7 @@ func (o User) ToBO() *bo.User {
 		HashedPassword: o.HashedPassword,
 
 		FirstName: o.FirstName,
-		Lastname:  o.Lastname,
+		LastName:  o.Lastname,
 		Gender:    o.Gender,
 		City:      o.City,
 
