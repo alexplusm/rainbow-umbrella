@@ -2,6 +2,7 @@ package repos
 
 import (
 	"database/sql"
+	"fmt"
 
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/dao"
@@ -16,8 +17,11 @@ func NewUserRepo(dbClient *sql.DB) interfaces.IUserRepo {
 }
 
 func (r userRepo) InsertOne(item *dao.User) error {
+	q := buildInsertOneUser(item)
 
-	//r.dbClient.QueryRow()
+	if _, err := r.dbClient.Exec(q.Query, q.Args); err != nil {
+		return fmt.Errorf("[userRepo.InsertOne][1]: %+v", err)
+	}
 
 	return nil
 }
