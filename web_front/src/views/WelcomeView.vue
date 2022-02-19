@@ -3,8 +3,15 @@ import RegisterForm from '@/components/RegisterForm.vue'
 </script>
 
 <template>
-  <RegisterForm />
+  <div>
+    <RegisterForm />
+    <RegisterForm />
+  </div>
+
 </template>
 
 <style scoped>
+div {
+  display: flex;
+}
 </style>
