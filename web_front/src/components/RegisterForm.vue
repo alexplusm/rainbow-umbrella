@@ -1,6 +1,6 @@
 <script>
-import { useQuasar } from 'quasar'
 import { ref } from 'vue'
+import { useQuasar } from 'quasar'
 
 export default {
   setup () {
@@ -18,6 +18,17 @@ export default {
     const city = ref("Moscow")
     // TODO: interests
 
+    function resetForm() {
+      login.value = null
+      password.value = null
+
+      firstName.value = null
+      lastName.value = null
+      birthday.value = null
+      gender.value = null
+      city.value = null
+    }
+
     return {
       form,
 
@@ -31,9 +42,6 @@ export default {
       city,
 
       onSubmit () {
-        // console.log("form.value", form.value.validate());
-        // console.log("form.value", form.value);
-
         const formData = new FormData()
         formData.append("login", login.value)
         formData.append("password", password.value)
@@ -55,6 +63,7 @@ export default {
                 icon: 'cloud_done',
                 message: 'Register succeed'
               });
+              resetForm();
               break;
             case 409:
               $q.notify({
@@ -73,26 +82,9 @@ export default {
               });
           }
         })
-
-        // $q.notify({
-        //   color: 'green-4',
-        //   textColor: 'white',
-        //   icon: 'cloud_done',
-        //   message: 'Register succeed'
-        // })
-        // TODO: send request
-        //    process 409 - unique login
       },
-
       onReset () {
-        login.value = null
-        password.value = null
-
-        firstName.value = null
-        lastName.value = null
-        birthday.value = null
-        gender.value = null
-        city.value = null
+        resetForm()
       }
     }
   }
