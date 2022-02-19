@@ -5,7 +5,6 @@ import RegisterForm from '@/components/RegisterForm.vue'
 <template>
   <div>
     <RegisterForm />
-    <RegisterForm />
   </div>
 
 </template>

@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import TheWelcome from '@/components/TheWelcome.vue'
+import RegisterForm from '@/components/RegisterForm.vue'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    HOME
+  </div>
+
 </template>
+
+<style scoped>
+div {
+  display: flex;
+}
+</style>
