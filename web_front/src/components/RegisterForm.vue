@@ -8,14 +8,14 @@ export default {
 
     const form = ref(null)
 
-    const login = ref(null)
-    const password = ref(null)
+    const login = ref("login1")
+    const password = ref("pass")
 
-    const firstName = ref(null)
-    const lastName = ref(null)
-    const birthday = ref(null)
-    const gender = ref(null)
-    const city = ref(null)
+    const firstName = ref("alex")
+    const lastName = ref("kekus")
+    const birthday = ref("1996/10/17")
+    const gender = ref("Male")
+    const city = ref("Moscow")
     // TODO: interests
 
     return {
@@ -34,12 +34,52 @@ export default {
         // console.log("form.value", form.value.validate());
         // console.log("form.value", form.value);
 
-        $q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Register succeed'
+        const formData = new FormData()
+        formData.append("login", login.value)
+        formData.append("password", password.value)
+        formData.append("firstName", firstName.value)
+        formData.append("lastName", lastName.value)
+        formData.append("birthday", birthday.value)
+        formData.append("gender", gender.value)
+        formData.append("city", city.value)
+
+        fetch("/api/v1/user/register", {
+          method: "POST",
+          body: formData
+        }).then(response => {
+          switch (response.status) {
+            case 201:
+              $q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Register succeed'
+              });
+              break;
+            case 409:
+              $q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Login already taken'
+              });
+              break;
+            default:
+              $q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Somethings went wrong'
+              });
+          }
         })
+
+        // $q.notify({
+        //   color: 'green-4',
+        //   textColor: 'white',
+        //   icon: 'cloud_done',
+        //   message: 'Register succeed'
+        // })
         // TODO: send request
         //    process 409 - unique login
       },
