@@ -90,7 +90,6 @@ export default {
 <template>
   <div class="q-pa-md" style="max-width: 400px">
     <q-form
-        ref="form"
         @submit="onSubmit"
         @reset="onReset"
         class="q-gutter-md"
