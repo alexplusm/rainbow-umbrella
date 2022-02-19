@@ -8,36 +8,27 @@ export default {
 
     const form = ref(null)
 
-    // function validate () {
-    //   form.value.validate().then(success => {
-    //     if (success) {
-    //       // yay, models are correct
-    //       console.log("SUCCESS");
-    //     }
-    //     else {
-    //       console.log("FAILURE");
-    //     }
-    //   })
-    // }
+    const login = ref(null)
+    const password = ref(null)
 
     const firstName = ref(null)
     const lastName = ref(null)
     const birthday = ref(null)
-
-    const age = ref(null)
-    const accept = ref(false)
-
-    console.log("$q", $q);
+    const gender = ref(null)
+    const city = ref(null)
+    // TODO: interests
 
     return {
       form,
 
+      login,
+      password,
+
       firstName,
       lastName,
       birthday,
-
-      age,
-      accept,
+      gender,
+      city,
 
       onSubmit () {
         // console.log("form.value", form.value.validate());
@@ -49,12 +40,19 @@ export default {
           icon: 'cloud_done',
           message: 'Register succeed'
         })
+        // TODO: send request
+        //    process 409 - unique login
       },
 
       onReset () {
+        login.value = null
+        password.value = null
+
         firstName.value = null
-        age.value = null
-        accept.value = false
+        lastName.value = null
+        birthday.value = null
+        gender.value = null
+        city.value = null
       }
     }
   }
@@ -71,12 +69,34 @@ export default {
     >
       <q-input
           filled
+          v-model="login"
+          label="Login"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
+      <q-input
+          filled
+          v-model="password"
+          label="Password"
+          type="password"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
+
+      <q-input
+          filled
           v-model="firstName"
           label="First name"
           lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
-
+      <q-input
+          filled
+          v-model="lastName"
+          label="Last name"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
       <q-input filled label="Birthday" v-model="birthday" mask="date" :rules="['date']">
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
@@ -91,17 +111,21 @@ export default {
         </template>
       </q-input>
 
-<!--      <q-input-->
-<!--          filled-->
-<!--          type="number"-->
-<!--          v-model="age"-->
-<!--          label="Your age *"-->
-<!--          lazy-rules-->
-<!--          :rules="[-->
-<!--          val => val !== null && val !== '' || 'Please type your age',-->
-<!--          val => val > 0 && val < 100 || 'Please type a real age'-->
-<!--        ]"-->
-<!--      />-->
+      <q-select
+          filled
+          v-model="gender"
+          label="Gender"
+          :options="['Male', 'Female']"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please select something']"
+      />
+      <q-input
+          filled
+          v-model="city"
+          label="City"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
 
       <div>
         <q-btn label="Submit" type="submit" color="primary"/>
