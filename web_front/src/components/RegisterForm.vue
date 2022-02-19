@@ -6,13 +6,11 @@ export default {
   setup () {
     const $q = useQuasar()
 
-    const form = ref(null)
-
     const login = ref("login1")
-    const password = ref("pass")
+    const password = ref(null)
 
-    const firstName = ref("alex")
-    const lastName = ref("kekus")
+    const firstName = ref("guest")
+    const lastName = ref("guestov")
     const birthday = ref("1996/10/17")
     const gender = ref("Male")
     const city = ref("Moscow")
@@ -30,8 +28,6 @@ export default {
     }
 
     return {
-      form,
-
       login,
       password,
 
