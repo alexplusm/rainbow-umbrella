@@ -20,6 +20,7 @@ export default {
         }
 
         console.log("submit!!! ", formData)
+        // TODO: request for login and write session ID in localStorage
       }
     }
   }
