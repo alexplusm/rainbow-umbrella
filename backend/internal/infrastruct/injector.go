@@ -14,11 +14,15 @@ import (
 
 type IInjector interface {
 	InjectUserController() interfaces.IUserController
+
+	InjectSessionService() interfaces.ISessionService
 }
 
 type injector struct {
 	dbClient    *sql.DB
 	redisClient *redis.Client
+
+	sessionService interfaces.ISessionService
 }
 
 func NewInjector(config *AppConfig) IInjector {
@@ -29,11 +33,17 @@ func NewInjector(config *AppConfig) IInjector {
 
 	redisClient := NewRedisConn() // TODO: pass config end handle error
 
-	return &injector{dbClient: dbClient, redisClient: redisClient}
+	sessionService := services.NewSessionService(repos.NewSessionRepo(redisClient))
+
+	return &injector{dbClient: dbClient, redisClient: redisClient, sessionService: sessionService}
 }
 
 func (i injector) InjectUserController() interfaces.IUserController {
 	return controllers.NewUserController(i.injectUserService())
+}
+
+func (i injector) InjectSessionService() interfaces.ISessionService {
+	return i.sessionService
 }
 
 // ---

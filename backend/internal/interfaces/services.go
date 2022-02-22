@@ -9,3 +9,6 @@ type IUserService interface {
 	LoginExist(login string) (bool, error)
 	GenerateAvatarFileName(originalName string) string
 }
+
+type ISessionService interface {
+}
