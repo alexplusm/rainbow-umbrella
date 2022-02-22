@@ -7,3 +7,6 @@ import (
 type IUserRepo interface {
 	InsertOne(item *dao.User) error
 }
+
+type ISessionRepo interface {
+}

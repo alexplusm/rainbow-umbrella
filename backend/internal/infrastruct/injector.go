@@ -45,3 +45,7 @@ func (i injector) injectUserService() interfaces.IUserService {
 func (i injector) injectUserRepo() interfaces.IUserRepo {
 	return repos.NewUserRepo(i.dbClient)
 }
+
+func (i injector) injectSessionRepo() interfaces.ISessionRepo {
+	return repos.NewSessionRepo(i.redisClient)
+}
