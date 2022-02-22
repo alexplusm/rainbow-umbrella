@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 
+	"github.com/go-redis/redis/v8"
+
 	"rainbow-umbrella/internal/controllers"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/repos"
@@ -15,7 +17,8 @@ type IInjector interface {
 }
 
 type injector struct {
-	dbClient *sql.DB
+	dbClient    *sql.DB
+	redisClient *redis.Client
 }
 
 func NewInjector(config *AppConfig) IInjector {
@@ -24,7 +27,9 @@ func NewInjector(config *AppConfig) IInjector {
 		log.Fatal(err)
 	}
 
-	return &injector{dbClient: dbClient}
+	redisClient := NewRedisConn() // TODO: pass config end handle error
+
+	return &injector{dbClient: dbClient, redisClient: redisClient}
 }
 
 func (i injector) InjectUserController() interfaces.IUserController {
