@@ -31,7 +31,10 @@ func NewInjector(config *AppConfig) IInjector {
 		log.Fatal(err)
 	}
 
-	redisClient := NewRedisConn() // TODO: pass config end handle error
+	redisClient, err := NewRedisConn(config.RedisConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	sessionService := services.NewSessionService(repos.NewSessionRepo(redisClient))
 
