@@ -12,7 +12,8 @@ import (
 
 type User struct {
 	ID             int64
-	Login          string
+	Login          string `json:"login"`
+	Password       string `json:"password"`
 	HashedPassword string
 
 	FirstName string
@@ -93,4 +94,10 @@ func (o User) ToBO() *bo.User {
 
 		Interests: o.Interests,
 	}
+}
+
+// ---
+
+type UserLoginResponse struct {
+	SessionID string `json:"sessionID"`
 }

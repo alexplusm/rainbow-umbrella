@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -93,6 +94,49 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c userController) Login(w http.ResponseWriter, r *http.Request) {
+	user := new(dto.User)
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
+			log.Printf("[userController.Login][1]: %+v", err)
+		}
+		return
+	}
+
+	if err := json.Unmarshal(body, user); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
+			log.Printf("[userController.Login][1]: %+v", err)
+		}
+		return
+	}
+
+	fmt.Println("user: ", user)
+
+	// hash pass
+	// check hash pass
+	// insert into redis user data and get sessionID
+
+	responseBody := dto.UserLoginResponse{SessionID: "123"}
+	responseBodyRaw, err := json.Marshal(responseBody)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Login][10]: %+v", err)
+		}
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	if _, err := w.Write(responseBodyRaw); err != nil {
+		log.Printf("[userController.Login][11]: %+v", err)
+	}
+}
+
+// INFO: unused, may be no need
 func (c userController) saveAvatar(fileHeader *multipart.FileHeader) (string, error) {
 	avatarFilePath := path.Join(consts.MediaRootDir, c.userService.GenerateAvatarFileName(fileHeader.Filename))
 

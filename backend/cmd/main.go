@@ -31,6 +31,10 @@ func main() {
 		"/api/v1/user/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
 
+	http.HandleFunc(
+		"/api/v1/user/login",
+		NewMethodMiddleware(http.MethodPost, userController.Login))
+
 	log.Printf("Start app on: %v", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), nil); err != nil {
 		log.Fatal(err)
@@ -54,4 +58,10 @@ func NewMethodMiddleware(method string, handler http.HandlerFunc) http.HandlerFu
 		}
 		handler(writer, request)
 	}
+}
+
+func NewAuthMiddleware() {
+
+	// get sessionID from header
+	// get user by sessionID
 }
