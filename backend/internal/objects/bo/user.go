@@ -19,3 +19,7 @@ type User struct {
 
 	Interests []string // TODO: late
 }
+
+type UserFilter struct {
+	ByLogin string
+}
