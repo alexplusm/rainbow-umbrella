@@ -42,7 +42,7 @@ func NewInjector(config *AppConfig) IInjector {
 }
 
 func (i injector) InjectUserController() interfaces.IUserController {
-	return controllers.NewUserController(i.injectUserService())
+	return controllers.NewUserController(i.injectUserService(), i.sessionService)
 }
 
 func (i injector) InjectSessionService() interfaces.ISessionService {

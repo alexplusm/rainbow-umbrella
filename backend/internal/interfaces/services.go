@@ -12,4 +12,5 @@ type IUserService interface {
 }
 
 type ISessionService interface {
+	Create(user *bo.User) (string, error)
 }

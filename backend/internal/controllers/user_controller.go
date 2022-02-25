@@ -16,11 +16,14 @@ import (
 )
 
 type userController struct {
-	userService interfaces.IUserService
+	userService    interfaces.IUserService
+	sessionService interfaces.ISessionService
 }
 
-func NewUserController(userService interfaces.IUserService) interfaces.IUserController {
-	return &userController{userService: userService}
+func NewUserController(
+	userService interfaces.IUserService,
+	sessionService interfaces.ISessionService) interfaces.IUserController {
+	return &userController{userService: userService, sessionService: sessionService}
 }
 
 func (c userController) Register(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +117,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("user[1]: %+v\n\n", user)
+	fmt.Printf("[userController.Login][1]: user raw %+v\n", user)
 
 	userBO, err := c.userService.RetrieveByLogin(user.Login)
 	if err != nil {
@@ -134,7 +137,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("user[2]: %+v\n\n", userBO)
+	fmt.Printf("[userController.Login][1]: userBO %+v\n", userBO)
 
 	if !userBO.CheckPassword(user.Password) {
 		w.WriteHeader(http.StatusNotFound)
@@ -144,9 +147,16 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// insert into redis user data and get sessionID
+	sessionID, err := c.sessionService.Create(userBO)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Login][5]: %+v", err)
+		}
+		return
+	}
 
-	responseBody := dto.UserLoginResponse{SessionID: "123"}
+	responseBody := dto.UserLoginResponse{SessionID: sessionID}
 	responseBodyRaw, err := json.Marshal(responseBody)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
