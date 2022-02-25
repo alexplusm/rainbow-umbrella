@@ -33,6 +33,8 @@ func (r userRepo) List(filter *bo.UserFilter) ([]dao.User, error) {
 		return nil, fmt.Errorf("[userRepo.List][1]: %+v", err)
 	}
 
+	fmt.Printf("[userRepo.List]: query: %+v\n", q)
+
 	rows, err := r.dbClient.Query(q.Query, q.Args...)
 	if err != nil {
 		return nil, fmt.Errorf("[userRepo.List][2]: %+v", err)

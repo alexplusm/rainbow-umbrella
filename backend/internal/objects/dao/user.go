@@ -28,7 +28,7 @@ func (o *User) FromBO(value *bo.User) *User {
 
 	o.FirstName = value.FirstName
 	o.LastName = value.LastName
-	o.Birthday = value.Birthday.Format("2006/01/02")
+	o.Birthday = value.Birthday.Format("2006-01-02")
 	o.Gender = value.Gender
 	o.City = value.City
 
@@ -38,12 +38,12 @@ func (o *User) FromBO(value *bo.User) *User {
 }
 
 func (o *User) ToBO() (*bo.User, error) {
-	birthday, err := time.Parse("2006/01/02", o.Birthday)
+	birthday, err := time.Parse("2006-01-02", o.Birthday)
 	if err != nil {
 		return nil, fmt.Errorf("[User.ToBO][1]: %+v", err)
 	}
 
-	createdAt, err := time.Parse(time.RFC3339, o.CreatedAt)
+	createdAt, err := time.Parse("2006-01-02 15:04:05", o.CreatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("[User.ToBO][2]: %+v", err)
 	}

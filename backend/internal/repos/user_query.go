@@ -30,11 +30,11 @@ INSERT INTO users (
 
 func buildListUserQuery(filter *bo.UserFilter) (*query, error) {
 	queryRaw := `
-SELECT (
+SELECT
 	user_id, login, hashed_password,
 	first_name, last_name, birthday, gender, city,
 	created_at
-) FROM users
+FROM users
 WHERE
 	user_id > 0
 	{{if .ByLogin}}
@@ -53,5 +53,5 @@ WHERE
 		args = append(args, filter.ByLogin)
 	}
 
-	return &query{Query: q, Args: nil}, nil
+	return &query{Query: q, Args: args}, nil
 }
