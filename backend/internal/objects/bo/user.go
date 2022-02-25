@@ -2,6 +2,8 @@ package bo
 
 import (
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -18,6 +20,12 @@ type User struct {
 	CreatedAt time.Time
 
 	Interests []string // TODO: late
+}
+
+func (o *User) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(o.HashedPassword), []byte(password))
+
+	return err == nil
 }
 
 type UserFilter struct {

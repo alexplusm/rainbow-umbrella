@@ -109,15 +109,41 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, user); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
-			log.Printf("[userController.Login][1]: %+v", err)
+			log.Printf("[userController.Login][2]: %+v", err)
 		}
 		return
 	}
 
-	fmt.Println("user: ", user)
+	fmt.Printf("user[1]: %+v\n\n", user)
 
-	// hash pass
-	// check hash pass
+	userBO, err := c.userService.RetrieveByLogin(user.Login)
+	if err != nil {
+		fmt.Println("err", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Login][3]: %+v", err)
+		}
+		return
+	}
+
+	if userBO == nil {
+		w.WriteHeader(http.StatusNotFound)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound))); err != nil {
+			log.Printf("[userController.Login][4]: %+v", err)
+		}
+		return
+	}
+
+	fmt.Printf("user[2]: %+v\n\n", userBO)
+
+	if !userBO.CheckPassword(user.Password) {
+		w.WriteHeader(http.StatusNotFound)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": invalid password")); err != nil {
+			log.Printf("[userController.Login][4]: %+v", err)
+		}
+		return
+	}
+
 	// insert into redis user data and get sessionID
 
 	responseBody := dto.UserLoginResponse{SessionID: "123"}
