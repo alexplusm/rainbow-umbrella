@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import RegisterForm from '@/components/RegisterForm.vue'
+import Profile from '@/components/Profile.vue'
+import FriendList from '@/components/FriendList.vue'
+import UserList from '@/components/UserList.vue'
 </script>
 
 <template>
-  <div>
-    HOME
-  </div>
+  <section>
+    <Profile />
+    <FriendList/>
+    <UserList />
+  </section>
 </template>
 
 <style scoped>
-div {
+section {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>
