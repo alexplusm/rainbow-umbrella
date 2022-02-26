@@ -27,6 +27,7 @@ export default {
 
               console.log("sessionId: ", sessionId);
               localStorage.setItem("X-SessionId", sessionId);
+              localStorage.setItem("currUser", login.value);
             });
 
         router.push({name: 'home', params: {login: login.value}, replace: true});
