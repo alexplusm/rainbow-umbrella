@@ -38,9 +38,12 @@ func main() {
 	r.Post("/api/v1/user/login",
 		NewMethodMiddleware(http.MethodPost, userController.Login))
 
-	r.Get("/api/v1/user/{login}", NewSessionMiddleware(
-		injector.InjectSessionService(),
-		NewMethodMiddleware(http.MethodGet, userController.Details)))
+	r.Get("/api/v1/user/{login}",
+		NewSessionMiddleware(
+			injector.InjectSessionService(),
+			NewMethodMiddleware(http.MethodGet, userController.Details),
+		),
+	)
 
 	log.Printf("Start app on: %v", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), r); err != nil {

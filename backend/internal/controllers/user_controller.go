@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"html"
 	"io"
 	"log"
 	"mime/multipart"
@@ -177,12 +176,13 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c userController) Details(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("kek"))
-
 	login := chi.URLParam(r, "login")
-	fmt.Println("123", html.EscapeString(r.URL.Path))
 	fmt.Println("YEP", login)
+
+	w.WriteHeader(http.StatusOK)
+	if _, err := w.Write([]byte(login)); err != nil {
+		log.Printf("[userController.Details][1]")
+	}
 }
 
 // INFO: unused, may be no need
