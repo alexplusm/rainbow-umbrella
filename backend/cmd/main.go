@@ -7,6 +7,7 @@ import (
 
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/infrastruct"
+	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/utils"
 )
 
@@ -60,8 +61,34 @@ func NewMethodMiddleware(method string, handler http.HandlerFunc) http.HandlerFu
 	}
 }
 
-func NewAuthMiddleware() {
+func NewSessionMiddleware(sessionService interfaces.ISessionService, handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		sessionID := r.Header.Get("X-SessionId")
+		if sessionID == "" {
+			w.WriteHeader(http.StatusUnauthorized)
+			if _, err := w.Write([]byte(http.StatusText(http.StatusUnauthorized))); err != nil {
+				log.Printf("[NewSessionMiddleware][1]: %+v", err)
+			}
+			return
+		}
 
-	// get sessionID from header
-	// get user by sessionID
+		ok, err := sessionService.Exists(sessionID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+				log.Printf("[NewSessionMiddleware][2]: %+v", err)
+			}
+			return
+		}
+
+		if !ok {
+			w.WriteHeader(http.StatusUnauthorized)
+			if _, err := w.Write([]byte(http.StatusText(http.StatusUnauthorized))); err != nil {
+				log.Printf("[NewSessionMiddleware][3]: %+v", err)
+			}
+			return
+		}
+
+		handler(w, r)
+	}
 }

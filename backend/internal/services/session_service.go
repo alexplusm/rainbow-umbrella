@@ -26,3 +26,12 @@ func (s sessionService) Create(user *bo.User) (string, error) {
 
 	return sessionID, nil
 }
+
+func (s sessionService) Exists(sessionID string) (bool, error) {
+	exists, err := s.sessionRepo.Exists(sessionID)
+	if err != nil {
+		return false, fmt.Errorf("[sessionService.Exists][1]: %+v", err)
+	}
+
+	return exists, nil
+}
