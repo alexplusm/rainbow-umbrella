@@ -1,6 +1,10 @@
 package services
 
 import (
+	"fmt"
+
+	"github.com/google/uuid"
+
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/bo"
 )
@@ -14,6 +18,11 @@ func NewSessionService(sessionRepo interfaces.ISessionRepo) interfaces.ISessionS
 }
 
 func (s sessionService) Create(user *bo.User) (string, error) {
-	// TODO: implements
-	return "new-session-ID", nil
+	sessionID := uuid.NewString()
+
+	if err := s.sessionRepo.InsertOne(sessionID, user.Login); err != nil {
+		return "", fmt.Errorf("[sessionService.Create][1]: %+v", err)
+	}
+
+	return sessionID, nil
 }
