@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/infrastruct"
 	"rainbow-umbrella/internal/interfaces"
@@ -13,6 +15,8 @@ import (
 
 func main() {
 	port := "8080"
+
+	r := chi.NewRouter()
 
 	appConfig, err := new(infrastruct.AppConfig).BuildFromEnv()
 	if err != nil {
@@ -28,22 +32,18 @@ func main() {
 	injector := infrastruct.NewInjector(appConfig)
 	userController := injector.InjectUserController()
 
-	http.HandleFunc(
-		"/api/v1/user/register",
+	r.Post("/api/v1/user/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
 
-	http.HandleFunc(
-		"/api/v1/user/login",
+	r.Post("/api/v1/user/login",
 		NewMethodMiddleware(http.MethodPost, userController.Login))
 
-	http.HandleFunc(
-		"/api/v1/user/details", // TODO: use ID
-		NewSessionMiddleware(
-			injector.InjectSessionService(),
-			NewMethodMiddleware(http.MethodGet, userController.Details)))
+	r.Get("/api/v1/user/{login}", NewSessionMiddleware(
+		injector.InjectSessionService(),
+		NewMethodMiddleware(http.MethodGet, userController.Details)))
 
 	log.Printf("Start app on: %v", port)
-	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), r); err != nil {
 		log.Fatal(err)
 	}
 }

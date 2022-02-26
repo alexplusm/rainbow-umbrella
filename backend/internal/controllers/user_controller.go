@@ -3,12 +3,15 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path"
+
+	"github.com/go-chi/chi/v5"
 
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
@@ -176,6 +179,10 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("kek"))
+
+	login := chi.URLParam(r, "login")
+	fmt.Println("123", html.EscapeString(r.URL.Path))
+	fmt.Println("YEP", login)
 }
 
 // INFO: unused, may be no need
