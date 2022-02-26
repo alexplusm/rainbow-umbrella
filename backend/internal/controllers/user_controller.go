@@ -149,6 +149,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 	sessionID, err := c.sessionService.Create(userBO)
 	if err != nil {
+		fmt.Println("Error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Printf("[userController.Login][5]: %+v", err)

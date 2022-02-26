@@ -21,7 +21,7 @@ func NewSessionRepo(redisClient *redis.Client) interfaces.ISessionRepo {
 func (r sessionRepo) InsertOne(sessionID, login string) error {
 	ctx := context.Background()
 
-	if err := r.client.HSet(ctx, sessionID, login).Err(); err != nil {
+	if err := r.client.HSet(ctx, sessionID, "login", login).Err(); err != nil {
 		return fmt.Errorf("[sessionRepo.InsertOne][1]: %+v", err)
 	}
 	if err := r.client.Expire(ctx, sessionID, 24*time.Hour).Err(); err != nil {
