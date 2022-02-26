@@ -36,6 +36,12 @@ func main() {
 		"/api/v1/user/login",
 		NewMethodMiddleware(http.MethodPost, userController.Login))
 
+	http.HandleFunc(
+		"/api/v1/user/details", // TODO: use ID
+		NewSessionMiddleware(
+			injector.InjectSessionService(),
+			NewMethodMiddleware(http.MethodGet, userController.Details)))
+
 	log.Printf("Start app on: %v", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), nil); err != nil {
 		log.Fatal(err)

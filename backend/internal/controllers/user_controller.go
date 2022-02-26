@@ -173,6 +173,11 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c userController) Details(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("kek"))
+}
+
 // INFO: unused, may be no need
 func (c userController) saveAvatar(fileHeader *multipart.FileHeader) (string, error) {
 	avatarFilePath := path.Join(consts.MediaRootDir, c.userService.GenerateAvatarFileName(fileHeader.Filename))
