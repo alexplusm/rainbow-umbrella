@@ -182,8 +182,37 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
 	fmt.Println("YEP", login)
 
+	user, err := c.userService.RetrieveByLogin(login)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Details][1]: %+v", err)
+		}
+		return
+	}
+
+	if user == nil {
+		w.WriteHeader(http.StatusNotFound)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": " + login)); err != nil {
+			log.Printf("[userController.Details][1]: %+v", err)
+		}
+		return
+	}
+
+	userDTO := new(dto.User).FromBO(user)
+
+	responseBody, err := json.Marshal(userDTO)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Printf("[userController.Details][10]: %+v", err)
+		}
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write([]byte(login)); err != nil {
+	w.Header().Set("Content-Type", "application/json") // TODO: why don't work
+	if _, err := w.Write(responseBody); err != nil {
 		log.Printf("[userController.Details][1]")
 	}
 }

@@ -11,17 +11,18 @@ import (
 )
 
 type User struct {
-	ID             int64
+	ID             int64  `json:"id"`
 	Login          string `json:"login"`
-	Password       string `json:"password"`
-	HashedPassword string
+	Password       string `json:"password,omitempty"`
+	HashedPassword string `json:"hashedPassword,omitempty"`
 
-	FirstName string
-	Lastname  string
-	Gender    string
-	City      string
+	Birthday  string `json:"birthday"` // TODO
+	FirstName string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Gender    string `json:"gender"`
+	City      string `json:"city"`
 
-	Interests []string // TODO: late
+	Interests []string `json:"interests,omitempty"` // TODO: late
 
 	//AvatarURL string // INFO: may be no need
 }
@@ -94,6 +95,19 @@ func (o User) ToBO() *bo.User {
 
 		Interests: o.Interests,
 	}
+}
+
+func (o *User) FromBO(user *bo.User) *User {
+	o.ID = user.ID
+	o.Login = user.Login
+
+	// TODO: birthday
+	o.FirstName = user.FirstName
+	o.Lastname = user.LastName
+	o.Gender = user.Gender
+	o.City = user.City
+
+	return o
 }
 
 // ---
