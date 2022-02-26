@@ -32,13 +32,13 @@ func main() {
 	injector := infrastruct.NewInjector(appConfig)
 	userController := injector.InjectUserController()
 
-	r.Post("/api/v1/user/register",
+	r.Post("/api/v1/users/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
 
-	r.Post("/api/v1/user/login",
+	r.Post("/api/v1/users/login",
 		NewMethodMiddleware(http.MethodPost, userController.Login))
 
-	r.Get("/api/v1/user/{login}",
+	r.Get("/api/v1/users/{login}",
 		NewSessionMiddleware(
 			injector.InjectSessionService(),
 			NewMethodMiddleware(http.MethodGet, userController.Details),
@@ -52,9 +52,10 @@ func main() {
 }
 
 func NewLoggerMiddleware(f http.HandlerFunc) http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("logger!!!")
-		f(writer, request)
+		f(w, r)
+
 	}
 }
 

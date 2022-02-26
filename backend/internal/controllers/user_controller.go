@@ -104,6 +104,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		fmt.Println("Error[2]", err)
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
 			log.Printf("[userController.Login][1]: %+v", err)
@@ -112,6 +113,8 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.Unmarshal(body, user); err != nil {
+		fmt.Println("Error[1]", err)
+		fmt.Println("body=", string(body))
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
 			log.Printf("[userController.Login][2]: %+v", err)
@@ -123,7 +126,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 	userBO, err := c.userService.RetrieveByLogin(user.Login)
 	if err != nil {
-		fmt.Println("err", err)
+		fmt.Println("Error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Printf("[userController.Login][3]: %+v", err)
