@@ -20,18 +20,16 @@ export default {
           password: password.value
         };
 
-        fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(formData) })
-            .then(response => {
-              response.json().then(data => {
-                const sessionId = data["sessionID"]
+        fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(formData)})
+          .then(response => response.json())
+          .then(data => {
+              const sessionId = data["sessionID"]
 
-                console.log("sessionId: ", sessionId)
-                localStorage.setItem("X-SessionId", sessionId)
+              console.log("sessionId: ", sessionId);
+              localStorage.setItem("X-SessionId", sessionId);
+            });
 
-                router.push(`/${login.value}`); // TODO: redirect to user profile
-              })
-            })
-        console.log("submit!!! ", formData);
+        router.push({name: 'home', params: {login: login.value}, replace: true});
       }
     }
   }
