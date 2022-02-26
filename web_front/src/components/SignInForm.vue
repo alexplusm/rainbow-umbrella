@@ -1,6 +1,7 @@
 <script>
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
+import router from '@/router'
 
 export default {
   setup() {
@@ -17,10 +18,20 @@ export default {
         const formData = {
           login: login.value,
           password: password.value
-        }
+        };
 
-        console.log("submit!!! ", formData)
-        // TODO: request for login and write session ID in localStorage
+        fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(formData) })
+            .then(response => {
+              response.json().then(data => {
+                const sessionId = data["sessionID"]
+
+                console.log("sessionId: ", sessionId)
+                localStorage.setItem("X-SessionId", sessionId)
+
+                router.push(`/${login.value}`); // TODO: redirect to user profile
+              })
+            })
+        console.log("submit!!! ", formData);
       }
     }
   }
