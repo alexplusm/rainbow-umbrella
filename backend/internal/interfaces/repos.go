@@ -11,4 +11,6 @@ type IUserRepo interface {
 }
 
 type ISessionRepo interface {
+	InsertOne(sessionID, login string) error
+	Exists(sessionID string) (bool, error)
 }
