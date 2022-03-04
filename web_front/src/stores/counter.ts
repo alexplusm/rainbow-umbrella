@@ -18,9 +18,13 @@ export const useCounterStore = defineStore({
   }
 })
 
+function buildHeaders(sessionId: string): Headers {
+  const headers = new Headers();
 
+  headers.append('X-SessionId', sessionId)
 
-// import { defineStore } from 'pinia'
+  return headers;
+}
 
 export const useUserStore = defineStore({
   // id is required so that Pinia can connect the store to the devtools
@@ -35,18 +39,22 @@ export const useUserStore = defineStore({
     sessionId: state => state.auth.sessionId
   },
   actions:{
-    // async retrieve(login: string) {
-    //   const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
-    //       .then(resp => resp.json())
-    //       .then(data => {
-    //         console.log("data", data);
-    //         const user = new UserM(data)
-    //
-    //         user.age = 666;
-    //
-    //         return user;
-    //       });
-    // },
+    async retrieve(login: string) {
+      const headers = buildHeaders(this.sessionId);
+
+      const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
+          .then(resp => resp.json())
+          .then(data => {
+            console.log("data", data);
+            const user = new UserM(data)
+
+            user.age = 666;
+
+            return user;
+          });
+
+      console.log("NEW USEEERRR", user);
+    },
 
     setSessionId(id: string, login: string) {
       localStorage.setItem("sessionId", id);

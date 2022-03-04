@@ -9,6 +9,7 @@
 import router from '@/router'
 import {UserM} from "@/models/user";
 import {onUnmounted} from "vue";
+import {useUserStore} from "@/stores/counter";
 
 
 const login = router.currentRoute.value.params['login'];
@@ -20,23 +21,26 @@ console.log("sessionId", sessionId)
 
 // withAsyncContext()
 
-const headers = new Headers();
-if (sessionId != null) {
-  headers.append('X-SessionId', sessionId)
-}
+const userStore = useUserStore();
+userStore.retrieve(login as string);
 
-const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
-  .then(resp => resp.json())
-  .then(data => {
-    console.log("data", data);
-    const user = new UserM(data)
+// const headers = new Headers();
+// if (sessionId != null) {
+//   headers.append('X-SessionId', sessionId)
+// }
+//
+// const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
+//   .then(resp => resp.json())
+//   .then(data => {
+//     console.log("data", data);
+//     const user = new UserM(data)
+//
+//     user.age = 666;
+//
+//     return user;
+//   });
 
-    user.age = 666;
-
-    return user;
-  });
-
-console.log("USERRR: ", user);
+// console.log("USERRR: ", user);
 
 
 // export default {
