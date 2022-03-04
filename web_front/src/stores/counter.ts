@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import {UserM} from "@/models/user";
 import router from "@/router";
+import {loginApi} from "@/api";
 
 export const useCounterStore = defineStore({
   id: 'counter',
@@ -25,9 +26,14 @@ export const useUserStore = defineStore({
   // id is required so that Pinia can connect the store to the devtools
   id: 'user',
   state: () =>({
-    sessionId: null
+    auth: {
+      sessionId: "",
+      login: "",
+    }
   }),
-  getters: {},
+  getters: {
+    sessionId: state => state.auth.sessionId
+  },
   actions:{
     // async retrieve(login: string) {
     //   const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
@@ -40,25 +46,21 @@ export const useUserStore = defineStore({
     //
     //         return user;
     //       });
-    // }
+    // },
+
+    setSessionId(id: string, login: string) {
+      localStorage.setItem("sessionId", id);
+      localStorage.setItem("currLogin", login);
+
+      this.$state.auth.login = login;
+      this.$state.auth.sessionId = id;
+    },
 
     async login(login: string, password: string) {
-      const data = {login, password}
+      const sessionId = await loginApi(login, password);
 
-      await fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(data)})
-        .then(response => response.json())
-        .then(data => {
-          const sessionId = data["sessionID"]
-
-          console.log("sessionId: ", sessionId);
-          localStorage.setItem("X-SessionId", sessionId);
-          localStorage.setItem("currUser", login);
-
-          this.$state.sessionId = sessionId;
-        });
-
-      console.log("this.$state.sessionId", this.$state.sessionId);
-
+      this.setSessionId(sessionId, login);
+      console.log("this.$state.sessionId", this.$state.auth);
 
       await router.push({name: 'home', params: {login}, replace: true});
     }

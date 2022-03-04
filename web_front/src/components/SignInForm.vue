@@ -1,7 +1,6 @@
 <script>
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
-import router from '@/router'
 import {useUserStore} from "@/stores/counter";
 
 export default {
@@ -16,12 +15,7 @@ export default {
       password,
 
       onSubmit () {
-        // const formData = {
-        //   login: login.value,
-        //   password: password.value
-        // };
-
-        const userStore = useUserStore()
+        const userStore = useUserStore();
 
         userStore.login(login.value, password.value);
       }

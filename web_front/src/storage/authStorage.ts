@@ -1,3 +1,3 @@
-export function setSessionId(sessionId: string) {
+export function setSessionIdToStorage(sessionId: string) {
     localStorage.setItem("sessionId", sessionId)
 }
