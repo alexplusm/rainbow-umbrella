@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import router from '@/router'
+import {useUserStore} from "@/stores/counter";
 
 export default {
   setup() {
@@ -15,22 +16,14 @@ export default {
       password,
 
       onSubmit () {
-        const formData = {
-          login: login.value,
-          password: password.value
-        };
+        // const formData = {
+        //   login: login.value,
+        //   password: password.value
+        // };
 
-        fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(formData)})
-          .then(response => response.json())
-          .then(data => {
-              const sessionId = data["sessionID"]
+        const userStore = useUserStore()
 
-              console.log("sessionId: ", sessionId);
-              localStorage.setItem("X-SessionId", sessionId);
-              localStorage.setItem("currUser", login.value);
-            });
-
-        router.push({name: 'home', params: {login: login.value}, replace: true});
+        userStore.login(login.value, password.value);
       }
     }
   }
