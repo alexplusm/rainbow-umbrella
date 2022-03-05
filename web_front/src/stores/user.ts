@@ -3,22 +3,7 @@ import {UserM} from "@/models/user";
 import router from "@/router";
 import {loginApi} from "@/api";
 
-export const useCounterStore = defineStore({
-  id: 'counter',
-  state: () => ({
-    counter: 0
-  }),
-  getters: {
-    doubleCount: (state) => state.counter * 2
-  },
-  actions: {
-    increment() {
-      this.counter++
-    }
-  }
-})
-
-function buildHeaders(sessionId: string): Headers {
+function buildAuthHeaders(sessionId: string): Headers {
   const headers = new Headers();
 
   headers.append('X-SessionId', sessionId)
@@ -40,7 +25,7 @@ export const useUserStore = defineStore({
   },
   actions:{
     async retrieve(login: string) {
-      const headers = buildHeaders(this.sessionId);
+      const headers = buildAuthHeaders(this.sessionId);
 
       const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
           .then(resp => resp.json())

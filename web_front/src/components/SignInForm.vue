@@ -1,7 +1,7 @@
 <script>
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
-import {useUserStore} from "@/stores/counter";
+import {useUserStore} from "@/stores/user";
 
 export default {
   setup() {
