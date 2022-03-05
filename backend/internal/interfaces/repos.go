@@ -16,4 +16,5 @@ type ISessionRepo interface {
 }
 
 type IFriendshipRepo interface {
+	InsertOne(friendship *dao.Friendship) error
 }
