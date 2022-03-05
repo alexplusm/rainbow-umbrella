@@ -55,10 +55,16 @@ func (i injector) injectUserService() interfaces.IUserService {
 	return services.NewUserService(i.injectUserRepo())
 }
 
+// --- repos
+
 func (i injector) injectUserRepo() interfaces.IUserRepo {
 	return repos.NewUserRepo(i.dbClient)
 }
 
 func (i injector) injectSessionRepo() interfaces.ISessionRepo {
 	return repos.NewSessionRepo(i.redisClient)
+}
+
+func (i injector) injectFriendshipRepo() interfaces.IFriendshipRepo {
+	return repos.NewFriendshipRepo(i.dbClient)
 }
