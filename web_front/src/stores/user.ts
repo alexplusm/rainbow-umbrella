@@ -6,7 +6,7 @@ import type {UserM} from "@/models/user";
 function buildAuthHeaders(sessionId: string): Headers {
   const headers = new Headers();
 
-  headers.append('X-SessionId', sessionId)
+  headers.append('X-SessionId', sessionId);
 
   return headers;
 }
@@ -24,8 +24,8 @@ export const useUserStore = defineStore({
   id: 'user',
   state: () =>({
     auth: {
-      sessionId: "",
-      login: "",
+      sessionId: localStorage.getItem("sessionId"),
+      login: localStorage.getItem("currLogin"),
     },
     currentUser: null,
   } as userStore),
@@ -53,9 +53,11 @@ export const useUserStore = defineStore({
       const sessionId = await loginApi(login, password);
 
       this.setSessionId(sessionId, login);
+
       console.log("this.$state.sessionId", this.$state.auth);
 
-      await router.push({name: 'home', params: {login}, replace: true});
+      await this.retrieve(login);
+      await router.push({name: 'user', params: {login}, replace: true});
     }
   }
 })

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import WelcomeView from '@/views/WelcomeView.vue'
-import HomeView from '@/views/HomeView.vue'
+import UserView from '@/views/UserView.vue'
+import {useUserStore} from "@/stores/user";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,10 +13,22 @@ const router = createRouter({
     },
     {
       path: '/:login',
-      name: 'home',
-      component: HomeView
+      name: 'user',
+      component: UserView
     }
   ]
+});
+
+router.beforeResolve((to, from, next) => {
+  const userStore = useUserStore();
+
+  if (to.name === 'user') {
+    const login = to.params['login'] as string;
+
+    console.log("router.beforeResolve: user route: ", login);
+
+    userStore.retrieve(login).then(() => next());
+  }
 })
 
 export default router
