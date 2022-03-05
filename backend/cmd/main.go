@@ -23,8 +23,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	infrastruct.NewDBConn(appConfig.DatabaseConfig)
-
 	if err := utils.MakeDirs(consts.AppDirs); err != nil {
 		log.Fatal(err)
 	}
