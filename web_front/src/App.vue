@@ -8,7 +8,6 @@ import { RouterView } from 'vue-router'
       🦄 & 🌈
     </div>
   </header>
-
   <RouterView class="main"/>
 </template>
 
