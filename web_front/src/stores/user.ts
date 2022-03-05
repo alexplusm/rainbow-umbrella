@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import {UserM} from "@/models/user";
 import router from "@/router";
-import {loginApi} from "@/api";
+import {loginApi, retrieveUserAPI} from "@/api";
+import type {UserM} from "@/models/user";
 
 function buildAuthHeaders(sessionId: string): Headers {
   const headers = new Headers();
@@ -11,6 +11,14 @@ function buildAuthHeaders(sessionId: string): Headers {
   return headers;
 }
 
+interface userStore {
+  auth: {
+    sessionId: string,
+    login: string
+  },
+  currentUser: null | UserM
+}
+
 export const useUserStore = defineStore({
   // id is required so that Pinia can connect the store to the devtools
   id: 'user',
@@ -18,27 +26,19 @@ export const useUserStore = defineStore({
     auth: {
       sessionId: "",
       login: "",
-    }
-  }),
+    },
+    currentUser: null,
+  } as userStore),
   getters: {
     sessionId: state => state.auth.sessionId
   },
   actions:{
     async retrieve(login: string) {
-      const headers = buildAuthHeaders(this.sessionId);
+      const user: UserM = await retrieveUserAPI(login, buildAuthHeaders(this.sessionId));
 
-      const user: UserM = await fetch(`/api/v1/users/${login}`, {headers})
-          .then(resp => resp.json())
-          .then(data => {
-            console.log("data", data);
-            const user = new UserM(data)
+      this.$state.currentUser = user;
 
-            user.age = 666;
-
-            return user;
-          });
-
-      console.log("NEW USEEERRR", user);
+      console.log("NEW user", user);
     },
 
     setSessionId(id: string, login: string) {

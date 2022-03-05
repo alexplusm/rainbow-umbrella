@@ -1,7 +1,7 @@
 <template>
   <section>
     KEKW
-<!--    {{ user.login }}-->
+    {{ userStore.currentUser?.login }}
   </section>
 </template>
 
@@ -9,14 +9,15 @@
 import router from '@/router'
 import {useUserStore} from "@/stores/user";
 
+const userStore = useUserStore()
+
 const login = router.currentRoute.value.params['login'];
 console.log("curr login", login);
 
 const sessionId = localStorage.getItem("X-SessionId");
 
-console.log("sessionId", sessionId)
+console.log("sessionId", sessionId);
 
-const userStore = useUserStore();
 userStore.retrieve(login as string);
 </script>
 
