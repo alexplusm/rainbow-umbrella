@@ -3,4 +3,5 @@
 3) [+] [front] save sessionID in localStorage 
 4) [+] [front] use session in requests headers
 5) [] [back] add friendship
-6) 
+6) [] [back] add interests
+7) 

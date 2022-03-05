@@ -11,13 +11,21 @@ CREATE TABLE IF NOT EXISTS users (
 
     created_at        TIMESTAMP     NOT NULL,
 
-    --      "interests"             ... MANY TO MANY ?
-    --      "friends"               ... MANY TO MANY ?
-    --      "friendship_requests"   ... MANY TO MANY ? // // // // //
-
     PRIMARY KEY (user_id)
 );
 
+CREATE TABLE IF NOT EXISTS `friendships` (
+    `friendship_id`         SERIAL,
+    `requesting_user_id`    INT         NOT NULL,
+    `targeting_user_id`     INT         NOT NULL,
+    `status`                VARCHAR     NOT NULL,
+
+    PRIMARY KEY (`friendship_id`),
+
+    CONSTRAINT `unique_users` UNIQUE(`requesting_user_id`, `targeting_user_id`),
+
+    FOREIGN KEY (`requesting_user_id`),
+    FOREIGN KEY (`targeting_user_id`)
+);
+
 --      "interests"             ... MANY TO MANY ?
---      "friends"               ... MANY TO MANY ?
---      "friendship_requests"   ... MANY TO MANY ?
