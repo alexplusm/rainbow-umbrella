@@ -16,16 +16,19 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS `friendships` (
     `friendship_id`         SERIAL,
-    `requesting_user_id`    INT         NOT NULL,
-    `targeting_user_id`     INT         NOT NULL,
-    `status`                VARCHAR     NOT NULL,
+    `requesting_user_id`    BIGINT UNSIGNED   NOT NULL,
+    `targeting_user_id`     BIGINT UNSIGNED   NOT NULL,
+    `status`                VARCHAR(255)      NOT NULL,
+
+    `created_at`        TIMESTAMP     NOT NULL,
+    `updated_at`        TIMESTAMP,
 
     PRIMARY KEY (`friendship_id`),
 
     CONSTRAINT `unique_users` UNIQUE(`requesting_user_id`, `targeting_user_id`),
 
-    FOREIGN KEY (`requesting_user_id`),
-    FOREIGN KEY (`targeting_user_id`)
+    FOREIGN KEY (`requesting_user_id`)    REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`targeting_user_id`)     REFERENCES `users`(`user_id`)
 );
 
 --      "interests"             ... MANY TO MANY ?
