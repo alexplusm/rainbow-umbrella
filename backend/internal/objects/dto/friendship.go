@@ -1,6 +1,6 @@
 package dto
 
 type Friendship struct {
-	RequestingUserID int64 `json:"requestingUserID"`
-	TargetingUserID  int64 `json:"targetingUserID"`
+	RequestingUserID uint64 `json:"requestingUserId"`
+	TargetingUserID  uint64 `json:"targetingUserId"`
 }

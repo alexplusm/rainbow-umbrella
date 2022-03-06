@@ -29,6 +29,7 @@ func main() {
 
 	injector := infrastruct.NewInjector(appConfig)
 	userController := injector.InjectUserController()
+	friendshipController := injector.InjectFriendshipController()
 
 	r.Post("/api/v1/users/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
@@ -42,6 +43,8 @@ func main() {
 			NewMethodMiddleware(http.MethodGet, userController.Details),
 		),
 	)
+
+	r.Post("/api/v1/friendship", friendshipController.Create)
 
 	log.Printf("Start app on: %v", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), r); err != nil {

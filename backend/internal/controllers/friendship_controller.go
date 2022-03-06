@@ -25,7 +25,7 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(rawBody, body); err != nil {
 	}
 
-	fmt.Println("BODY: ", body)
+	fmt.Printf("BODY: %+v\n", body)
 
 	w.Write([]byte("123 aza"))
 }
