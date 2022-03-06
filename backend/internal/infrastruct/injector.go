@@ -14,6 +14,7 @@ import (
 
 type IInjector interface {
 	InjectUserController() interfaces.IUserController
+	InjectFriendshipController() interfaces.IFriendshipController
 
 	InjectSessionService() interfaces.ISessionService
 }
@@ -43,6 +44,10 @@ func NewInjector(config *AppConfig) IInjector {
 
 func (i injector) InjectUserController() interfaces.IUserController {
 	return controllers.NewUserController(i.injectUserService(), i.sessionService)
+}
+
+func (i injector) InjectFriendshipController() interfaces.IFriendshipController {
+	return controllers.NewFriendshipController()
 }
 
 func (i injector) InjectSessionService() interfaces.ISessionService {

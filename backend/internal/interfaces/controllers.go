@@ -9,3 +9,6 @@ type IUserController interface {
 	Login(w http.ResponseWriter, r *http.Request)
 	Details(w http.ResponseWriter, r *http.Request)
 }
+
+type IFriendshipController interface {
+}
