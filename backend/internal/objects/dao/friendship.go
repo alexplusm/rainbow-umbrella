@@ -1,9 +1,9 @@
 package dao
 
 type Friendship struct {
-	ID               int
-	RequestingUserID int
-	TargetingUserID  int
+	ID               int64
+	RequestingUserID int64
+	TargetingUserID  int64
 	Status           string
 
 	CreatedAt string
