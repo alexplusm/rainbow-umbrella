@@ -28,5 +28,7 @@ func (s friendshipService) FriendList(user *bo.User) (*bo.FriendList, error) {
 	friendList := &bo.FriendList{}
 	friendList.Friends = make([]bo.User, 0)
 
+	s.friendshipRepo.FriendList(user.ID)
+
 	return friendList, nil
 }

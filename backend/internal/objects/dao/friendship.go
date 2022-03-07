@@ -22,3 +22,9 @@ func (o *Friendship) FromBO(value *bo.Friendship) *Friendship {
 
 	return o
 }
+
+type FriendList struct {
+	Friends            []User
+	Requested          []User
+	WaitingForResponse []User
+}

@@ -21,3 +21,22 @@ INSERT INTO friendships (
 
 	return &query{Query: queryRaw, Args: args}
 }
+
+func buildFriendListQuery(userID uint64) *query {
+	queryRaw := `
+SELECT
+	f.requesting_user_id, f.targeting_user_id, f.status,
+	u.user_id, u.login,
+	u.first_name, u.last_name, u.birthday, u.gender, u.city
+	u.created_at
+FROM friendships AS f
+INNER JOIN users AS u
+ON u.user_id = f.requesting_user_id OR u.user_id = f.targeting_user_id
+WHERE 
+	u.user_id != ?
+	AND (f.requesting_user_id = ? OR f.targeting_user_id = ?) 
+`
+	args := []interface{}{userID, userID, userID}
+
+	return &query{Query: queryRaw, Args: args}
+}
