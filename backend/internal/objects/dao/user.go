@@ -32,7 +32,7 @@ func (o *User) FromBO(value *bo.User) *User {
 	o.Gender = value.Gender
 	o.City = value.City
 
-	o.CreatedAt = value.CreatedAt.Format(time.RFC3339)
+	o.CreatedAt = timeToDAO(value.CreatedAt)
 
 	return o
 }
@@ -43,7 +43,7 @@ func (o *User) ToBO() (*bo.User, error) {
 		return nil, fmt.Errorf("[User.ToBO][1]: %+v", err)
 	}
 
-	createdAt, err := time.Parse("2006-01-02 15:04:05", o.CreatedAt)
+	createdAt, err := timeFromDAO(o.CreatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("[User.ToBO][2]: %+v", err)
 	}

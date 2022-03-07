@@ -3,6 +3,7 @@ package dto
 import (
 	"time"
 
+	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/objects/bo"
 )
 
@@ -15,6 +16,7 @@ func (o *Friendship) ToBO() *bo.Friendship {
 	return &bo.Friendship{
 		RequestingUserID: o.RequestingUserID,
 		TargetingUserID:  o.TargetingUserID,
+		Status:           consts.FriendshipStatusNew,
 		CreatedAt:        time.Now(),
 	}
 }

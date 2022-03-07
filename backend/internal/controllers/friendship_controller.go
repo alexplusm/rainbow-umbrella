@@ -41,8 +41,6 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("BODY: %+v\n", body)
-
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(http.StatusText(http.StatusOK)))
 }

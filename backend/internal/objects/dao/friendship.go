@@ -1,5 +1,9 @@
 package dao
 
+import (
+	"rainbow-umbrella/internal/objects/bo"
+)
+
 type Friendship struct {
 	ID               uint64
 	RequestingUserID uint64
@@ -8,4 +12,13 @@ type Friendship struct {
 
 	CreatedAt string
 	UpdatedAt string
+}
+
+func (o *Friendship) FromBO(value *bo.Friendship) *Friendship {
+	o.RequestingUserID = value.RequestingUserID
+	o.TargetingUserID = value.TargetingUserID
+	o.Status = value.Status
+	o.CreatedAt = timeToDAO(value.CreatedAt)
+
+	return o
 }

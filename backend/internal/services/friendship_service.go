@@ -1,8 +1,11 @@
 package services
 
 import (
+	"fmt"
+
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/bo"
+	"rainbow-umbrella/internal/objects/dao"
 )
 
 type friendshipService struct {
@@ -14,5 +17,9 @@ func NewFriendshipService(friendshipRepo interfaces.IFriendshipRepo) interfaces.
 }
 
 func (s friendshipService) Create(value *bo.Friendship) error {
+	if err := s.friendshipRepo.InsertOne(new(dao.Friendship).FromBO(value)); err != nil {
+		return fmt.Errorf("[friendshipService.Create][1]: %+v", err)
+	}
+
 	return nil
 }
