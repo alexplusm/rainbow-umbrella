@@ -20,3 +20,28 @@ func (o *Friendship) ToBO() *bo.Friendship {
 		CreatedAt:        time.Now(),
 	}
 }
+
+type FriendList struct {
+	Friends            []User `json:"friends"`
+	Requested          []User `json:"requested"`
+	WaitingForResponse []User `json:"waitingForResponse"`
+}
+
+func (o *FriendList) FromBO(value *bo.FriendList) *FriendList {
+	for _, item := range value.Friends {
+		user := new(User).FromBO(&item)
+		o.Friends = append(o.Friends, *user)
+	}
+
+	for _, item := range value.Requested {
+		user := new(User).FromBO(&item)
+		o.Requested = append(o.Requested, *user)
+	}
+
+	for _, item := range value.WaitingForResponse {
+		user := new(User).FromBO(&item)
+		o.WaitingForResponse = append(o.WaitingForResponse, *user)
+	}
+
+	return o
+}

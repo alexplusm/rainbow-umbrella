@@ -13,3 +13,9 @@ type Friendship struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type FriendList struct {
+	Friends            []User
+	Requested          []User
+	WaitingForResponse []User
+}

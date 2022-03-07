@@ -23,3 +23,10 @@ func (s friendshipService) Create(value *bo.Friendship) error {
 
 	return nil
 }
+
+func (s friendshipService) FriendList(user *bo.User) (*bo.FriendList, error) {
+	friendList := &bo.FriendList{}
+	friendList.Friends = make([]bo.User, 0)
+
+	return friendList, nil
+}

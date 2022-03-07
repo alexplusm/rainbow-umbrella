@@ -47,7 +47,7 @@ func (i injector) InjectUserController() interfaces.IUserController {
 }
 
 func (i injector) InjectFriendshipController() interfaces.IFriendshipController {
-	return controllers.NewFriendshipController(i.injectFriendshipService())
+	return controllers.NewFriendshipController(i.injectFriendshipService(), i.injectUserService())
 }
 
 func (i injector) InjectSessionService() interfaces.ISessionService {
