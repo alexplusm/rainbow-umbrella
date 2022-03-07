@@ -17,4 +17,5 @@ type ISessionService interface {
 }
 
 type IFriendshipService interface {
+	Create(value *bo.Friendship) error
 }
