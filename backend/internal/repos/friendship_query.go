@@ -27,7 +27,7 @@ func buildFriendListQuery(userID uint64) *query {
 SELECT
 	f.requesting_user_id, f.targeting_user_id, f.status,
 	u.user_id, u.login,
-	u.first_name, u.last_name, u.birthday, u.gender, u.city
+	u.first_name, u.last_name, u.birthday, u.gender, u.city,
 	u.created_at
 FROM friendships AS f
 INNER JOIN users AS u
