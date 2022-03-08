@@ -46,6 +46,7 @@ func (r friendshipRepo) FriendList(userID uint64) (*dao.FriendList, error) {
 		user := new(dao.User)
 
 		err = rows.Scan(
+			&user.FriendshipID,
 			&requestingUserID, &targetingUserID, &status,
 			&user.ID, &user.Login,
 			&user.FirstName, &user.LastName, &user.Birthday, &user.Gender, &user.City,

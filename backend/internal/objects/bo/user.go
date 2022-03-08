@@ -8,6 +8,7 @@ import (
 
 type User struct {
 	ID             uint64
+	FriendshipID   uint64
 	Login          string
 	HashedPassword string
 

@@ -11,7 +11,9 @@ import (
 )
 
 type User struct {
-	ID             uint64 `json:"id"`
+	ID           uint64 `json:"id"`
+	FriendshipID uint64 `json:"friendshipId,omitempty"`
+
 	Login          string `json:"login"`
 	Password       string `json:"password,omitempty"`
 	HashedPassword string `json:"hashedPassword,omitempty"`
@@ -99,6 +101,7 @@ func (o User) ToBO() *bo.User {
 
 func (o *User) FromBO(user *bo.User) *User {
 	o.ID = user.ID
+	o.FriendshipID = user.FriendshipID
 	o.Login = user.Login
 
 	// TODO: birthday

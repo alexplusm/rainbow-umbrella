@@ -9,6 +9,7 @@ import (
 
 type User struct {
 	ID             uint64
+	FriendshipID   uint64
 	Login          string
 	HashedPassword string
 
@@ -50,6 +51,7 @@ func (o *User) ToBO() (*bo.User, error) {
 
 	return &bo.User{
 		ID:             o.ID,
+		FriendshipID:   o.FriendshipID,
 		Login:          o.Login,
 		HashedPassword: o.HashedPassword,
 

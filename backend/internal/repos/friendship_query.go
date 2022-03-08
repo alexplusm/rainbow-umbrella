@@ -25,7 +25,7 @@ INSERT INTO friendships (
 func buildFriendListQuery(userID uint64) *query {
 	queryRaw := `
 SELECT
-	f.requesting_user_id, f.targeting_user_id, f.status,
+	f.friendship_id, f.requesting_user_id, f.targeting_user_id, f.status,
 	u.user_id, u.login,
 	u.first_name, u.last_name, u.birthday, u.gender, u.city,
 	u.created_at

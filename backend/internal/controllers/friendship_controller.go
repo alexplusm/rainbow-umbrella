@@ -3,10 +3,11 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/dto"
