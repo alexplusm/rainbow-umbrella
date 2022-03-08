@@ -25,10 +25,15 @@ func (s friendshipService) Create(value *bo.Friendship) error {
 }
 
 func (s friendshipService) FriendList(user *bo.User) (*bo.FriendList, error) {
-	friendList := &bo.FriendList{}
-	friendList.Friends = make([]bo.User, 0)
+	friendList, err := s.friendshipRepo.FriendList(user.ID)
+	if err != nil {
+		return nil, fmt.Errorf("[friendshipService.FriendList][1]: %+v", err)
+	}
 
-	s.friendshipRepo.FriendList(user.ID)
+	friendListBO, err := friendList.ToBO()
+	if err != nil {
+		return nil, fmt.Errorf("[friendshipService.FriendList][2]: %+v", err)
+	}
 
-	return friendList, nil
+	return friendListBO, nil
 }
