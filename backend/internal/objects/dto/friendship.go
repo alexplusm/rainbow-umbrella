@@ -8,6 +8,7 @@ import (
 )
 
 type Friendship struct {
+	ID               uint64 `json:"id"`
 	RequestingUserID uint64 `json:"requestingUserId"`
 	TargetingUserID  uint64 `json:"targetingUserId"`
 }

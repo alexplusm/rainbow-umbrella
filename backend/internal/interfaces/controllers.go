@@ -13,4 +13,6 @@ type IUserController interface {
 type IFriendshipController interface {
 	Create(w http.ResponseWriter, r *http.Request)
 	List(w http.ResponseWriter, r *http.Request)
+	Approve(w http.ResponseWriter, r *http.Request)
+	Decline(w http.ResponseWriter, r *http.Request)
 }

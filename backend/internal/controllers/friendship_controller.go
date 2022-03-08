@@ -85,3 +85,45 @@ func (c friendshipController) List(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseBody)
 	w.Header().Set("Content-Type", "application/json") // TODO: why don't work // change to ADD
 }
+
+func (c friendshipController) Approve(w http.ResponseWriter, r *http.Request) {
+	body := new(dto.Friendship)
+
+	rawBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		processError(w, http.StatusBadRequest, nil)
+		log.Println(fmt.Errorf("[friendshipController.Approve][1]: %+v", err))
+		return
+	}
+	if err = json.Unmarshal(rawBody, body); err != nil {
+		processError(w, http.StatusBadRequest, nil)
+		log.Println(fmt.Errorf("[friendshipController.Approve][2]: %+v", err))
+		return
+	}
+
+	fmt.Printf("BODYYYYY: %+v", body)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(http.StatusText(http.StatusOK)))
+}
+
+func (c friendshipController) Decline(w http.ResponseWriter, r *http.Request) {
+	body := new(dto.Friendship)
+
+	rawBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		processError(w, http.StatusBadRequest, nil)
+		log.Println(fmt.Errorf("[friendshipController.Decline][1]: %+v", err))
+		return
+	}
+	if err = json.Unmarshal(rawBody, body); err != nil {
+		processError(w, http.StatusBadRequest, nil)
+		log.Println(fmt.Errorf("[friendshipController.Decline][2]: %+v", err))
+		return
+	}
+
+	fmt.Printf("BODYYYYY: %+v", body)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(http.StatusText(http.StatusOK)))
+}

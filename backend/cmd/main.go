@@ -46,6 +46,8 @@ func main() {
 
 	// TODO: add NewSessionMiddleware
 	r.Post("/api/v1/friendship", friendshipController.Create)
+	r.Post("/api/v1/friendship/approve", friendshipController.Approve)
+	r.Post("/api/v1/friendship/decline", friendshipController.Decline)
 	r.Get("/api/v1/friendship/{login}", friendshipController.List)
 
 	log.Printf("Start app on: %v", port)
