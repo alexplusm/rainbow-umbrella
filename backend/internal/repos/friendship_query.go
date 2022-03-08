@@ -43,12 +43,12 @@ WHERE
 
 func buildUpdateOneFriendshipQuery(id uint64, status string) *query {
 	queryRaw := `
-UPDATE friendship
+UPDATE friendships
 SET status = ?
 WHERE friendship_id = ?
 ;
 `
-	args := []interface{}{id, status}
+	args := []interface{}{status, id}
 
 	return &query{Query: queryRaw, Args: args}
 }

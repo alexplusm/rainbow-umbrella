@@ -55,13 +55,9 @@ func (r friendshipRepo) FriendList(userID uint64) (*dao.FriendList, error) {
 
 		if status == consts.FriendshipStatusAccept {
 			friendList.Friends = append(friendList.Friends, *user)
-		}
-
-		if requestingUserID == userID {
+		} else if requestingUserID == userID {
 			friendList.WaitingForResponse = append(friendList.WaitingForResponse, *user)
-		}
-
-		if targetingUserID == userID {
+		} else if targetingUserID == userID {
 			friendList.Requested = append(friendList.Requested, *user)
 		}
 
