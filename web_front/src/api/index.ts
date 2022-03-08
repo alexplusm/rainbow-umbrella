@@ -42,3 +42,15 @@ export async function retrieveFriendListApi(login: string, headers: Headers): Pr
             } as IFriendList;
         });
 }
+
+export async function userListApi() :Promise<UserM[]> {
+    return fetch("/api/v1/users")
+        .then(data => data.json())
+        .then(body => body['users'])
+        .then(users => {
+            console.log("Users", users);
+
+            // TODO: wtf?
+            return users.map((user) => new UserM(user))
+        })
+}

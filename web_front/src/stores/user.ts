@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import router from "@/router";
-import {loginApi, retrieveFriendListApi, retrieveUserAPI} from "@/api";
+import {loginApi, retrieveFriendListApi, retrieveUserAPI, userListApi} from "@/api";
 import type {UserM, IFriendList} from "@/models/user";
 
 function buildAuthHeaders(sessionId: string): Headers {
@@ -18,7 +18,8 @@ interface IUserStore {
     login: string // TODO: current User
   },
   currentUser: null | UserM,
-  friendList: IFriendList
+  friendList: IFriendList,
+  users: UserM[]
 }
 
 export const useUserStore = defineStore({
@@ -35,9 +36,11 @@ export const useUserStore = defineStore({
       waitingForResponse: [],
     },
     currentUser: null,
+    users: []
   } as IUserStore),
   getters: {
-    sessionId: state => state.auth.sessionId
+    sessionId: state => state.auth.sessionId,
+    users: state => state.users,
   },
   actions:{
     async retrieve(login: string) {
@@ -65,6 +68,14 @@ export const useUserStore = defineStore({
 
       await this.retrieve(login);
       await router.push({name: 'user', params: {login}, replace: true});
+    },
+
+    async retrieveUserList() {
+      const users: UserM[] = await userListApi();
+
+      console.log("BEFORE set value: ", users);
+
+      this.$state.users = users;
     },
 
     async retrieveFriendList(login: string) {

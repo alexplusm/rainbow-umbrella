@@ -35,8 +35,10 @@ router.beforeResolve((to, from, next) => {
 
     console.log("router.beforeResolve: user route: ", login);
 
+    // TODO: make action?
     userStore.retrieve(login)
         .then(() => userStore.retrieveFriendList(login))
+        .then(() => userStore.retrieveUserList())
         .then(() => next());
   } else {
     next();

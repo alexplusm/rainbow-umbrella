@@ -219,6 +219,8 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c userController) List(w http.ResponseWriter, r *http.Request) {
+	// TODO: exclude currentUser
+
 	users, err := c.userService.List(&bo.UserFilter{})
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
