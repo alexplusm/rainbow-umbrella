@@ -32,7 +32,7 @@ func (s userService) LoginExist(login string) (bool, error) {
 }
 
 func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
-	list, err := s.list(&bo.UserFilter{ByLogin: login})
+	list, err := s.List(&bo.UserFilter{ByLogin: login})
 	if err != nil {
 		return nil, fmt.Errorf("[userService.RetrieveByLogin][1]: %+v", err)
 	}
@@ -46,7 +46,7 @@ func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
 	return &user, nil
 }
 
-func (s userService) list(filter *bo.UserFilter) ([]bo.User, error) {
+func (s userService) List(filter *bo.UserFilter) ([]bo.User, error) {
 	listDAO, err := s.userRepo.List(filter)
 	if err != nil {
 		return nil, fmt.Errorf("[userService.List][1]: %+v", err)

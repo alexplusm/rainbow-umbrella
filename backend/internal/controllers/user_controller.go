@@ -14,6 +14,7 @@ import (
 
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
+	"rainbow-umbrella/internal/objects/bo"
 	"rainbow-umbrella/internal/objects/dto"
 )
 
@@ -215,6 +216,35 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	if _, err := w.Write(responseBody); err != nil {
 		log.Printf("[userController.Details][1]")
 	}
+}
+
+func (c userController) List(w http.ResponseWriter, r *http.Request) {
+	users, err := c.userService.List(&bo.UserFilter{})
+	if err != nil {
+		processError(w, http.StatusInternalServerError, nil)
+		log.Println(fmt.Errorf("[userController.List][1]: %+v", err))
+		return
+	}
+
+	usersDTO := make([]dto.User, 0, len(users))
+
+	for _, item := range users {
+		userDTO := new(dto.User).FromBO(&item)
+		usersDTO = append(usersDTO, *userDTO)
+	}
+
+	bodyRaw := map[string][]dto.User{"users": usersDTO}
+
+	body, err := json.Marshal(bodyRaw)
+	if err != nil {
+		processError(w, http.StatusInternalServerError, nil)
+		log.Println(fmt.Errorf("[userController.List][2]: %+v", err))
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
 }
 
 // INFO: unused, may be no need

@@ -9,6 +9,7 @@ type IUserService interface {
 	RetrieveByLogin(login string) (*bo.User, error)
 	LoginExist(login string) (bool, error)
 	GenerateAvatarFileName(originalName string) string
+	List(filter *bo.UserFilter) ([]bo.User, error)
 }
 
 type ISessionService interface {

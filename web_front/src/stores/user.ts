@@ -15,7 +15,7 @@ function buildAuthHeaders(sessionId: string): Headers {
 interface IUserStore {
   auth: {
     sessionId: string,
-    login: string
+    login: string // TODO: current User
   },
   currentUser: null | UserM,
   friendList: IFriendList
@@ -71,6 +71,8 @@ export const useUserStore = defineStore({
       const friendList: IFriendList = await retrieveFriendListApi(login, buildAuthHeaders(this.sessionId));
 
       console.log("[friendList]", friendList);
+
+      this.$state.friendList = friendList;
     }
   }
-})
+});

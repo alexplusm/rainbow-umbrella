@@ -34,6 +34,8 @@ func main() {
 	r.Post("/api/v1/users/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
 
+	r.Get("/api/v1/users", userController.List)
+
 	r.Post("/api/v1/users/login",
 		NewMethodMiddleware(http.MethodPost, userController.Login))
 
