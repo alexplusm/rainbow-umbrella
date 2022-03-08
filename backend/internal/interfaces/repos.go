@@ -18,4 +18,5 @@ type ISessionRepo interface {
 type IFriendshipRepo interface {
 	InsertOne(friendship *dao.Friendship) error
 	FriendList(userID uint64) (*dao.FriendList, error)
+	UpdateStatus(id uint64, status string) error
 }

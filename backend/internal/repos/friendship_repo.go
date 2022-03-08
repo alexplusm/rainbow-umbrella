@@ -72,3 +72,13 @@ func (r friendshipRepo) FriendList(userID uint64) (*dao.FriendList, error) {
 
 	return friendList, nil
 }
+
+func (r friendshipRepo) UpdateStatus(id uint64, status string) error {
+	q := buildUpdateOneFriendshipQuery(id, status)
+
+	if _, err := r.dbClient.Exec(q.Query, q.Args...); err != nil {
+		return fmt.Errorf("[friendshipRepo.UpdateStatus][1]: %+v", err)
+	}
+
+	return nil
+}

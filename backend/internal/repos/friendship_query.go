@@ -40,3 +40,15 @@ WHERE
 
 	return &query{Query: queryRaw, Args: args}
 }
+
+func buildUpdateOneFriendshipQuery(id uint64, status string) *query {
+	queryRaw := `
+UPDATE friendship
+SET status = ?
+WHERE friendship_id = ?
+;
+`
+	args := []interface{}{id, status}
+
+	return &query{Query: queryRaw, Args: args}
+}
