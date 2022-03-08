@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import router from "@/router";
-import {loginApi, retrieveUserAPI} from "@/api";
-import type {UserM} from "@/models/user";
+import {loginApi, retrieveFriendListApi, retrieveUserAPI} from "@/api";
+import type {UserM, IFriendList} from "@/models/user";
 
 function buildAuthHeaders(sessionId: string): Headers {
   const headers = new Headers();
@@ -11,12 +11,14 @@ function buildAuthHeaders(sessionId: string): Headers {
   return headers;
 }
 
-interface userStore {
+
+interface IUserStore {
   auth: {
     sessionId: string,
     login: string
   },
-  currentUser: null | UserM
+  currentUser: null | UserM,
+  friendList: IFriendList
 }
 
 export const useUserStore = defineStore({
@@ -27,8 +29,13 @@ export const useUserStore = defineStore({
       sessionId: localStorage.getItem("sessionId"),
       login: localStorage.getItem("currLogin"),
     },
+    friendList: {
+      friends: [],
+      requested: [],
+      waitingForResponse: [],
+    },
     currentUser: null,
-  } as userStore),
+  } as IUserStore),
   getters: {
     sessionId: state => state.auth.sessionId
   },
@@ -58,6 +65,12 @@ export const useUserStore = defineStore({
 
       await this.retrieve(login);
       await router.push({name: 'user', params: {login}, replace: true});
+    },
+
+    async retrieveFriendList(login: string) {
+      const friendList: IFriendList = await retrieveFriendListApi(login, buildAuthHeaders(this.sessionId));
+
+      console.log("[friendList]", friendList);
     }
   }
 })

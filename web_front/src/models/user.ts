@@ -11,6 +11,7 @@ export interface User {
 
 export class UserM {
     id: number;
+    friendshipId: number;
     login: string;
 
     firstName: string;
@@ -21,6 +22,7 @@ export class UserM {
 
     constructor(value: any) {
         this.id = value['id'];
+        this.friendshipId = value['friendshipId'];
         this.login = value['login'];
         this.firstName = value['firstName'];
         this.lastName = value['lastName'];
@@ -28,4 +30,10 @@ export class UserM {
         this.gender = value['gender'];
         this.age = value['age'];
     }
+}
+
+export interface IFriendList {
+    friends: UserM[];
+    requested: UserM[];
+    waitingForResponse: UserM[];
 }

@@ -1,3 +1,4 @@
+import type {IFriendList} from "@/models/user";
 import {UserM} from "@/models/user";
 import router from "@/router";
 
@@ -13,7 +14,6 @@ export async function loginApi(login: string, password: string): Promise<string>
 
 export async function retrieveUserAPI(login: string, headers: Headers): Promise<UserM> {
     return await fetch(`/api/v1/users/${login}`, {headers})
-
         .then(resp => {
             console.log("RESP:" , resp);
             if (resp.status === 401) {
@@ -28,6 +28,17 @@ export async function retrieveUserAPI(login: string, headers: Headers): Promise<
             user.age = 666;
             console.log("user", user);
             return user;
-        })
-        ;
+        });
+}
+
+export async function retrieveFriendListApi(login: string, headers: Headers): Promise<IFriendList> {
+    return fetch(`/api/v1/friendship/${login}`, {headers})
+        .then(data => data.json())
+        .then(value => {
+            return {
+                friends: value["friends"] || [],
+                requested: value["requested"] || [],
+                waitingForResponse: value["waitingForResponse"] || [],
+            } as IFriendList;
+        });
 }
