@@ -37,3 +37,7 @@ func (s friendshipService) FriendList(user *bo.User) (*bo.FriendList, error) {
 
 	return friendListBO, nil
 }
+
+func (s friendshipService) UpdateStatus(id uint64, status string) error {
+	return nil
+}

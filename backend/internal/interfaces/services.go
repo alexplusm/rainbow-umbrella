@@ -19,4 +19,5 @@ type ISessionService interface {
 type IFriendshipService interface {
 	Create(value *bo.Friendship) error
 	FriendList(user *bo.User) (*bo.FriendList, error)
+	UpdateStatus(id uint64, status string) error
 }

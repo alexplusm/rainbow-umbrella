@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/dto"
 )
@@ -103,8 +104,16 @@ func (c friendshipController) Approve(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("BODYYYYY: %+v", body)
 
+	if err = c.friendshipService.UpdateStatus(body.ID, consts.FriendshipStatusAccept); err != nil {
+		processError(w, http.StatusInternalServerError, nil)
+		log.Println(fmt.Errorf("[friendshipController.Approve][3]: %+v", err))
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(http.StatusText(http.StatusOK)))
+	if _, err = w.Write([]byte(http.StatusText(http.StatusOK))); err != nil {
+		log.Println(fmt.Errorf("[friendshipController.Approve][4]: %+v", err))
+	}
 }
 
 func (c friendshipController) Decline(w http.ResponseWriter, r *http.Request) {
@@ -125,5 +134,7 @@ func (c friendshipController) Decline(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("BODYYYYY: %+v", body)
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(http.StatusText(http.StatusOK)))
+	if _, err = w.Write([]byte(http.StatusText(http.StatusOK))); err != nil {
+		log.Println(fmt.Errorf("[friendshipController.Decline][3]: %+v", err))
+	}
 }
