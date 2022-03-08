@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	ID             int64
+	ID             uint64
 	Login          string
 	HashedPassword string
 
