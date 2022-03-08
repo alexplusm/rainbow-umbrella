@@ -7,7 +7,8 @@
 
     UserList
 
-    {{ userStore.users?.length }}
+<!--    {{ userStore.users?.length }}-->
+    a {{ userStore.usersList?.length }} b
   </section>
 </template>
 
@@ -17,11 +18,8 @@ import {useUserStore} from "@/stores/user";
 console.log("INIT COMPONENT!!!");
 
 const userStore = useUserStore();
-// const users = userStore.users;
 
-// TODO: DON`T WORK
-console.log("users", userStore.users);
-
+console.log("users", userStore.usersList);
 </script>
 
 

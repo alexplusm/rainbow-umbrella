@@ -40,7 +40,7 @@ export const useUserStore = defineStore({
   } as IUserStore),
   getters: {
     sessionId: state => state.auth.sessionId,
-    users: state => state.users,
+    usersList: state => state.users,
   },
   actions:{
     async retrieve(login: string) {

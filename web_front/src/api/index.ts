@@ -51,6 +51,6 @@ export async function userListApi() :Promise<UserM[]> {
             console.log("Users", users);
 
             // TODO: wtf?
-            return users.map((user) => new UserM(user))
-        })
+            return (users as []).map((user) => new UserM(user))
+        });
 }
