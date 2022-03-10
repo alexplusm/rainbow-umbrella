@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import router from "@/router";
 import {api} from "@/api";
-import {loginApi, retrieveFriendListApi, retrieveUserAPI, userListApi} from "@/api";
 import type {IApiResponse} from "@/api";
 import type {User, IFriendList} from "@/models/user";
 
@@ -12,7 +11,6 @@ function buildAuthHeaders(sessionId: string): Headers {
 
   return headers;
 }
-
 
 interface IUserStore {
   auth: {
@@ -46,7 +44,7 @@ export const useUserStore = defineStore({
   },
   actions:{
     async retrieve(login: string) {
-      const user: User = await retrieveUserAPI(login, buildAuthHeaders(this.sessionId));
+      const user: User = await api.retrieveUser(login, buildAuthHeaders(this.sessionId));
 
       this.$state.currentUser = user;
 
@@ -62,7 +60,7 @@ export const useUserStore = defineStore({
     },
 
     async login(login: string, password: string) {
-      const sessionId = await loginApi(login, password);
+      const sessionId = await api.login(login, password);
 
       this.setSessionId(sessionId, login);
 
@@ -73,7 +71,7 @@ export const useUserStore = defineStore({
     },
 
     async retrieveUserList() {
-      const users: User[] = await userListApi();
+      const users: User[] = await api.userList();
 
       console.log("BEFORE set value: ", users);
 
@@ -81,7 +79,7 @@ export const useUserStore = defineStore({
     },
 
     async retrieveFriendList(login: string) {
-      const friendList: IFriendList = await retrieveFriendListApi(login, buildAuthHeaders(this.sessionId));
+      const friendList: IFriendList = await api.retrieveFriendList(login, buildAuthHeaders(this.sessionId));
 
       console.log("[friendList]", friendList);
 

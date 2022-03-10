@@ -32,7 +32,7 @@ async function registerUser(formData: FormData): Promise<IApiResponse> {
     })
 }
 
-export async function loginApi(login: string, password: string): Promise<string> {
+async function login(login: string, password: string): Promise<string> {
     const data = {login, password};
 
     return await fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(data)})
@@ -41,7 +41,7 @@ export async function loginApi(login: string, password: string): Promise<string>
         .catch(data => data);
 }
 
-export async function retrieveUserAPI(login: string, headers: Headers): Promise<User> {
+async function retrieveUser(login: string, headers: Headers): Promise<User> {
     return await fetch(`/api/v1/users/${login}`, {headers})
         .then(resp => {
             console.log("RESP:" , resp);
@@ -60,7 +60,7 @@ export async function retrieveUserAPI(login: string, headers: Headers): Promise<
         });
 }
 
-export async function retrieveFriendListApi(login: string, headers: Headers): Promise<IFriendList> {
+async function retrieveFriendList(login: string, headers: Headers): Promise<IFriendList> {
     return fetch(`/api/v1/friendship/${login}`, {headers})
         .then(data => data.json())
         .then(value => {
@@ -72,7 +72,7 @@ export async function retrieveFriendListApi(login: string, headers: Headers): Pr
         });
 }
 
-export async function userListApi() :Promise<User[]> {
+async function userList(): Promise<User[]> {
     return fetch("/api/v1/users")
         .then(data => data.json())
         .then(body => body['users'])
@@ -86,5 +86,9 @@ export async function userListApi() :Promise<User[]> {
 
 
 export const api = {
-    registerUser
+    registerUser,
+    login,
+    retrieveUser,
+    retrieveFriendList,
+    userList,
 }
