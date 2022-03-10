@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import router from "@/router";
+import {api} from "@/api";
 import {loginApi, retrieveFriendListApi, retrieveUserAPI, userListApi} from "@/api";
+import type {IApiResponse} from "@/api";
 import type {UserM, IFriendList} from "@/models/user";
 
 function buildAuthHeaders(sessionId: string): Headers {
@@ -84,6 +86,10 @@ export const useUserStore = defineStore({
       console.log("[friendList]", friendList);
 
       this.$state.friendList = friendList;
+    },
+
+    async userRegister(formData: FormData): Promise<IApiResponse> {
+      return api.registerUser(formData)
     }
   }
 });

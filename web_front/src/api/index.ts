@@ -2,21 +2,21 @@ import type {IFriendList} from "@/models/user";
 import {UserM} from "@/models/user";
 import router from "@/router";
 
-interface ApiResponse<T=null> {
+export interface IApiResponse<T=null> {
     hasError: boolean;
     notifyMessage: string | null;
     data: T | null;
 }
 
-function buildApiResponse<T=null>(): ApiResponse<T> {
+function buildApiResponse<T=null>(): IApiResponse<T> {
     return {
         hasError: false,
         notifyMessage: null,
         data: null
-    } as ApiResponse<T>;
+    } as IApiResponse<T>;
 }
 
-async function registerUser(formData: FormData): Promise<ApiResponse> {
+async function registerUser(formData: FormData): Promise<IApiResponse> {
     return fetch("/api/v1/users/register", {
         method: "POST",
         body: formData

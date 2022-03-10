@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { api } from "@/api";
+import { useUserStore } from "@/stores/user";
 
 const $q = useQuasar();
 
+const userStore = useUserStore();
+
 const login = ref("login1")
 const password = ref("")
-
 const firstName = ref("guest")
 const lastName = ref("guestov")
 const birthday = ref("1996/10/17")
@@ -15,16 +16,15 @@ const gender = ref("Male")
 const city = ref("Moscow")
 const interests = ref([])
 
-function resetForm() {
-  login.value = ""
-  password.value = ""
-
-  firstName.value = ""
-  lastName.value = ""
-  birthday.value = ""
-  gender.value = ""
-  city.value = ""
-  interests.value = []
+function onReset() {
+  login.value = "";
+  password.value = "";
+  firstName.value = "";
+  lastName.value = "";
+  birthday.value = "";
+  gender.value = "";
+  city.value = "";
+  interests.value = [];
 }
 
 function onSubmit () {
@@ -38,10 +38,7 @@ function onSubmit () {
   formData.append("city", city.value)
   formData.append("interests", interests.value.join(","))
 
-  console.log("formData....", formData.get("interests"))
-
-  // TODO: make action in store
-  api.registerUser(formData).then(apiResp => {
+  userStore.userRegister(formData).then(apiResp => {
     if (!apiResp.hasError) {
       $q.notify({
         color: 'green-4',
@@ -49,7 +46,7 @@ function onSubmit () {
         icon: 'cloud_done',
         message: 'Register succeed'
       });
-      resetForm();
+      onReset();
     } else {
       $q.notify({
         color: 'red-4',
@@ -59,10 +56,6 @@ function onSubmit () {
       });
     }
   });
-}
-
-function onReset () {
-  resetForm()
 }
 
 function addInterest (val: string, done: any) {
