@@ -67,7 +67,7 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[userController.Register][3.1]: %v", err.Error())
 		return
 	}
-	if !ok {
+	if ok {
 		w.WriteHeader(http.StatusConflict)
 		if _, err := w.Write([]byte("login already exist")); err != nil {
 			log.Printf("[userController.Register][4]: %v", err.Error())

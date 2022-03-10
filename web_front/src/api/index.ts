@@ -20,11 +20,11 @@ async function registerUser(formData: FormData): Promise<ApiResponse> {
     return fetch("/api/v1/users/register", {
         method: "POST",
         body: formData
-    }).then(resp => {
+    }).then(async resp => {
         const response = buildApiResponse();
 
         if (resp.status >= 299) {
-            response.notifyMessage = resp.statusText;
+            response.notifyMessage = await resp.text();
             response.hasError = true;
         }
 

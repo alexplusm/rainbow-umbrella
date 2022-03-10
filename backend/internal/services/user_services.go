@@ -28,7 +28,12 @@ func (s userService) Register(user *bo.User) error {
 }
 
 func (s userService) LoginExist(login string) (bool, error) {
-	return true, nil
+	user, err := s.RetrieveByLogin(login)
+	if err != nil {
+		return false, fmt.Errorf("[userService.LoginExist][1]: %+v", err)
+	}
+
+	return user != nil, nil
 }
 
 func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
