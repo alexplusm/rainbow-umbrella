@@ -1,89 +1,76 @@
-<script>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 
-export default {
-  setup () {
-    const $q = useQuasar()
+const $q = useQuasar();
 
-    const login = ref("login1")
-    const password = ref(null)
+const login = ref("login1")
+const password = ref("")
 
-    const firstName = ref("guest")
-    const lastName = ref("guestov")
-    const birthday = ref("1996/10/17")
-    const gender = ref("Male")
-    const city = ref("Moscow")
-    // TODO: interests
+const firstName = ref("guest")
+const lastName = ref("guestov")
+const birthday = ref("1996/10/17")
+const gender = ref("Male")
+const city = ref("Moscow")
+// TODO: interests
 
-    function resetForm() {
-      login.value = null
-      password.value = null
+function resetForm() {
+  login.value = ""
+  password.value = ""
 
-      firstName.value = null
-      lastName.value = null
-      birthday.value = null
-      gender.value = null
-      city.value = null
+  firstName.value = ""
+  lastName.value = ""
+  birthday.value = ""
+  gender.value = ""
+  city.value = ""
+}
+
+
+function onSubmit () {
+  const formData = new FormData()
+  formData.append("login", login.value)
+  formData.append("password", password.value)
+  formData.append("firstName", firstName.value)
+  formData.append("lastName", lastName.value)
+  formData.append("birthday", birthday.value)
+  formData.append("gender", gender.value)
+  formData.append("city", city.value)
+
+  fetch("/api/v1/users/register", {
+    method: "POST",
+    body: formData
+  }).then(response => {
+    switch (response.status) {
+      case 201:
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Register succeed'
+        });
+        resetForm();
+        break;
+      case 409:
+        $q.notify({
+          color: 'red-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Login already taken'
+        });
+        break;
+      default:
+        $q.notify({
+          color: 'red-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Somethings went wrong'
+        });
     }
+  })
+}
 
-    return {
-      login,
-      password,
-
-      firstName,
-      lastName,
-      birthday,
-      gender,
-      city,
-
-      onSubmit () {
-        const formData = new FormData()
-        formData.append("login", login.value)
-        formData.append("password", password.value)
-        formData.append("firstName", firstName.value)
-        formData.append("lastName", lastName.value)
-        formData.append("birthday", birthday.value)
-        formData.append("gender", gender.value)
-        formData.append("city", city.value)
-
-        fetch("/api/v1/user/register", {
-          method: "POST",
-          body: formData
-        }).then(response => {
-          switch (response.status) {
-            case 201:
-              $q.notify({
-                color: 'green-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Register succeed'
-              });
-              resetForm();
-              break;
-            case 409:
-              $q.notify({
-                color: 'red-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Login already taken'
-              });
-              break;
-            default:
-              $q.notify({
-                color: 'red-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Somethings went wrong'
-              });
-          }
-        })
-      },
-      onReset () {
-        resetForm()
-      }
-    }
-  }
+function onReset () {
+  resetForm()
 }
 </script>
 
