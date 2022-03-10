@@ -4,7 +4,6 @@ import { useQuasar } from 'quasar'
 import { useUserStore } from "@/stores/user";
 
 const $q = useQuasar();
-
 const userStore = useUserStore();
 
 const login = ref("login1")
@@ -64,42 +63,51 @@ function addInterest (val: string, done: any) {
 </script>
 
 <template>
-  <div class="q-pa-md" style="max-width: 400px">
+  <div class="q-pa-md" style="width: 800px">
     <q-form
         @submit="onSubmit"
         @reset="onReset"
         class="q-gutter-md"
     >
-      <q-input
-          filled
-          v-model="login"
-          label="Login"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
-      <q-input
-          filled
-          v-model="password"
-          label="Password"
-          type="password"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
+      <div class="row">
+        <q-input
+            class="col"
+            filled
+            v-model="login"
+            label="Login"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"
+        />
+        <q-input
+            filled
+            class="col"
+            v-model="password"
+            label="Password"
+            type="password"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"
+        />
+      </div>
 
-      <q-input
-          filled
-          v-model="firstName"
-          label="First name"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
-      <q-input
-          filled
-          v-model="lastName"
-          label="Last name"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
+      <div class="row">
+        <q-input
+            filled
+            class="col"
+            v-model="firstName"
+            label="First name"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"
+        />
+        <q-input
+            filled
+            class="col"
+            v-model="lastName"
+            label="Last name"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"
+        />
+      </div>
+
       <q-input filled label="Birthday" v-model="birthday" mask="date" :rules="['date']">
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
@@ -139,8 +147,8 @@ function addInterest (val: string, done: any) {
           hide-dropdown-icon
           input-debounce="0"
           @new-value="addInterest"
-          style="width: 250px"
       />
+
       <div>
         <q-btn label="Submit" type="submit" color="primary"/>
         <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
@@ -150,4 +158,8 @@ function addInterest (val: string, done: any) {
 </template>
 
 <style scoped>
+
+.col + .col {
+  margin-left: 1rem;
+}
 </style>
