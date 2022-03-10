@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { api } from "@/api";
 
 const $q = useQuasar();
 
@@ -25,7 +26,6 @@ function resetForm() {
   city.value = ""
 }
 
-
 function onSubmit () {
   const formData = new FormData()
   formData.append("login", login.value)
@@ -36,37 +36,24 @@ function onSubmit () {
   formData.append("gender", gender.value)
   formData.append("city", city.value)
 
-  fetch("/api/v1/users/register", {
-    method: "POST",
-    body: formData
-  }).then(response => {
-    switch (response.status) {
-      case 201:
-        $q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Register succeed'
-        });
-        resetForm();
-        break;
-      case 409:
-        $q.notify({
-          color: 'red-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Login already taken'
-        });
-        break;
-      default:
-        $q.notify({
-          color: 'red-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Somethings went wrong'
-        });
+  api.registerUser(formData).then(apiResp => {
+    if (!apiResp.hasError) {
+      $q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'cloud_done',
+        message: 'Register succeed'
+      });
+      resetForm();
+    } else {
+      $q.notify({
+        color: 'red-4',
+        textColor: 'white',
+        icon: 'cloud_done',
+        message: apiResp.notifyMessage as string
+      });
     }
-  })
+  });
 }
 
 function onReset () {

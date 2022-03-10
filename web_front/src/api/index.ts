@@ -2,6 +2,35 @@ import type {IFriendList} from "@/models/user";
 import {UserM} from "@/models/user";
 import router from "@/router";
 
+interface ApiResponse<T=null> {
+    hasError: boolean;
+    notifyMessage: string | null;
+    data: T | null;
+}
+
+function buildApiResponse<T=null>(): ApiResponse<T> {
+    return {
+        hasError: false,
+        notifyMessage: null,
+        data: null
+    } as ApiResponse<T>;
+}
+
+async function registerUser(formData: FormData): Promise<ApiResponse> {
+    return fetch("/api/v1/users/register", {
+        method: "POST",
+        body: formData
+    }).then(resp => {
+        const response = buildApiResponse();
+
+        if (resp.status >= 299) {
+            response.notifyMessage = resp.statusText;
+            response.hasError = true;
+        }
+
+        return response;
+    })
+}
 
 export async function loginApi(login: string, password: string): Promise<string> {
     const data = {login, password};
@@ -53,4 +82,9 @@ export async function userListApi() :Promise<UserM[]> {
             // TODO: wtf?
             return (users as []).map((user) => new UserM(user))
         });
+}
+
+
+export const api = {
+    registerUser
 }
