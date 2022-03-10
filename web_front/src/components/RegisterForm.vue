@@ -13,7 +13,7 @@ const lastName = ref("guestov")
 const birthday = ref("1996/10/17")
 const gender = ref("Male")
 const city = ref("Moscow")
-// TODO: interests
+const interests = ref([])
 
 function resetForm() {
   login.value = ""
@@ -24,6 +24,7 @@ function resetForm() {
   birthday.value = ""
   gender.value = ""
   city.value = ""
+  interests.value = []
 }
 
 function onSubmit () {
@@ -35,7 +36,11 @@ function onSubmit () {
   formData.append("birthday", birthday.value)
   formData.append("gender", gender.value)
   formData.append("city", city.value)
+  formData.append("interests", interests.value.join(","))
 
+  console.log("formData....", formData.get("interests"))
+
+  // TODO: make action in store
   api.registerUser(formData).then(apiResp => {
     if (!apiResp.hasError) {
       $q.notify({
@@ -58,6 +63,10 @@ function onSubmit () {
 
 function onReset () {
   resetForm()
+}
+
+function addInterest (val: string, done: any) {
+  done(val, 'add-unique')
 }
 </script>
 
@@ -127,7 +136,18 @@ function onReset () {
           lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
-
+      <q-select
+          label="Interests"
+          filled
+          v-model="interests"
+          use-input
+          use-chips
+          multiple
+          hide-dropdown-icon
+          input-debounce="0"
+          @new-value="addInterest"
+          style="width: 250px"
+      />
       <div>
         <q-btn label="Submit" type="submit" color="primary"/>
         <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
