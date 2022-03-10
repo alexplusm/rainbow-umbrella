@@ -3,7 +3,7 @@ import router from "@/router";
 import {api} from "@/api";
 import {loginApi, retrieveFriendListApi, retrieveUserAPI, userListApi} from "@/api";
 import type {IApiResponse} from "@/api";
-import type {UserM, IFriendList} from "@/models/user";
+import type {User, IFriendList} from "@/models/user";
 
 function buildAuthHeaders(sessionId: string): Headers {
   const headers = new Headers();
@@ -19,9 +19,9 @@ interface IUserStore {
     sessionId: string,
     login: string // TODO: current User
   },
-  currentUser: null | UserM,
+  currentUser: null | User,
   friendList: IFriendList,
-  users: UserM[]
+  users: User[]
 }
 
 export const useUserStore = defineStore({
@@ -46,7 +46,7 @@ export const useUserStore = defineStore({
   },
   actions:{
     async retrieve(login: string) {
-      const user: UserM = await retrieveUserAPI(login, buildAuthHeaders(this.sessionId));
+      const user: User = await retrieveUserAPI(login, buildAuthHeaders(this.sessionId));
 
       this.$state.currentUser = user;
 
@@ -73,7 +73,7 @@ export const useUserStore = defineStore({
     },
 
     async retrieveUserList() {
-      const users: UserM[] = await userListApi();
+      const users: User[] = await userListApi();
 
       console.log("BEFORE set value: ", users);
 

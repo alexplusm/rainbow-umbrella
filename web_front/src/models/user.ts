@@ -1,24 +1,13 @@
-export interface User {
-    id: number;
-    login: string;
-
-    firstName: string;
-    lastName: string;
-    city: string;
-    gender: string;
-    age: number; // TODO
-}
-
-export class UserM {
+export class User {
     id: number;
     friendshipId: number;
     login: string;
-
     firstName: string;
     lastName: string;
     city: string;
     gender: string;
     age: number;
+    interests: string[];
 
     constructor(value: any) {
         this.id = value['id'];
@@ -29,11 +18,12 @@ export class UserM {
         this.city = value['city'];
         this.gender = value['gender'];
         this.age = value['age'];
+        this.interests = ["one", "two"];
     }
 }
 
 export interface IFriendList {
-    friends: UserM[];
-    requested: UserM[];
-    waitingForResponse: UserM[];
+    friends: User[];
+    requested: User[];
+    waitingForResponse: User[];
 }

@@ -52,11 +52,11 @@
 
 <script lang="ts" setup>
 import {useUserStore} from "@/stores/user";
-import type {UserM} from "@/models/user";
+import type {User} from "@/models/user";
 
 const userStore = useUserStore()
 
-const currentUser: UserM = userStore.currentUser as UserM;
+const currentUser: User = userStore.currentUser as User;
 </script>
 
 <style scoped>

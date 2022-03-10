@@ -1,5 +1,5 @@
 import type {IFriendList} from "@/models/user";
-import {UserM} from "@/models/user";
+import {User} from "@/models/user";
 import router from "@/router";
 
 export interface IApiResponse<T=null> {
@@ -41,7 +41,7 @@ export async function loginApi(login: string, password: string): Promise<string>
         .catch(data => data);
 }
 
-export async function retrieveUserAPI(login: string, headers: Headers): Promise<UserM> {
+export async function retrieveUserAPI(login: string, headers: Headers): Promise<User> {
     return await fetch(`/api/v1/users/${login}`, {headers})
         .then(resp => {
             console.log("RESP:" , resp);
@@ -52,7 +52,7 @@ export async function retrieveUserAPI(login: string, headers: Headers): Promise<
         })
         .then(resp => resp.json())
 
-        .then(data => new UserM(data))
+        .then(data => new User(data))
         .then(user => {
             user.age = 666;
             console.log("user", user);
@@ -72,7 +72,7 @@ export async function retrieveFriendListApi(login: string, headers: Headers): Pr
         });
 }
 
-export async function userListApi() :Promise<UserM[]> {
+export async function userListApi() :Promise<User[]> {
     return fetch("/api/v1/users")
         .then(data => data.json())
         .then(body => body['users'])
@@ -80,7 +80,7 @@ export async function userListApi() :Promise<UserM[]> {
             console.log("Users", users);
 
             // TODO: wtf?
-            return (users as []).map((user) => new UserM(user))
+            return (users as []).map((user) => new User(user))
         });
 }
 
