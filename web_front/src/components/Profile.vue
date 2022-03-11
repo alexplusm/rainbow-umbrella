@@ -1,6 +1,14 @@
+<script lang="ts" setup>
+import { useUserStore } from "@/stores/user";
+import type {User} from "@/models/user";
+
+const userStore = useUserStore();
+const currentUser: User = userStore.currentUser as User;
+</script>
+
 <template>
   <section>
-    <q-card class="my-card" flat bordered>
+    <q-card flat bordered>
       <q-item>
         <q-item-section avatar>
           <q-avatar>
@@ -49,15 +57,6 @@
     </q-card>
   </section>
 </template>
-
-<script lang="ts" setup>
-import {useUserStore} from "@/stores/user";
-import type {User} from "@/models/user";
-
-const userStore = useUserStore()
-
-const currentUser: User = userStore.currentUser as User;
-</script>
 
 <style scoped>
 </style>
