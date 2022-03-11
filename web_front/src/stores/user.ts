@@ -36,7 +36,7 @@ export const useUserStore = defineStore({
       waitingForResponse: [],
     },
     currentUser: null,
-    users: []
+    users: [] as User[]
   } as IUserStore),
   getters: {
     sessionId: state => state.auth.sessionId,

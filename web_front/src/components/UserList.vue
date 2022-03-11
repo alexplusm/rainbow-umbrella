@@ -1,27 +1,36 @@
-<template>
-  <section>
-    <label>
-      Search User
-      <input type="search" placeholder="Type ...">
-    </label>
-
-    UserList
-
-<!--    {{ userStore.users?.length }}-->
-    a {{ userStore.usersList?.length }} b
-  </section>
-</template>
-
 <script setup lang="ts">
-import {useUserStore} from "@/stores/user";
-
-console.log("INIT COMPONENT!!!");
+import {ref} from "vue";
+import { useUserStore } from "@/stores/user";
+import ProfileMini from "@/components/ProfileMini.vue";
 
 const userStore = useUserStore();
-
-console.log("users", userStore.usersList);
+const searchControl = ref("");
 </script>
 
+<template>
+  <section>
+    <q-card flat bordered class="my-card">
+      <q-card-section>
+        <div class="text-h6">Users</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <q-input v-model="searchControl" label="Search user" />
+      </q-card-section>
+
+      <q-separator inset />
+
+      <q-card-section>
+        <ProfileMini
+            v-for="user in userStore.usersList"
+            :key="user.id"
+            :user="user"
+            :show-actions="true"
+        />
+      </q-card-section>
+    </q-card>
+  </section>
+</template>
 
 <style scoped>
 </style>
