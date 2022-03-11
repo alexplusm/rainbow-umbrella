@@ -25,7 +25,7 @@ import { RouterView } from 'vue-router'
 
 header {
   width: 100vw;
-  height: 46px;
+  height: 8vh;
 }
 
 .logo {
@@ -35,5 +35,6 @@ header {
 
 .main {
   justify-content: center;
+  height: 85vh;
 }
 </style>

@@ -6,7 +6,7 @@ import UserList from '@/components/UserList.vue'
 
 <template>
   <section>
-    <Profile />
+    <Profile class="profile" />
     <FriendList/>
     <UserList />
   </section>
@@ -17,5 +17,9 @@ section {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.profile {
+  height: 300px;
 }
 </style>

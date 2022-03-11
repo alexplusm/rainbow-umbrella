@@ -1,6 +1,6 @@
-import type {IFriendList} from "@/models/user";
-import {User} from "@/models/user";
 import router from "@/router";
+import type { IFriendList } from "@/models/user";
+import { User } from "@/models/user";
 
 export interface IApiResponse<T=null> {
     hasError: boolean;

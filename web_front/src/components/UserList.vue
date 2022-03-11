@@ -18,7 +18,7 @@ const searchControl = ref("");
         <q-input v-model="searchControl" label="Search user" />
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section class="scroll overflow-hidden" style="height: 60vh">
         <ProfileMini
             v-for="user in userStore.usersList"
             :key="user.id"

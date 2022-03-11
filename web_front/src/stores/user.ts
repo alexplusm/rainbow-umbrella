@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import router from "@/router";
-import {api} from "@/api";
-import type {IApiResponse} from "@/api";
-import type {User, IFriendList} from "@/models/user";
+import { api } from "@/api";
+import type { IApiResponse } from "@/api";
+import type { User, IFriendList } from "@/models/user";
 
 function buildAuthHeaders(sessionId: string): Headers {
   const headers = new Headers();
