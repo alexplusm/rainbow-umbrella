@@ -1,6 +1,7 @@
 export class User {
     id: number;
     friendshipId: number;
+    friendshipStatus: string;
     login: string;
     firstName: string;
     lastName: string;
@@ -12,6 +13,8 @@ export class User {
     constructor(value: any) {
         this.id = value['id'];
         this.friendshipId = value['friendshipId'];
+        this.friendshipStatus = "new";
+
         this.login = value['login'];
         this.firstName = value['firstName'];
         this.lastName = value['lastName'];
