@@ -6,34 +6,40 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <section class="q-pa-md" style="max-width: 350px">
-    <div class="text-h6">Friend List</div>
+  <section class="wrap">
+    <div class="text-h6 q-pb-sm">Friend List</div>
 
-    <q-list bordered separator>
+    <q-list class="user_list" bordered separator>
       <ProfileMini
         class="profile_mini"
         :user="userStore.currentUser"
-        :showActions="true"
+        :showActions="false"
       />
 
       <ProfileMini
         class="profile_mini"
         :user="userStore.currentUser"
-        :showActions="true"
+        :showActions="false"
       />
 
       <ProfileMini
         class="profile_mini"
         :user="userStore.currentUser"
-        :showActions="true"
+        :showActions="false"
       />
     </q-list>
   </section>
 </template>
 
 <style scoped>
-section {
+.wrap {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+}
+
+.user_list {
+  max-height: 70vh;
+  overflow: scroll;
 }
 </style>

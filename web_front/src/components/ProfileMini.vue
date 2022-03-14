@@ -15,8 +15,10 @@ function showFriendIcon(): boolean {
   return props.user.friendshipStatus === "friend";
 }
 function onAddFriend(event: PointerEvent) {
-  console.log("event: ", event);
   event.stopPropagation();
+  event.preventDefault();
+
+  console.log("event: ", event);
 }
 </script>
 

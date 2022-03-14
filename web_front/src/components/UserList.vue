@@ -8,10 +8,10 @@ const searchControl = ref("");
 </script>
 
 <template>
-  <section>
-    <div class="text-h6">Users</div>
+  <section class="wrap">
+    <div class="text-h6 q-pb-sm">Users</div>
 
-    <q-input v-model="searchControl" label="Search user" />
+    <q-input class="q-pb-sm" label="Search user" v-model="searchControl" />
 
     <q-list class="user_list" bordered separator>
       <ProfileMini
@@ -25,12 +25,14 @@ const searchControl = ref("");
 </template>
 
 <style scoped>
-section {
+.wrap {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
 }
 
 .user_list {
+  max-height: 70vh;
   overflow: scroll;
 }
 </style>
