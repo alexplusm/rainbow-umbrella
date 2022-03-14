@@ -60,7 +60,7 @@ export const useUserStore = defineStore({
     },
 
     async login(login: string, password: string) {
-      const sessionId = await api.login(login, password);
+      const sessionId = await api.login(login, password); // TODO: OR ERROR
 
       this.setSessionId(sessionId, login);
 

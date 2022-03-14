@@ -1,69 +1,50 @@
-<script>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useUserStore } from "@/stores/user";
 
-export default {
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar();
+const userStore = useUserStore();
 
-    const login = ref(null)
-    const password = ref(null)
+const login = ref("");
+const password = ref("");
 
-    return {
-      login,
-      password,
-
-      onSubmit () {
-        const userStore = useUserStore();
-
-        userStore.login(login.value, password.value);
-      }
-    }
-  }
+function onSubmit () {
+  userStore.login(login.value, password.value).then(data => {
+    console.log("data: ", data);
+    // TODO: process ERROR
+  });
 }
 </script>
 
 <template>
-  <div class="wrap q-pa-md" style="max-width: 400px">
+  <q-card style="height: 280px">
+    <q-card-section>
+      <div class="text-h6 q-mb-lg">Sign In</div>
 
-    <q-card class="my-card">
-      <q-card-section>
-        <div class="text-h6">Sign In</div>
-      </q-card-section>
+      <q-form @submit="onSubmit">
+        <q-input
+          filled
+          v-model="login"
+          label="Login"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
+        />
 
-      <q-separator dark />
+        <q-input
+          filled
+          v-model="password"
+          label="Password"
+          type="password"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
+        />
 
-      <q-card-actions>
-        <q-form @submit="onSubmit" class="q-gutter-md">
-          <q-input
-              filled
-              v-model="login"
-              label="Login"
-              lazy-rules
-              :rules="[ val => val && val.length > 0 || 'Please type something']"
-          />
-          <q-input
-              filled
-              v-model="password"
-              label="Password"
-              type="password"
-              lazy-rules
-              :rules="[ val => val && val.length > 0 || 'Please type something']"
-          />
-
-          <div>
-            <q-btn label="Submit" type="submit" color="primary"/>
-          </div>
-        </q-form>
-      </q-card-actions>
-    </q-card>
-  </div>
+        <q-btn label="Submit" type="submit" color="primary"/>
+      </q-form>
+    </q-card-section>
+  </q-card>
 </template>
 
 <style scoped>
-.wrap {
-  display: flex;
-  flex-direction: column;
-}
 </style>

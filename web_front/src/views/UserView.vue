@@ -6,9 +6,9 @@ import UserList from '@/components/UserList.vue'
 
 <template>
   <section>
-    <Profile class="profile" />
-    <FriendList class="friend_list"/>
-    <UserList class="user_list_comp"/>
+    <Profile class="profile_component" />
+    <FriendList class="friend_list_component"/>
+    <UserList class="user_list_component"/>
   </section>
 </template>
 
@@ -20,15 +20,16 @@ section {
   justify-content: flex-start;
 }
 
-.profile {
+.profile_component {
   width: 250px;
 }
 
-.friend_list {
+.friend_list_component {
   width: 300px;
   margin-left: 2em;
 }
-.user_list_comp {
+
+.user_list_component {
   width: 300px;
   margin-left: 2em;
 }

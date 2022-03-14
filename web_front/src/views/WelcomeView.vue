@@ -4,14 +4,11 @@ import SignInForm from '@/components/SignInForm.vue'
 </script>
 
 <template>
-  <div>
-    <RegisterForm />
-    <SignInForm />
-  </div>
+  <section class="row">
+    <RegisterForm class="col-4" />
+    <SignInForm class="col-3 offset-4" />
+  </section>
 </template>
 
 <style scoped>
-div {
-  display: flex;
-}
 </style>

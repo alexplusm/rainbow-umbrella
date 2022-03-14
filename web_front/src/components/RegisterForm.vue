@@ -58,12 +58,12 @@ function onSubmit () {
 }
 
 function addInterest (val: string, done: any) {
-  done(val, 'add-unique')
+  done(val, 'add-unique');
 }
 </script>
 
 <template>
-  <div class="q-pa-md" style="width: 800px">
+  <div>
     <q-form
         @submit="onSubmit"
         @reset="onReset"

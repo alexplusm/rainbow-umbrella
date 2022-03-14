@@ -48,15 +48,6 @@ const currentUser = userStore.currentUser;
           :label="interest"
       />
     </q-card-section>
-
-<!--    <q-separator />-->
-
-<!--    <q-card-section>Your friend</q-card-section>-->
-
-<!--    <q-card-actions>-->
-<!--      <q-btn flat>Add to friend</q-btn>-->
-<!--      <q-btn flat color="primary">Reserve</q-btn>-->
-<!--    </q-card-actions>-->
   </q-card>
 </template>
 
