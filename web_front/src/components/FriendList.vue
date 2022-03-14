@@ -6,18 +6,28 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <section>
-    <q-card flat bordered>
-      <q-card-section>
-        <div class="text-h6">Friend List</div>
-      </q-card-section>
+  <section class="q-pa-md" style="max-width: 350px">
+    <div class="text-h6">Friend List</div>
 
-      <q-card-section>
-        <ProfileMini :user="userStore.currentUser" :show-actions="false"/>
-        <ProfileMini :user="userStore.currentUser" :show-actions="false"/>
-        <ProfileMini :user="userStore.currentUser" :show-actions="false"/>
-      </q-card-section>
-    </q-card>
+    <q-list bordered separator>
+      <ProfileMini
+        class="profile_mini"
+        :user="userStore.currentUser"
+        :showActions="false"
+      />
+
+      <ProfileMini
+        class="profile_mini"
+        :user="userStore.currentUser"
+        :showActions="false"
+      />
+
+      <ProfileMini
+        class="profile_mini"
+        :user="userStore.currentUser"
+        :showActions="false"
+      />
+    </q-list>
   </section>
 </template>
 

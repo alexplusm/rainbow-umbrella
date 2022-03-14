@@ -4,4 +4,4 @@
 4) [+] [front] use session in requests headers
 5) [] [back] add friendship
 6) [] [back] add interests
-7) 
+7) [] [front] use q-list instead q-card for profile

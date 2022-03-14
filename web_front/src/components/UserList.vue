@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
-import ProfileMini from "@/components/ProfileMini.vue";
+import ProfileMini from "@/components/ProfileMiniOld.vue";
 
 const userStore = useUserStore();
 const searchControl = ref("");
