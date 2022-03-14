@@ -88,6 +88,11 @@ export const useUserStore = defineStore({
 
     async userRegister(formData: FormData): Promise<IApiResponse> {
       return api.registerUser(formData)
+    },
+
+    async createFriendRequest(targetId: number) {
+      console.log("createFriendRequest: targetId: ", targetId);
+      // TODO: refresh friendList and userList OR update status by "targetId"
     }
   }
 });

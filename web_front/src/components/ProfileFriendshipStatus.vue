@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { FriendshipStatus } from "@/models/user";
+import { useUserStore } from "@/stores/user";
 
 const props = defineProps<{userId: number, friendshipStatus: FriendshipStatus}>();
+
+const userStore = useUserStore();
 
 function showAddButton(): boolean {
   return props.friendshipStatus === FriendshipStatus.NotFriend;
@@ -23,11 +26,8 @@ function onAddFriend(event: PointerEvent) {
   event.stopPropagation();
   event.preventDefault();
 
-  // TODO: store.initFriendship();
-
-  console.log("onAddFriend: ", props.userId);
+  userStore.createFriendRequest(props.userId);
 }
-
 </script>
 
 <template>

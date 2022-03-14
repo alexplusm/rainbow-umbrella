@@ -15,7 +15,7 @@ export class User {
         this.id = value['id'];
         this.avatarUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
         this.friendshipId = value['friendshipId'];
-        this.friendshipStatus = FriendshipStatus.Myself;
+        this.friendshipStatus = FriendshipStatus.NotFriend;
 
         this.login = value['login'];
         this.firstName = value['firstName'];

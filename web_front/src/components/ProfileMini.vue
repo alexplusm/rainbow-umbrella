@@ -1,27 +1,8 @@
 <script setup lang="ts">
+import ProfileFriendshipStatus from "@/components/ProfileFriendshipStatus.vue";
 import type { User } from "@/models/user";
 
 const props = defineProps<{user: User, showActions: boolean}>();
-
-function showAddButton(): boolean {
-  return props.user.friendshipStatus === "new";
-}
-
-function showWaitIcon(): boolean {
-  return props.user.friendshipStatus === "wait";
-}
-
-function showFriendIcon(): boolean {
-  return props.user.friendshipStatus === "friend";
-}
-
-function onAddFriend(event: PointerEvent) {
-  event.stopPropagation();
-  event.preventDefault();
-
-  // TODO: store.initFriendship();
-  console.log("event: ", event);
-}
 </script>
 
 <template>
@@ -37,13 +18,10 @@ function onAddFriend(event: PointerEvent) {
     <template v-if="props.showActions">
       <q-separator vertical/>
 
-      <q-item-section side>
-        <q-btn v-on:click="onAddFriend" v-if="showAddButton()" flat round icon="add" class="text-blue" />
-
-        <q-icon v-if="showFriendIcon()" size="3em" class="text-green" name="grade" />
-
-        <q-icon v-if="showWaitIcon()" size="3em" class="text-yellow" name="watch_later" />
-      </q-item-section>
+      <ProfileFriendshipStatus
+          :userId="props.user.id"
+          :friendshipStatus="props.user.friendshipStatus"
+      />
     </template>
   </q-item>
 </template>
