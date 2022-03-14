@@ -3,7 +3,7 @@ import { useUserStore } from "@/stores/user";
 import type { User } from "@/models/user";
 
 const userStore = useUserStore();
-const currentUser: User = userStore.currentUser as User;
+const currentUser = userStore.currentUser as User;
 </script>
 
 <template>
