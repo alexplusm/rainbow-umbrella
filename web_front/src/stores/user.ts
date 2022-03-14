@@ -59,15 +59,18 @@ export const useUserStore = defineStore({
       this.$state.auth.sessionId = id;
     },
 
-    async login(login: string, password: string) {
-      const sessionId = await api.login(login, password); // TODO: OR ERROR
+    async login(login: string, password: string): Promise<IApiResponse<string>> {
+      const response = await api.login(login, password); // TODO: OR ERROR
 
-      this.setSessionId(sessionId, login);
+      if (response.hasError) {
+        return response;
+      }
 
-      console.log("this.$state.sessionId", this.$state.auth);
-
+      this.setSessionId(response.data, login);
       await this.retrieve(login);
       await router.push({name: 'user', params: {login}, replace: true});
+
+      return response;
     },
 
     async retrieveUserList() {

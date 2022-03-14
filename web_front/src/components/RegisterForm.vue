@@ -51,7 +51,7 @@ function onSubmit () {
         color: 'red-4',
         textColor: 'white',
         icon: 'cloud_done',
-        message: apiResp.notifyMessage as string
+        message: apiResp.notifyMessage
       });
     }
   });

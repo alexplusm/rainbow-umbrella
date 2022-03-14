@@ -11,8 +11,14 @@ const password = ref("");
 
 function onSubmit () {
   userStore.login(login.value, password.value).then(data => {
-    console.log("data: ", data);
-    // TODO: process ERROR
+    if (data.hasError) {
+      $q.notify({
+        color: 'red-4',
+        textColor: 'white',
+        icon: 'cloud_done',
+        message: data.notifyMessage
+      });
+    }
   });
 }
 </script>

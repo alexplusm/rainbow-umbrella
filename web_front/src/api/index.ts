@@ -4,15 +4,15 @@ import { User } from "@/models/user";
 
 export interface IApiResponse<T=null> {
     hasError: boolean;
-    notifyMessage: string | null;
-    data: T | null;
+    notifyMessage: string;
+    data: T;
 }
 
 function buildApiResponse<T=null>(): IApiResponse<T> {
     return {
         hasError: false,
-        notifyMessage: null,
-        data: null
+        notifyMessage: "",
+        data: {}
     } as IApiResponse<T>;
 }
 
@@ -32,13 +32,25 @@ async function registerUser(formData: FormData): Promise<IApiResponse> {
     })
 }
 
-async function login(login: string, password: string): Promise<string> {
+async function login(login: string, password: string): Promise<IApiResponse<string>> {
     const data = {login, password};
 
     return await fetch("/api/v1/users/login", {method: "POST", body: JSON.stringify(data)})
-        .then(response => response.json())
-        .then(data => data["sessionID"])
-        .catch(data => data);
+        .then(async resp => {
+            const response = buildApiResponse<string>();
+            response.hasError = resp.status > 399;
+
+            if (resp.status === 404) {
+                response.notifyMessage = "User not found"
+                return response;
+            }
+
+            const data = await resp.json()
+
+            response.data = data["sessionID"];
+
+            return response;
+        });
 }
 
 async function retrieveUser(login: string, headers: Headers): Promise<User> {
