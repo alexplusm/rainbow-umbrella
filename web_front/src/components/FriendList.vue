@@ -13,19 +13,19 @@ const userStore = useUserStore();
       <ProfileMini
         class="profile_mini"
         :user="userStore.currentUser"
-        :showActions="false"
+        :showActions="true"
       />
 
       <ProfileMini
         class="profile_mini"
         :user="userStore.currentUser"
-        :showActions="false"
+        :showActions="true"
       />
 
       <ProfileMini
         class="profile_mini"
         :user="userStore.currentUser"
-        :showActions="false"
+        :showActions="true"
       />
     </q-list>
   </section>
