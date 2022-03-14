@@ -30,19 +30,15 @@ function onSubmit () {
 
       <q-form @submit="onSubmit">
         <q-input
-          filled
           v-model="login"
           label="Login"
-          lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
 
         <q-input
-          filled
           v-model="password"
           label="Password"
           type="password"
-          lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
 

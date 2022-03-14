@@ -28,6 +28,7 @@ function onReset() {
 
 function onSubmit () {
   const formData = new FormData()
+
   formData.append("login", login.value)
   formData.append("password", password.value)
   formData.append("firstName", firstName.value)
@@ -71,44 +72,41 @@ function addInterest (val: string, done: any) {
     >
       <div class="row">
         <q-input
-            class="col"
-            filled
-            v-model="login"
-            label="Login"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+          class="col"
+          v-model="login"
+          label="Login"
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
         <q-input
-            filled
-            class="col"
-            v-model="password"
-            label="Password"
-            type="password"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+          class="col"
+          v-model="password"
+          label="Password"
+          type="password"
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
       </div>
 
       <div class="row">
         <q-input
-            filled
-            class="col"
-            v-model="firstName"
-            label="First name"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+          class="col"
+          v-model="firstName"
+          label="First name"
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
         <q-input
-            filled
-            class="col"
-            v-model="lastName"
-            label="Last name"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+          class="col"
+          v-model="lastName"
+          label="Last name"
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
       </div>
 
-      <q-input filled label="Birthday" v-model="birthday" mask="date" :rules="['date']">
+      <q-input
+          label="Birthday"
+          v-model="birthday"
+          mask="date"
+          :rules="['date']"
+      >
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy ref="qDateProxy" cover transition-show="scale" transition-hide="scale">
@@ -123,30 +121,26 @@ function addInterest (val: string, done: any) {
       </q-input>
 
       <q-select
-          filled
-          v-model="gender"
-          label="Gender"
-          :options="['Male', 'Female']"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please select something']"
+        v-model="gender"
+        label="Gender"
+        :options="['Male', 'Female']"
+        :rules="[ val => val && val.length > 0 || 'Please select something']"
       />
       <q-input
-          filled
-          v-model="city"
-          label="City"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
+        v-model="city"
+        label="City"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
       <q-select
-          label="Interests"
-          filled
-          v-model="interests"
-          use-input
-          use-chips
-          multiple
-          hide-dropdown-icon
-          input-debounce="0"
-          @new-value="addInterest"
+        v-model="interests"
+        label="Interests"
+        use-input
+        use-chips
+        multiple
+        hide-dropdown-icon
+        input-debounce="0"
+        @new-value="addInterest"
       />
 
       <div>
@@ -158,7 +152,6 @@ function addInterest (val: string, done: any) {
 </template>
 
 <style scoped>
-
 .col + .col {
   margin-left: 1rem;
 }
