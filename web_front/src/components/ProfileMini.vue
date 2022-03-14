@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from "@/models/user";
+import type {User} from "@/models/user";
 
 const props = defineProps<{user: User, showActions: boolean}>();
 
@@ -17,39 +17,39 @@ function showFriendIcon(): boolean {
 </script>
 
 <template>
-  <div>
-    <q-card class="card" flat bordered>
-      <q-card-section horizontal>
-        <template v-if="props.showActions">
-          <q-card-actions class="actions">
-            <q-btn v-if="showAddButton()" flat round icon="add" class="text-blue" />
-            <q-icon v-if="showFriendIcon()" size="3em" class="text-green" name="grade"></q-icon>
-            <q-icon v-if="showWaitIcon()" size="3em" class="text-yellow" name="watch_later"></q-icon>
-          </q-card-actions>
+  <q-item clickable v-ripple>
 
-          <q-separator vertical />
-        </template>
+    <q-item-section avatar>
+      <q-avatar>
+        <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+      </q-avatar>
+    </q-item-section>
 
-        <q-item>
-          <q-item-section avatar>
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-            </q-avatar>
-          </q-item-section>
+    <q-item-section>{{ props.user.firstName }} {{ props.user.lastName }}</q-item-section>
 
-          <q-item-section>
-            <q-item-label class="user_name ellipsis">
-              {{ props.user.firstName }} {{ props.user.lastName }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-card-section>
-    </q-card>
-  </div>
+
+
+    <q-separator vertical></q-separator>
+
+    ({{ props.showActions }})
+
+    <q-item-section side>
+<!--      <q-item-label caption>5 min ago</q-item-label>-->
+<!--      <q-icon size="2em" name="star" color="yellow" />-->
+
+      <q-btn v-if="showAddButton()" flat round icon="add" class="text-blue" />
+      <q-icon v-if="showFriendIcon()" size="3em" class="text-green" name="grade"></q-icon>
+      <q-icon v-if="showWaitIcon()" size="3em" class="text-yellow" name="watch_later"></q-icon>
+
+
+    </q-item-section>
+
+<!--    <q-item-section>-->
+<!--      <q-icon color="primary" name="bluetooth" />-->
+<!--    </q-item-section>-->
+  </q-item>
 </template>
 
+
 <style scoped>
-.user_name {
-  width: 200px;
-}
 </style>
