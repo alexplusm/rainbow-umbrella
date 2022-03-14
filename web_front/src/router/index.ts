@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from "@/stores/user";
 import WelcomeView from '@/views/WelcomeView.vue'
 import UserView from '@/views/UserView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
-import { useUserStore } from "@/stores/user";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

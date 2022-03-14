@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView } from 'vue-router';
+import { useAppStore } from "@/stores/app";
+
+const appStore = useAppStore();
 </script>
 
 <template>
   <header>
-    <div class="logo">
-      🦄 & 🌈
-    </div>
+    <router-link class="logo" :to="appStore.logoNavLink">
+      <q-btn size="0.8em" flat style="color: #FF0080" label="🦄 & 🌈" />
+    </router-link>
+
   </header>
   <RouterView class="main"/>
 </template>
@@ -31,6 +35,8 @@ header {
 .logo {
   display: block;
   font-size: 24px;
+  text-decoration: none;
+  color: black;
 }
 
 .main {
