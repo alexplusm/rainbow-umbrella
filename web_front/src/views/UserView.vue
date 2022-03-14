@@ -21,7 +21,6 @@ section {
 }
 
 .profile {
-  height: 300px;
   width: 250px;
 }
 

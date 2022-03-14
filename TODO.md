@@ -5,3 +5,5 @@
 5) [] [back] add friendship
 6) [] [back] add interests
 7) [+] [front] use q-list instead q-card for profile
+8) [] [front] Profile comp: add interests tags
+9) 
