@@ -1,5 +1,6 @@
 export class User {
     id: number;
+    avatarUrl: string;
     friendshipId: number;
     friendshipStatus: string;
     login: string;
@@ -12,6 +13,7 @@ export class User {
 
     constructor(value: any) {
         this.id = value['id'];
+        this.avatarUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
         this.friendshipId = value['friendshipId'];
         this.friendshipStatus = "new";
 
