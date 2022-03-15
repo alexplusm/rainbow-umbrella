@@ -9,3 +9,6 @@ run:
 
 build:
 	go build -o $(NAME) $(SRC)
+
+gen_users:
+	go run tests/data/index.go
