@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
-import { useUserStore } from "@/stores/user";
+import { useAuthStore } from "@/stores/auth";
 
 export const useAppStore = defineStore({
     id: "app",
     state: () => ({}),
     getters: {
         logoNavLink() {
-            const userStore = useUserStore();
+            const authStore = useAuthStore()
 
-            if (userStore.currentUser === null) {
+            if (authStore.user === null) {
                 return {name: 'welcome'};
             }
-            return {name: 'user', params: {login: userStore.currentUser.login}};
+            return {name: 'user', params: {login: authStore.login}};
         }
     },
     actions: {}

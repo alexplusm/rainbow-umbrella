@@ -14,10 +14,12 @@ function buildAuthHeaders(sessionId: string): Headers {
 
 interface IUserStore {
   auth: {
-    sessionId: string,
-    login: string // TODO: current User
+    sessionId: string;
+    login: string; // TODO: current User
+    currentUser: User;
   },
-  currentUser: null | User,
+  currentUser: User,
+  chosenUser: User,
   friendList: IFriendList,
   users: User[]
 }
@@ -29,13 +31,15 @@ export const useUserStore = defineStore({
     auth: {
       sessionId: localStorage.getItem("sessionId"),
       login: localStorage.getItem("currLogin"),
+      currentUser: {} as User,
     },
     friendList: {
       friends: [],
       requested: [],
       waitingForResponse: [],
     },
-    currentUser: null,
+    currentUser: {} as User, // TODO: remove
+    chosenUser: {} as User,
     users: [] as User[]
   } as IUserStore),
   getters: {
@@ -51,27 +55,27 @@ export const useUserStore = defineStore({
       console.log("NEW user", user);
     },
 
-    setSessionId(id: string, login: string) {
-      localStorage.setItem("sessionId", id);
-      localStorage.setItem("currLogin", login);
+    // setSessionId(id: string, login: string) {
+    //   localStorage.setItem("sessionId", id);
+    //   localStorage.setItem("currLogin", login);
+    //
+    //   this.$state.auth.login = login;
+    //   this.$state.auth.sessionId = id;
+    // },
 
-      this.$state.auth.login = login;
-      this.$state.auth.sessionId = id;
-    },
-
-    async login(login: string, password: string): Promise<IApiResponse<string>> {
-      const response = await api.login(login, password); // TODO: OR ERROR
-
-      if (response.hasError) {
-        return response;
-      }
-
-      this.setSessionId(response.data, login);
-      await this.retrieve(login);
-      await router.push({name: 'user', params: {login}, replace: true});
-
-      return response;
-    },
+    // async login(login: string, password: string): Promise<IApiResponse<string>> {
+    //   const response = await api.login(login, password); // TODO: OR ERROR
+    //
+    //   if (response.hasError) {
+    //     return response;
+    //   }
+    //
+    //   this.setSessionId(response.data, login);
+    //   await this.retrieve(login);
+    //   await router.push({name: 'user', params: {login}, replace: true});
+    //
+    //   return response;
+    // },
 
     async retrieveUserList() {
       const users: User[] = await api.userList();
@@ -94,8 +98,13 @@ export const useUserStore = defineStore({
     },
 
     async createFriendRequest(targetId: number) {
-      console.log("createFriendRequest: targetId: ", targetId);
-      // TODO: refresh friendList and userList OR update status by "targetId"
+      const response = await api.createFriendship(0, targetId);
+
+      if (response.hasError) {
+        console.log("[createFriendRequest]: error: ", response);
+      } else {
+        // TODO: refresh friendList and userList OR update status by "targetId"
+      }
     }
   }
 });

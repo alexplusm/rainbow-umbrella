@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { useUserStore } from "@/stores/user";
+import { useAuthStore } from "@/stores/auth";
 
 const $q = useQuasar();
-const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const login = ref("");
 const password = ref("");
 
 function onSubmit () {
-  userStore.login(login.value, password.value).then(data => {
+  authStore.login(login.value, password.value).then(data => {
     if (data.hasError) {
       $q.notify({
         color: 'red-4',

@@ -47,10 +47,10 @@ func main() {
 	)
 
 	// TODO: add NewSessionMiddleware
-	r.Post("/api/v1/friendship", friendshipController.Create)
-	r.Post("/api/v1/friendship/approve", friendshipController.Approve)
-	r.Post("/api/v1/friendship/decline", friendshipController.Decline)
-	r.Get("/api/v1/friendship/{login}", friendshipController.List)
+	r.Post("/api/v1/friendships", friendshipController.Create)
+	r.Post("/api/v1/friendships/approve", friendshipController.Approve)
+	r.Post("/api/v1/friendships/decline", friendshipController.Decline)
+	r.Get("/api/v1/friendships/{login}", friendshipController.List)
 
 	log.Printf("Start app on: %v", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), r); err != nil {

@@ -96,6 +96,19 @@ async function userList(): Promise<User[]> {
         });
 }
 
+async function createFriendship(requestingUserId: number, targetingUserId: number): Promise<IApiResponse> {
+    const body = JSON.stringify({
+        requestingUserId,
+        targetingUserId
+    });
+
+    return fetch("/api/v1/friendships", {method: "POST",  body})
+        .then(resp => {
+            const response = buildApiResponse();
+
+            return response;
+        });
+}
 
 export const api = {
     registerUser,
@@ -103,4 +116,6 @@ export const api = {
     retrieveUser,
     retrieveFriendList,
     userList,
+
+    createFriendship,
 }
