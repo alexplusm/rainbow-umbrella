@@ -1,21 +1,12 @@
 import { defineStore } from 'pinia'
-import router from "@/router";
 import { api } from "@/api";
 import type { IApiResponse } from "@/api";
 import type { User, IFriendList } from "@/models/user";
+import { useAuthStore } from "@/stores/auth";
 
-function buildAuthHeaders(sessionId: string): Headers {
-  const headers = new Headers();
-
-  headers.append('X-SessionId', sessionId);
-
-  return headers;
-}
 
 interface IUserStore {
   auth: {
-    sessionId: string;
-    login: string; // TODO: current User
     currentUser: User;
   },
   currentUser: User,
@@ -29,8 +20,6 @@ export const useUserStore = defineStore({
   id: 'user',
   state: () =>({
     auth: {
-      sessionId: localStorage.getItem("sessionId"),
-      login: localStorage.getItem("currLogin"),
       currentUser: {} as User,
     },
     friendList: {
@@ -43,39 +32,17 @@ export const useUserStore = defineStore({
     users: [] as User[]
   } as IUserStore),
   getters: {
-    sessionId: state => state.auth.sessionId,
-    usersList: state => state.users,
+    usersList: state => state.users
   },
   actions:{
     async retrieve(login: string) {
-      const user: User = await api.retrieveUser(login, buildAuthHeaders(this.sessionId));
+      const user = await api.retrieveUser(login, useAuthStore().authHeaders);
 
+      // TODO: RM!
       this.$state.currentUser = user;
 
       console.log("NEW user", user);
     },
-
-    // setSessionId(id: string, login: string) {
-    //   localStorage.setItem("sessionId", id);
-    //   localStorage.setItem("currLogin", login);
-    //
-    //   this.$state.auth.login = login;
-    //   this.$state.auth.sessionId = id;
-    // },
-
-    // async login(login: string, password: string): Promise<IApiResponse<string>> {
-    //   const response = await api.login(login, password); // TODO: OR ERROR
-    //
-    //   if (response.hasError) {
-    //     return response;
-    //   }
-    //
-    //   this.setSessionId(response.data, login);
-    //   await this.retrieve(login);
-    //   await router.push({name: 'user', params: {login}, replace: true});
-    //
-    //   return response;
-    // },
 
     async retrieveUserList() {
       const users: User[] = await api.userList();
@@ -86,7 +53,7 @@ export const useUserStore = defineStore({
     },
 
     async retrieveFriendList(login: string) {
-      const friendList: IFriendList = await api.retrieveFriendList(login, buildAuthHeaders(this.sessionId));
+      const friendList = await api.retrieveFriendList(login, useAuthStore().authHeaders);
 
       console.log("[friendList]", friendList);
 

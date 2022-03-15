@@ -73,7 +73,7 @@ async function retrieveUser(login: string, headers: Headers): Promise<User> {
 }
 
 async function retrieveFriendList(login: string, headers: Headers): Promise<IFriendList> {
-    return fetch(`/api/v1/friendship/${login}`, {headers})
+    return fetch(`/api/v1/friendships/${login}`, {headers})
         .then(data => data.json())
         .then(value => {
             return {
