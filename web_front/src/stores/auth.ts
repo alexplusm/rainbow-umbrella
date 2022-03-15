@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import router from "@/router";
 import { api } from "@/api";
 import type { IApiResponse } from "@/api";
