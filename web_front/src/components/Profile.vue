@@ -42,10 +42,10 @@ const currentUser = userStore.currentUser;
       <div class="text-h6">Interests</div>
 
       <q-badge
-          class="q-ml-sm q-mb-sm"
-          rounded color="green"
-          v-for="interest in currentUser.interests"
-          :label="interest"
+        class="q-ml-sm q-mb-sm"
+        rounded color="green"
+        v-for="interest in currentUser.interests"
+        :label="interest"
       />
     </q-card-section>
   </q-card>

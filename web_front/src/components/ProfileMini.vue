@@ -3,10 +3,11 @@ import ProfileFriendshipStatus from "@/components/ProfileFriendshipStatus.vue";
 import type { User } from "@/models/user";
 
 const props = defineProps<{user: User, showActions: boolean}>();
+const navigationParams = {name: 'user', params: {login: props.user.login}};
 </script>
 
 <template>
-  <q-item clickable v-ripple :to="{name: 'user', params: {login: props.user.login}}">
+  <q-item clickable v-ripple :to="navigationParams">
     <q-item-section avatar>
       <q-avatar>
         <img alt="avatar" :src="props.user.avatarUrl">
@@ -16,11 +17,11 @@ const props = defineProps<{user: User, showActions: boolean}>();
     <q-item-section>{{ props.user.firstName }} {{ props.user.lastName }}</q-item-section>
 
     <template v-if="props.showActions">
-      <q-separator vertical/>
+      <q-separator vertical />
 
       <ProfileFriendshipStatus
-          :userId="props.user.id"
-          :friendshipStatus="props.user.friendshipStatus"
+        :userId="props.user.id"
+        :friendshipStatus="props.user.friendshipStatus"
       />
     </template>
   </q-item>
