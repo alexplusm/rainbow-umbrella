@@ -32,12 +32,21 @@ export const useAuthStore = defineStore({
             return response;
         },
 
+        async logout() {
+            localStorage.removeItem("sessionId");
+            localStorage.removeItem("login");
+
+            await router.push({name: 'welcome', replace: true});
+
+            api.logout()
+        },
+
         setSessionId(id: string, login: string) {
             localStorage.setItem("sessionId", id);
             localStorage.setItem("login", login);
 
             this.$state.login = login;
             this.$state.sessionId = id;
-        },
+        }
     }
 })

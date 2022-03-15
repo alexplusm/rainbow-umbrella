@@ -53,6 +53,10 @@ async function login(login: string, password: string): Promise<IApiResponse<stri
         });
 }
 
+async function logout() {
+    // TODO: implements
+}
+
 async function retrieveUser(login: string, headers: Headers): Promise<User> {
     return await fetch(`/api/v1/users/${login}`, {headers})
         .then(resp => {
@@ -111,8 +115,10 @@ async function createFriendship(requestingUserId: number, targetingUserId: numbe
 }
 
 export const api = {
-    registerUser,
     login,
+    logout,
+
+    registerUser,
     retrieveUser,
     retrieveFriendList,
     userList,
