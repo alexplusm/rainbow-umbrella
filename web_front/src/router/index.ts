@@ -25,24 +25,19 @@ const router = createRouter({
   ]
 });
 
-router.beforeResolve((to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   const userStore = useUserStore();
 
   console.log("router.beforeResolve: route name: ", to.name);
 
   if (to.name === 'user') {
     const login = to.params['login'] as string;
-
     console.log("router.beforeResolve: user route: ", login);
 
-    // TODO: make action?
-    userStore.retrieve(login)
-        .then(() => userStore.retrieveFriendList(login))
-        .then(() => userStore.retrieveUserList())
-        .then(() => next());
-  } else {
-    next();
+    await userStore.uploadDataForUser(login);
   }
+
+  next();
 })
 
 export default router

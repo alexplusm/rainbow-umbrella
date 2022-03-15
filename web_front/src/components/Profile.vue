@@ -3,7 +3,6 @@ import ProfileFriendshipStatus from "@/components/ProfileFriendshipStatus.vue";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
-const currentUser = userStore.currentUser;
 </script>
 
 <template>
@@ -11,18 +10,20 @@ const currentUser = userStore.currentUser;
     <q-item>
       <q-item-section avatar>
         <q-avatar>
-          <img alt="avatar" :src="currentUser.avatarUrl">
+          <img alt="avatar" :src="userStore.currentUser.avatarUrl">
         </q-avatar>
       </q-item-section>
 
       <q-item-section>
-        <q-item-label>{{ currentUser.firstName }} {{ currentUser.lastName }}</q-item-label>
-        <q-item-label caption>{{ currentUser.login }}</q-item-label>
+        <q-item-label>
+          {{ userStore.currentUser.firstName }} {{ userStore.currentUser.lastName }}
+        </q-item-label>
+        <q-item-label caption>{{ userStore.currentUser.login }}</q-item-label>
       </q-item-section>
 
       <ProfileFriendshipStatus
-          :userId="currentUser.id"
-          :friendshipStatus="currentUser.friendshipStatus"
+          :userId="userStore.currentUser.id"
+          :friendshipStatus="userStore.currentUser.friendshipStatus"
       />
     </q-item>
 
@@ -30,9 +31,9 @@ const currentUser = userStore.currentUser;
 
     <q-card-section>
       <ul>
-        <li>Age: {{ currentUser.age }}</li>
-        <li>City: {{ currentUser.city}}</li>
-        <li>Gender: {{ currentUser.gender }}</li>
+        <li>Age: {{ userStore.currentUser.age }}</li>
+        <li>City: {{ userStore.currentUser.city}}</li>
+        <li>Gender: {{ userStore.currentUser.gender }}</li>
       </ul>
     </q-card-section>
 
@@ -44,7 +45,7 @@ const currentUser = userStore.currentUser;
       <q-badge
         class="q-ml-sm q-mb-sm"
         rounded color="green"
-        v-for="interest in currentUser.interests"
+        v-for="interest in userStore.currentUser.interests"
         :label="interest"
       />
     </q-card-section>

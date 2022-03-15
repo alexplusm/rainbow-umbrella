@@ -6,58 +6,42 @@ import { useAuthStore } from "@/stores/auth";
 
 
 interface IUserStore {
-  auth: {
-    currentUser: User;
-  },
   currentUser: User,
-  chosenUser: User,
   friendList: IFriendList,
   users: User[]
 }
 
 export const useUserStore = defineStore({
-  // id is required so that Pinia can connect the store to the devtools
   id: 'user',
   state: () =>({
-    auth: {
-      currentUser: {} as User,
-    },
+    currentUser: {} as User,
     friendList: {
       friends: [],
       requested: [],
       waitingForResponse: [],
     },
-    currentUser: {} as User, // TODO: remove
-    chosenUser: {} as User,
     users: [] as User[]
   } as IUserStore),
   getters: {
     usersList: state => state.users
   },
   actions:{
-    async retrieve(login: string) {
-      const user = await api.retrieveUser(login, useAuthStore().authHeaders);
+    async uploadDataForUser(login: string) {
+      this.$state.currentUser = await this.retrieve(login);
+      await this.retrieveFriendList(login);
+      await this.retrieveUserList();
+    },
 
-      // TODO: RM!
-      this.$state.currentUser = user;
-
-      console.log("NEW user", user);
+    async retrieve(login: string): Promise<User> {
+      return await api.retrieveUser(login, useAuthStore().authHeaders);
     },
 
     async retrieveUserList() {
-      const users: User[] = await api.userList();
-
-      console.log("BEFORE set value: ", users);
-
-      this.$state.users = users;
+      this.$state.users = await api.userList();
     },
 
     async retrieveFriendList(login: string) {
-      const friendList = await api.retrieveFriendList(login, useAuthStore().authHeaders);
-
-      console.log("[friendList]", friendList);
-
-      this.$state.friendList = friendList;
+      this.$state.friendList = await api.retrieveFriendList(login, useAuthStore().authHeaders);
     },
 
     async userRegister(formData: FormData): Promise<IApiResponse> {
