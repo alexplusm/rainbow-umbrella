@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/go-sql-driver/mysql"
+
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/dao"
@@ -21,6 +23,9 @@ func (r friendshipRepo) InsertOne(friendship *dao.Friendship) error {
 	q := buildInsertOneFriendshipQuery(friendship)
 
 	if _, err := r.dbClient.Exec(q.Query, q.Args...); err != nil {
+		if driverErr, ok := err.(*mysql.MySQLError); ok {
+			fmt.Println("[friendshipRepo.InsertOne]: ", driverErr.Number, driverErr.Message)
+		}
 		return fmt.Errorf("[friendshipRepo.InsertOne][1]: %+v", err)
 	}
 

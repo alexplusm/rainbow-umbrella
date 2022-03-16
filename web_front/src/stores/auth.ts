@@ -2,17 +2,21 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import { api } from "@/api";
 import type { IApiResponse } from "@/api";
+import type {User} from "@/models/user";
+import { useUserStore } from "@/stores/user";
 
 interface IAuthStore {
     sessionId: string;
     login: string;
+    user: User;
 }
 
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
         sessionId: localStorage.getItem("sessionId"),
-        login: localStorage.getItem("login")
+        login: localStorage.getItem("login"),
+        user: {}
     } as IAuthStore),
     getters: {
         authHeaders: (state): Headers => new Headers({'X-SessionId': state.sessionId})
@@ -26,6 +30,7 @@ export const useAuthStore = defineStore({
             }
 
             this.setSessionId(response.data, login);
+            await this.setUser();
 
             await router.push({name: 'user', params: {login}, replace: true});
 
@@ -36,9 +41,14 @@ export const useAuthStore = defineStore({
             localStorage.removeItem("sessionId");
             localStorage.removeItem("login");
 
+            await api.logout();
             await router.push({name: 'welcome', replace: true});
+        },
 
-            api.logout()
+        async setUser() {
+            if (!this.$state.user.id) {
+                this.$state.user = await useUserStore().retrieve(this.$state.login);
+            }
         },
 
         setSessionId(id: string, login: string) {

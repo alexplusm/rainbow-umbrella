@@ -34,7 +34,6 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: check userID existence
 	body := new(dto.Friendship)
 
 	if err = json.Unmarshal(rawBody, body); err != nil {
@@ -42,6 +41,9 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 		log.Println(fmt.Errorf("[friendshipController.Create][2]: %+v", err))
 		return
 	}
+
+	// TODO: check userID existence
+	fmt.Printf("body: %+v\n", body)
 
 	if err = c.friendshipService.Create(body.ToBO()); err != nil {
 		processError(w, http.StatusInternalServerError, nil)

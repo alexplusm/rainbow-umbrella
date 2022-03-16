@@ -49,6 +49,8 @@ export const useUserStore = defineStore({
     },
 
     async createFriendRequest(targetId: number) {
+      useAuthStore()
+
       const response = await api.createFriendship(0, targetId);
 
       if (response.hasError) {
