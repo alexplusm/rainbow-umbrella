@@ -9,6 +9,7 @@ import (
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/dao"
+	"rainbow-umbrella/internal/utils"
 )
 
 type friendshipRepo struct {
@@ -24,7 +25,28 @@ func (r friendshipRepo) InsertOne(friendship *dao.Friendship) error {
 
 	if _, err := r.dbClient.Exec(q.Query, q.Args...); err != nil {
 		if driverErr, ok := err.(*mysql.MySQLError); ok {
-			fmt.Println("[friendshipRepo.InsertOne]: ", driverErr.Number, driverErr.Message)
+
+			fmt.Println("[driverErr, ok][1]:", driverErr.Number, "___", driverErr, ok) // TODO: use stack!!!
+
+			if driverErr.Number == 1452 {
+				return fmt.Errorf("[friendshipRepo.InsertOne]: %w: %v", utils.AppErrorAlreadyExist, err.Error())
+			}
+
+			//err = errors.Wrap(err, "azaza")
+
+			//utils.WrapErr()
+
+			//err = fmt.Errorf("kek: %w", err)
+
+			//driverErr1, ok1 := err.(*mysql.MySQLError)
+			//
+			//fmt.Println("[driverErr, ok][2]", driverErr1, ok1)
+
+			return fmt.Errorf("[friendshipRepo.InsertOne][44]: %w", err)
+
+			//fmt.Println("[friendshipRepo.InsertOne]: ", driverErr.Number, driverErr.Message)
+			//
+			//return &utils.AppError{ErrorCode: utils.AppErrorAlreadyExistOld, Err: err}
 		}
 		return fmt.Errorf("[friendshipRepo.InsertOne][1]: %+v", err)
 	}

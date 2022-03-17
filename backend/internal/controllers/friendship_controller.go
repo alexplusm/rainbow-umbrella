@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/dto"
+	"rainbow-umbrella/internal/utils"
 )
 
 type friendshipController struct {
@@ -46,8 +48,16 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("body: %+v\n", body)
 
 	if err = c.friendshipService.Create(body.ToBO()); err != nil {
-		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[friendshipController.Create][3]: %+v", err))
+		statusCode := http.StatusInternalServerError
+
+		fmt.Println("MUST BE TRUE: ", errors.Is(err, utils.AppErrorAlreadyExist))
+
+		if errors.Is(err, utils.AppErrorAlreadyExist) {
+			statusCode = http.StatusConflict
+		}
+
+		processError(w, statusCode, nil)
+		log.Println(fmt.Errorf("[friendshipController.Create][3]: %w", err))
 		return
 	}
 

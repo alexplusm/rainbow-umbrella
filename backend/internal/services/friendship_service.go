@@ -18,7 +18,7 @@ func NewFriendshipService(friendshipRepo interfaces.IFriendshipRepo) interfaces.
 
 func (s friendshipService) Create(value *bo.Friendship) error {
 	if err := s.friendshipRepo.InsertOne(new(dao.Friendship).FromBO(value)); err != nil {
-		return fmt.Errorf("[friendshipService.Create][1]: %+v", err)
+		return fmt.Errorf("[friendshipService.Create][1]: %w", err)
 	}
 
 	return nil
