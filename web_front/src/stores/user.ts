@@ -3,6 +3,7 @@ import { api } from "@/api";
 import type { IApiResponse } from "@/api";
 import type { User, IFriendList } from "@/models/user";
 import { useAuthStore } from "@/stores/auth";
+import { FriendshipStatus } from "@/models/user";
 
 
 interface IUserStore {
@@ -49,14 +50,19 @@ export const useUserStore = defineStore({
     },
 
     async createFriendRequest(targetId: number) {
-      useAuthStore()
-
-      const response = await api.createFriendship(0, targetId);
+      const response = await api.createFriendship(useAuthStore().user.id, targetId);
 
       if (response.hasError) {
         console.log("[createFriendRequest]: error: ", response);
       } else {
-        // TODO: refresh friendList and userList OR update status by "targetId"
+        this.$state.users = this.$state.users.map(user => {
+          if (user.id === targetId) {
+            user.friendshipStatus = FriendshipStatus.Wait;
+            this.$state.friendList.waitingForResponse.push(user);
+          }
+
+          return user;
+        });
       }
     }
   }
