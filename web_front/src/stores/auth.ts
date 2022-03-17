@@ -5,6 +5,7 @@ import type { IApiResponse } from "@/api";
 import type {User} from "@/models/user";
 import { useUserStore } from "@/stores/user";
 
+
 interface IAuthStore {
     sessionId: string;
     login: string;
@@ -47,7 +48,8 @@ export const useAuthStore = defineStore({
 
         async setUser() {
             if (!this.$state.user.id) {
-                this.$state.user = await useUserStore().retrieve(this.$state.login);
+                const data = await useUserStore().retrieve(this.$state.login);
+                this.$state.user = data.data;
             }
         },
 
@@ -59,4 +61,4 @@ export const useAuthStore = defineStore({
             this.$state.sessionId = id;
         }
     }
-})
+});

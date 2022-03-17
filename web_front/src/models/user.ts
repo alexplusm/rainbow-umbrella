@@ -22,7 +22,7 @@ export class User {
         this.lastName = value['lastName'];
         this.city = value['city'];
         this.gender = value['gender'];
-        this.age = value['age'];
+        this.age = 23; // TODO: value['age'];
         this.interests = ["one", "two", "azazazazazaz", "lololololololol", "wtf"];
     }
 }

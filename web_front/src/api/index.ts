@@ -1,4 +1,3 @@
-import router from "@/router";
 import type { IFriendList } from "@/models/user";
 import { User } from "@/models/user";
 
@@ -57,22 +56,22 @@ async function logout() {
     // TODO: implements
 }
 
-async function retrieveUser(login: string, headers: Headers): Promise<User> {
+async function retrieveUser(login: string, headers: Headers): Promise<IApiResponse<User>> {
     return await fetch(`/api/v1/users/${login}`, {headers})
         .then(resp => {
-            console.log("RESP:" , resp);
-            if (resp.status === 401) {
-                router.push({name: 'welcome'});
-            }
-            return resp;
-        })
-        .then(resp => resp.json())
+            const response = buildApiResponse<User>();
+            response.hasError = resp.status > 399;
 
-        .then(data => new User(data))
-        .then(user => {
-            user.age = 666;
-            console.log("user", user);
-            return user;
+            if (resp.status === 401) {
+                response.notifyMessage = "Unauthorized";
+
+                return response;
+            }
+
+            const data = resp.json();
+            response.data = new User(data);
+
+            return response;
         });
 }
 
@@ -124,4 +123,4 @@ export const api = {
     userList,
 
     createFriendship,
-}
+};

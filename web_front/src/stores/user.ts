@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import router from "@/router";
 import { api } from "@/api";
 import type { IApiResponse } from "@/api";
 import type { User, IFriendList } from "@/models/user";
@@ -7,9 +8,9 @@ import { FriendshipStatus } from "@/models/user";
 
 
 interface IUserStore {
-  currentUser: User,
-  friendList: IFriendList,
-  users: User[]
+  currentUser: User;
+  friendList: IFriendList;
+  users: User[];
 }
 
 export const useUserStore = defineStore({
@@ -28,12 +29,18 @@ export const useUserStore = defineStore({
   },
   actions:{
     async uploadDataForUser(login: string) {
-      this.$state.currentUser = await this.retrieve(login);
+      const userResponse = await this.retrieve(login);
+      if (userResponse.hasError) {
+        await useAuthStore().logout()
+        return router.push({name: 'welcome'});
+      }
+      this.$state.currentUser = userResponse.data;
+
       await this.retrieveFriendList(login);
       await this.retrieveUserList();
     },
 
-    async retrieve(login: string): Promise<User> {
+    async retrieve(login: string): Promise<IApiResponse<User>> {
       return await api.retrieveUser(login, useAuthStore().authHeaders);
     },
 
