@@ -58,7 +58,7 @@ async function logout() {
 
 async function retrieveUser(login: string, headers: Headers): Promise<IApiResponse<User>> {
     return await fetch(`/api/v1/users/${login}`, {headers})
-        .then(resp => {
+        .then(async resp => {
             const response = buildApiResponse<User>();
             response.hasError = resp.status > 399;
 
@@ -68,7 +68,7 @@ async function retrieveUser(login: string, headers: Headers): Promise<IApiRespon
                 return response;
             }
 
-            const data = resp.json();
+            const data = await resp.json();
             response.data = new User(data);
 
             return response;
@@ -91,12 +91,7 @@ async function userList(): Promise<User[]> {
     return fetch("/api/v1/users")
         .then(data => data.json())
         .then(body => body['users'])
-        .then(users => {
-            console.log("Users", users);
-
-            // TODO: wtf?
-            return (users as []).map((user) => new User(user))
-        });
+        .then(users => (users as []).map((user) => new User(user)));
 }
 
 async function createFriendship(requestingUserId: number, targetingUserId: number): Promise<IApiResponse> {
