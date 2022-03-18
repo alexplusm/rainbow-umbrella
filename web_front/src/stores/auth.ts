@@ -33,7 +33,9 @@ export const useAuthStore = defineStore({
             this.setSessionId(response.data, login);
             await this.setUser();
 
+            console.log("BEFORE REDIRECT");
             await router.push({name: 'user', params: {login}, replace: true});
+            console.log("AFTER REDIRECT");
 
             return response;
         },

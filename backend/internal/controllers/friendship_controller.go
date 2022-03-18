@@ -88,7 +88,6 @@ func (c friendshipController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//u1 := friendList.Friends[0]
-	//
 	//fmt.Printf("u1: %+v\n", u1)
 
 	responseBody, err := json.Marshal(new(dto.FriendList).FromBO(friendList))

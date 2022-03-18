@@ -45,7 +45,7 @@ export const useUserStore = defineStore({
     },
 
     async retrieveUserList() {
-      this.$state.users = await api.userList();
+      this.$state.users = await api.userList(useAuthStore().authHeaders);
     },
 
     async retrieveFriendList(login: string) {

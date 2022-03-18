@@ -35,3 +35,12 @@ func (s sessionService) Exists(sessionID string) (bool, error) {
 
 	return exists, nil
 }
+
+func (s sessionService) RetrieveUserLogin(sessionID string) (string, bool, error) {
+	login, err := s.sessionRepo.RetrieveUserLogin(sessionID)
+	if err != nil {
+		return "", false, fmt.Errorf("[sessionService.RetrieveUserLogin][1]: %w", err)
+	}
+
+	return login, login != "", nil
+}

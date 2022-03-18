@@ -15,6 +15,7 @@ type IUserService interface {
 type ISessionService interface {
 	Create(user *bo.User) (string, error)
 	Exists(sessionID string) (bool, error)
+	RetrieveUserLogin(sessionID string) (string, bool, error)
 }
 
 type IFriendshipService interface {

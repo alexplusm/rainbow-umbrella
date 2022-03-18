@@ -41,3 +41,12 @@ func (r sessionRepo) Exists(sessionID string) (bool, error) {
 
 	return value == 1, nil
 }
+
+func (r sessionRepo) RetrieveUserLogin(sessionID string) (string, error) {
+	value, err := r.client.HGet(context.TODO(), sessionID, "login").Result()
+	if err != nil {
+		return "", fmt.Errorf("[sessionRepo.RetrieveUserLogin][1]: %w", err)
+	}
+
+	return value, nil
+}

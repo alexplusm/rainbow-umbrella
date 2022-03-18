@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -34,7 +35,11 @@ func main() {
 	r.Post("/api/v1/users/register",
 		NewMethodMiddleware(http.MethodPost, userController.Register))
 
-	r.Get("/api/v1/users", userController.List)
+	r.Get("/api/v1/users",
+		NewSessionMiddleware(
+			injector.InjectSessionService(), userController.List,
+		),
+	)
 
 	r.Post("/api/v1/users/login",
 		NewMethodMiddleware(http.MethodPost, userController.Login))
@@ -89,7 +94,7 @@ func NewSessionMiddleware(sessionService interfaces.ISessionService, handler htt
 			return
 		}
 
-		ok, err := sessionService.Exists(sessionID)
+		userLogin, ok, err := sessionService.RetrieveUserLogin(sessionID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
@@ -97,6 +102,10 @@ func NewSessionMiddleware(sessionService interfaces.ISessionService, handler htt
 			}
 			return
 		}
+
+		fmt.Println("@@@ [NewSessionMiddleware]: userLogin", userLogin)
+
+		ctx := context.WithValue(r.Context(), "currentUserLogin", userLogin)
 
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
@@ -106,6 +115,6 @@ func NewSessionMiddleware(sessionService interfaces.ISessionService, handler htt
 			return
 		}
 
-		handler(w, r)
+		handler(w, r.WithContext(ctx))
 	}
 }

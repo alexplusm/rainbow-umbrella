@@ -30,5 +30,6 @@ func (o *User) CheckPassword(password string) bool {
 }
 
 type UserFilter struct {
-	ByLogin string
+	ByLogin      string
+	ExcludeLogin string
 }

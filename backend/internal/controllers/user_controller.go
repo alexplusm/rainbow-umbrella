@@ -55,9 +55,6 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("[formValue]: check", formValue)
-	fmt.Println("User", user)
-
 	ok, err := c.userService.LoginExist(user.Login)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -92,8 +89,6 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	//}
 
 	w.WriteHeader(http.StatusCreated)
-	//w.Header()
-	// TODO: write JSON with userID?
 	if _, err := w.Write([]byte("user created")); err != nil {
 		log.Printf("[userController.Register][10]: %v", err.Error())
 		return
@@ -219,9 +214,13 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c userController) List(w http.ResponseWriter, r *http.Request) {
-	// TODO: exclude currentUser
+	userFilter := new(bo.UserFilter)
 
-	users, err := c.userService.List(&bo.UserFilter{})
+	if valueRaw, ok := r.Context().Value("currentUserLogin").(string); ok {
+		userFilter.ExcludeLogin = valueRaw
+	}
+
+	users, err := c.userService.List(userFilter)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
 		log.Println(fmt.Errorf("[userController.List][1]: %+v", err))
