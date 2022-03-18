@@ -62,6 +62,10 @@ export const useUserStore = defineStore({
       if (response.hasError) {
         console.log("[createFriendRequest]: error: ", response);
       } else {
+        if (this.$state.currentUser.id !== useAuthStore().user.id) {
+          return
+        }
+
         this.$state.users = this.$state.users.map(user => {
           if (user.id === targetId) {
             user.friendshipStatus = FriendshipStatus.Wait;

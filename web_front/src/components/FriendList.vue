@@ -12,13 +12,13 @@ const tab = ref('friends');
     <div class="text-h6 q-pb-sm">Friend List</div>
 
     <q-tabs
-        v-model="tab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        narrow-indicator
+      v-model="tab"
+      dense
+      class="text-grey"
+      active-color="primary"
+      indicator-color="primary"
+      align="justify"
+      narrow-indicator
     >
       <q-tab name="friends" label="Friends">
         <q-badge color="green" floating>{{ userStore.$state.friendList.friends.length }}</q-badge>
