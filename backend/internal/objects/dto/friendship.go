@@ -29,6 +29,10 @@ type FriendList struct {
 }
 
 func (o *FriendList) FromBO(value *bo.FriendList) *FriendList {
+	o.Friends = []User{}
+	o.Requested = []User{}
+	o.WaitingForResponse = []User{}
+
 	for _, item := range value.Friends {
 		user := new(User).FromBO(&item)
 		o.Friends = append(o.Friends, *user)
