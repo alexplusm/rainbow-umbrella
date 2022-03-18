@@ -88,7 +88,7 @@ async function retrieveFriendList(login: string, headers: Headers): Promise<IFri
 }
 
 async function userList(headers: Headers): Promise<User[]> {
-    return fetch("/api/v1/users", {headers})
+    return fetch("/api/v1/users?limit=123&offset=44&search=wtf", {headers})
         .then(data => data.json())
         .then(body => body['users'])
         .then(users => (users as []).map((user) => new User(user)));

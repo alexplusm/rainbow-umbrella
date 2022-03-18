@@ -40,6 +40,9 @@ WHERE
 	{{if .ByLogin}}
 	AND login = ?
 	{{end}}
+	{{ if .ExcludeLogin }}
+	AND login != ?
+	{{ end }}
 ;
 `
 	args := make([]interface{}, 0)
@@ -51,6 +54,10 @@ WHERE
 
 	if filter.ByLogin != "" {
 		args = append(args, filter.ByLogin)
+	}
+
+	if filter.ExcludeLogin != "" {
+		args = append(args, filter.ExcludeLogin)
 	}
 
 	return &query{Query: q, Args: args}, nil

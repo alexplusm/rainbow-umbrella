@@ -7,6 +7,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 
@@ -214,7 +215,17 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c userController) List(w http.ResponseWriter, r *http.Request) {
-	userFilter := new(bo.UserFilter)
+	queryParams, err := url.ParseQuery(r.URL.RawQuery)
+	if err != nil {
+		log.Printf("[userController.List][01]: %v", err)
+	}
+
+	userFilter := new(bo.UserFilter).
+		Build().
+		SetLimitAndOffset(queryParams.Get("limit"), queryParams.Get("offset")).
+		SetSearch(queryParams.Get("search"))
+
+	fmt.Printf("\nuserFilter: %+v\n\n", userFilter)
 
 	if valueRaw, ok := r.Context().Value("currentUserLogin").(string); ok {
 		userFilter.ExcludeLogin = valueRaw
