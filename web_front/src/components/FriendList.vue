@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
+import { useAuthStore } from "@/stores/auth";
 import ProfileMini from "@/components/ProfileMini.vue";
 
 const userStore = useUserStore();
+const authStore = useAuthStore();
 const tab = ref('friends');
 </script>
 
 <template>
   <section class="wrap">
-    <div class="text-h6 q-pb-sm">Friend List</div>
-
     <q-tabs
       v-model="tab"
       dense
@@ -23,10 +23,10 @@ const tab = ref('friends');
       <q-tab name="friends" label="Friends">
         <q-badge color="green" floating>{{ userStore.$state.friendList.friends.length }}</q-badge>
       </q-tab>
-      <q-tab name="requested" label="Requested">
+      <q-tab name="requested" label="Requested" :disable="!authStore.currentUserOpened">
         <q-badge color="blue" floating>{{ userStore.$state.friendList.requested.length }}</q-badge>
       </q-tab>
-      <q-tab name="waiting" label="Waiting">
+      <q-tab name="waiting" label="Waiting" :disable="!authStore.currentUserOpened">
         <q-badge color="amber" floating>{{ userStore.$state.friendList.waitingForResponse.length }}</q-badge>
       </q-tab>
     </q-tabs>
@@ -50,7 +50,6 @@ const tab = ref('friends');
             :key="user.id"
             class="profile_mini"
             :user="user"
-            :showActions="false"
           />
         </q-list>
       </q-tab-panel>
@@ -71,7 +70,6 @@ const tab = ref('friends');
             :key="user.id"
             class="profile_mini"
             :user="user"
-            :showActions="false"
           />
         </q-list>
       </q-tab-panel>
@@ -91,7 +89,7 @@ const tab = ref('friends');
             v-for="item in userStore.$state.friendList.waitingForResponse"
             class="profile_mini"
             :user="item"
-            :showActions="false"
+            :show-approve-friendship-button="true"
           />
         </q-list>
       </q-tab-panel>

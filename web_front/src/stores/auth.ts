@@ -5,7 +5,6 @@ import type { IApiResponse } from "@/api";
 import type {User} from "@/models/user";
 import { useUserStore } from "@/stores/user";
 
-
 interface IAuthStore {
     sessionId: string;
     login: string;
@@ -20,7 +19,10 @@ export const useAuthStore = defineStore({
         user: {}
     } as IAuthStore),
     getters: {
-        authHeaders: (state): Headers => new Headers({'X-SessionId': state.sessionId})
+        authHeaders: (state): Headers => new Headers({'X-SessionId': state.sessionId}),
+        currentUserOpened: (state): boolean => {
+            return useUserStore().currentUser.id === state.user?.id;
+        }
     },
     actions: {
         async login(login: string, password: string): Promise<IApiResponse<string>> {

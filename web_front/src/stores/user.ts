@@ -75,6 +75,14 @@ export const useUserStore = defineStore({
           return user;
         });
       }
+    },
+
+    async approveFriendRequest(targetId: number) {
+      // TODO: move from waiting to friends
+    },
+
+    async declineFriendRequest(targetId: number) {
+      // TODO: rm from waiting
     }
   }
 });
