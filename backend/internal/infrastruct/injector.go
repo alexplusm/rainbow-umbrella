@@ -77,3 +77,7 @@ func (i injector) injectSessionRepo() interfaces.ISessionRepo {
 func (i injector) injectFriendshipRepo() interfaces.IFriendshipRepo {
 	return repos.NewFriendshipRepo(i.dbClient)
 }
+
+func (i injector) injectInterestRepo() interfaces.IInterestRepo {
+	return repos.NewInterestRepo(i.dbClient)
+}

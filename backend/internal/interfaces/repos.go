@@ -21,3 +21,7 @@ type IFriendshipRepo interface {
 	FriendList(userID uint64) (*dao.FriendList, error)
 	UpdateStatus(id uint64, status string) error
 }
+
+type IInterestRepo interface {
+	InsertOne()
+}
