@@ -1,6 +1,8 @@
 package interfaces
 
 import (
+	"context"
+
 	"rainbow-umbrella/internal/objects/bo"
 	"rainbow-umbrella/internal/objects/dao"
 )
@@ -23,5 +25,5 @@ type IFriendshipRepo interface {
 }
 
 type IInterestRepo interface {
-	InsertOne()
+	InsertOne(ctx context.Context, value *dao.Interest) error
 }

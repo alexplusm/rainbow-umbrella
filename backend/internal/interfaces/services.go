@@ -23,3 +23,6 @@ type IFriendshipService interface {
 	FriendList(user *bo.User) (*bo.FriendList, error)
 	UpdateStatus(id uint64, status string) error
 }
+
+type IInterestService interface {
+}
