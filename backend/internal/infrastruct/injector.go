@@ -57,7 +57,7 @@ func (i injector) InjectSessionService() interfaces.ISessionService {
 // ---
 
 func (i injector) injectUserService() interfaces.IUserService {
-	return services.NewUserService(i.injectUserRepo())
+	return services.NewUserService(i.injectUserRepo(), i.injectInterestService())
 }
 
 func (i injector) injectFriendshipService() interfaces.IFriendshipService {

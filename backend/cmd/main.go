@@ -67,7 +67,6 @@ func NewLoggerMiddleware(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("logger!!!")
 		f(w, r)
-
 	}
 }
 

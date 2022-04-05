@@ -8,7 +8,7 @@ import (
 )
 
 type IUserRepo interface {
-	InsertOne(item *dao.User) error
+	InsertOne(ctx context.Context, item *dao.User) (uint64, error)
 	List(filter *bo.UserFilter) ([]dao.User, error)
 }
 

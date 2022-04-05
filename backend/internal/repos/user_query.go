@@ -17,7 +17,8 @@ INSERT INTO users (
 	?, ?,
 	?, ?, ?, ?, ?,
 	?
-);
+)
+;
 `
 	args := []interface{}{
 		value.Login, value.HashedPassword,

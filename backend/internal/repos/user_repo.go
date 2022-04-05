@@ -1,6 +1,7 @@
 package repos
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -17,14 +18,20 @@ func NewUserRepo(dbClient *sql.DB) interfaces.IUserRepo {
 	return &userRepo{dbClient: dbClient}
 }
 
-func (r userRepo) InsertOne(item *dao.User) error {
+func (r userRepo) InsertOne(ctx context.Context, item *dao.User) (uint64, error) {
 	q := buildInsertOneUser(item)
 
-	if _, err := r.dbClient.Exec(q.Query, q.Args...); err != nil {
-		return fmt.Errorf("[userRepo.InsertOne][1]: %+v", err)
+	result, err := r.dbClient.ExecContext(ctx, q.Query, q.Args...)
+	if err != nil {
+		return 0, fmt.Errorf("[userRepo.InsertOne][1]: %w", err)
 	}
 
-	return nil
+	userID, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("[userRepo.InsertOne][2]: %w", err)
+	}
+
+	return uint64(userID), nil
 }
 
 func (r userRepo) List(filter *bo.UserFilter) ([]dao.User, error) {

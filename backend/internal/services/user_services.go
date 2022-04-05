@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -11,20 +12,27 @@ import (
 
 type userService struct {
 	userRepo interfaces.IUserRepo
+
+	interestService interfaces.IInterestService
 }
 
-func NewUserService(userRepo interfaces.IUserRepo) interfaces.IUserService {
+func NewUserService(
+	userRepo interfaces.IUserRepo,
+	interestService interfaces.IInterestService,
+) interfaces.IUserService {
 	return &userService{userRepo: userRepo}
 }
 
 func (s userService) Register(user *bo.User) error {
 	fmt.Printf("[userService]: register: %+v\n", user)
 
-	// TODO: make something with interests
-
-	if err := s.userRepo.InsertOne(new(dao.User).FromBO(user)); err != nil {
+	userID, err := s.userRepo.InsertOne(context.TODO(), new(dao.User).FromBO(user))
+	if err != nil {
 		return fmt.Errorf("[userService.Register][1]: %+v", err)
 	}
+
+	fmt.Println("NEW USER ID: ", userID)
+	// TODO: make something with interests
 
 	return nil
 }
