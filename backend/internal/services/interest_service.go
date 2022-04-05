@@ -1,6 +1,8 @@
 package services
 
-import "rainbow-umbrella/internal/interfaces"
+import (
+	"rainbow-umbrella/internal/interfaces"
+)
 
 type interestService struct {
 	interestRepo interfaces.IInterestRepo

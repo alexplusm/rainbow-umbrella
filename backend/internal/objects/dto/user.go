@@ -73,9 +73,15 @@ func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
 		return nil, fmt.Errorf("city required")
 	}
 
-	// TODO: late
 	if len(form["interests"]) != 0 {
-		o.Interests = strings.Split(form["interests"][0], ",")
+		interests := make([]string, 0, 32)
+		for _, rawInterest := range strings.Split(form["interests"][0], ",") {
+			interest := strings.TrimSpace(strings.ToLower(rawInterest))
+			if interest != "" {
+				interests = append(interests, interest)
+			}
+		}
+		o.Interests = interests
 	}
 
 	return o, nil

@@ -36,11 +36,18 @@ func execSQLScriptFromFile(filePath string, db *sql.DB) error {
 
 	rawScript := string(fileContent)
 
-	scripts := strings.Split(rawScript, ";\n")
+	scripts := make([]string, 0, 8)
+
+	for _, scriptChunk := range strings.Split(rawScript, ";\n") {
+		trimmedScript := strings.TrimSpace(scriptChunk)
+		if trimmedScript != "" {
+			scripts = append(scripts, trimmedScript)
+		}
+	}
 
 	for _, script := range scripts {
 		if _, err := db.Exec(script); err != nil {
-			return fmt.Errorf("[execSQLScriptFromFile][2]: %+v", err)
+			return fmt.Errorf("[execSQLScriptFromFile][2]: %v \n%w", script, err)
 		}
 	}
 

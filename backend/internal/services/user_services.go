@@ -20,6 +20,8 @@ func NewUserService(userRepo interfaces.IUserRepo) interfaces.IUserService {
 func (s userService) Register(user *bo.User) error {
 	fmt.Printf("[userService]: register: %+v\n", user)
 
+	// TODO: make something with interests
+
 	if err := s.userRepo.InsertOne(new(dao.User).FromBO(user)); err != nil {
 		return fmt.Errorf("[userService.Register][1]: %+v", err)
 	}

@@ -73,6 +73,8 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("USER: %+v\n\n", user)
+
 	if err := c.userService.Register(user.ToBO()); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {

@@ -31,6 +31,13 @@ CREATE TABLE IF NOT EXISTS `friendships` (
     PRIMARY KEY (`friendship_id`)
 );
 
+CREATE TABLE IF NOT EXISTS `interests` (
+    `interest_id`   SERIAL,
+    `value`         VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (`interest_id`)
+);
+
 CREATE TABLE IF NOT EXISTS `user_interests` (
     `user_interest_id`  SERIAL,
     `user_id`           BIGINT UNSIGNED   NOT NULL,
@@ -40,11 +47,4 @@ CREATE TABLE IF NOT EXISTS `user_interests` (
     FOREIGN KEY (`interest_id`)     REFERENCES `interests`(`interest_id`),
 
     PRIMARY KEY (`user_interest_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `interests` (
-    `interest_id`   SERIAL,
-    `value`         VARCHAR NOT NULL,
-
-    PRIMARY KEY (`interest_id`)
 );
