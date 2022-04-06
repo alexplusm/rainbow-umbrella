@@ -1,6 +1,8 @@
 package interfaces
 
 import (
+	"context"
+
 	"rainbow-umbrella/internal/objects/bo"
 )
 
@@ -25,4 +27,5 @@ type IFriendshipService interface {
 }
 
 type IInterestService interface {
+	CreateListForUser(ctx context.Context, userID uint64, interests []string) error
 }

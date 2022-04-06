@@ -14,3 +14,7 @@ VALUES (?)
 
 	return &query{Query: queryRaw, Args: args}
 }
+
+func buildQ() *query {
+	return &query{}
+}
