@@ -29,6 +29,10 @@ func (s userService) Register(user *bo.User) error {
 		return fmt.Errorf("[userService.Register][1]: %+v", err)
 	}
 
+	if len(user.Interests) == 0 {
+		return nil
+	}
+
 	if err := s.interestService.CreateListForUser(context.TODO(), userID, user.Interests); err != nil {
 		return fmt.Errorf("[userService.Register][2]: %w", err)
 	}

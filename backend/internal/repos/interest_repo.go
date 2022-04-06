@@ -43,13 +43,32 @@ func (r interestRepo) InsertListAndAssignToUser(ctx context.Context, userID uint
 		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][3]: %w", err)
 	}
 
-	if err := tx.Commit(); err != nil {
+	q, err = buildSelectInterestsIDsQuery(interests)
+	if err != nil {
 		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][4]: %w", err)
 	}
 
-	//  insert new interests
-	//	and get it ids
+	rows, err := tx.Query(q.Query, q.Args...)
+	if err != nil {
+		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][5]: %w", err)
+	}
+
+	interestIDs := make([]uint64, 0, len(interests))
+	for rows.Next() {
+		var id uint64
+		if err = rows.Scan(&id); err != nil {
+			return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][6]: %w", err)
+		}
+		interestIDs = append(interestIDs, id)
+	}
+
+	//tx.Exec()
+
 	//  assign interests ids to userId
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][5]: %w", err)
+	}
 
 	return nil
 }

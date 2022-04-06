@@ -31,6 +31,7 @@ VALUES
 	,(?)
 	{{- end -}}
 {{end -}}
+;
 `
 	filter := struct{ Interests []string }{Interests: interests}
 	queryStr, err := gofnd.ApplyFilterToQuery(queryRaw, &filter)
@@ -38,6 +39,32 @@ VALUES
 		return nil, fmt.Errorf("[buildInsertListInterestQuery][1]: %w", err)
 	}
 
+	args := make([]interface{}, len(interests))
+	for i, value := range interests {
+		args[i] = value
+	}
+
+	return &query{Query: queryStr, Args: args}, nil
+}
+
+func buildSelectInterestsIDsQuery(interests []string) (*query, error) {
+	queryRaw := `
+SELECT interest_id FROM interests
+WHERE
+{{range $index, $el := .Interests}}
+	{{- if eq $index 0 -}}
+	value = (?)
+	{{- else -}}
+	OR value = (?) 
+	{{- end -}}
+{{end -}}
+;
+`
+	filter := struct{ Interests []string }{Interests: interests}
+	queryStr, err := gofnd.ApplyFilterToQuery(queryRaw, &filter)
+	if err != nil {
+		return nil, fmt.Errorf("[buildSelectInterestsIDsQuery][1]: %w", err)
+	}
 	args := make([]interface{}, len(interests))
 	for i, value := range interests {
 		args[i] = value

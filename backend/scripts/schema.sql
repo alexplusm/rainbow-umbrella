@@ -46,5 +46,7 @@ CREATE TABLE IF NOT EXISTS `user_interests` (
     FOREIGN KEY (`user_id`)         REFERENCES `users`(`user_id`),
     FOREIGN KEY (`interest_id`)     REFERENCES `interests`(`interest_id`),
 
+    CONSTRAINT uc_user_id_interest_id UNIQUE (user_id , interest_id),
+
     PRIMARY KEY (`user_interest_id`)
 );
