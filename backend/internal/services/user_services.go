@@ -20,19 +20,17 @@ func NewUserService(
 	userRepo interfaces.IUserRepo,
 	interestService interfaces.IInterestService,
 ) interfaces.IUserService {
-	return &userService{userRepo: userRepo}
+	return &userService{userRepo: userRepo, interestService: interestService}
 }
 
 func (s userService) Register(user *bo.User) error {
-	fmt.Printf("[userService]: register: %+v\n", user)
-
 	userID, err := s.userRepo.InsertOne(context.TODO(), new(dao.User).FromBO(user))
 	if err != nil {
 		return fmt.Errorf("[userService.Register][1]: %+v", err)
 	}
 
 	if err := s.interestService.CreateListForUser(context.TODO(), userID, user.Interests); err != nil {
-		return fmt.Errorf("[userService.Register][1]: %w", err)
+		return fmt.Errorf("[userService.Register][2]: %w", err)
 	}
 
 	return nil

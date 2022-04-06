@@ -116,6 +116,7 @@ func (o *User) FromBO(user *bo.User) *User {
 	o.Gender = user.Gender
 	o.City = user.City
 
+	// TODO: interests
 	return o
 }
 

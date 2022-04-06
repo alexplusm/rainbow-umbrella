@@ -33,13 +33,23 @@ func (r interestRepo) InsertListAndAssignToUser(ctx context.Context, userID uint
 		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][1]: %w", err)
 	}
 
-	q := buildQ()
+	q, err := buildInsertListInterestQuery(interests)
+	if err != nil {
+		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][2]: %w", err)
+	}
 
 	// TODO: нужно ли вызывать запросы в рамках транзакции с контекстом?
-	tx.Exec(q.Query, q.Args...)
+	if _, err := tx.Exec(q.Query, q.Args...); err != nil {
+		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][3]: %w", err)
+	}
 
-	// insert new interests and get it ids
-	// assign interests ids to userId
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("[interestRepo.InsertListAndAssignToUser][4]: %w", err)
+	}
+
+	//  insert new interests
+	//	and get it ids
+	//  assign interests ids to userId
 
 	return nil
 }

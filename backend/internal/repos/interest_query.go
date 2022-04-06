@@ -1,9 +1,14 @@
 package repos
 
 import (
+	"fmt"
+
+	"github.com/alexplusm/gofnd"
+
 	"rainbow-umbrella/internal/objects/dao"
 )
 
+// TODO: remove
 func buildInsertOneInterestQuery(value *dao.Interest) *query {
 	queryRaw := `
 INSERT INTO interests (value)
@@ -15,6 +20,28 @@ VALUES (?)
 	return &query{Query: queryRaw, Args: args}
 }
 
-func buildQ() *query {
-	return &query{}
+func buildInsertListInterestQuery(interests []string) (*query, error) {
+	queryRaw := `
+INSERT IGNORE INTO interests (value)
+VALUES
+{{range $index, $el := .Interests}}
+	{{- if eq $index 0 -}}
+	(?)
+	{{- else -}}
+	,(?)
+	{{- end -}}
+{{end -}}
+`
+	filter := struct{ Interests []string }{Interests: interests}
+	queryStr, err := gofnd.ApplyFilterToQuery(queryRaw, &filter)
+	if err != nil {
+		return nil, fmt.Errorf("[buildInsertListInterestQuery][1]: %w", err)
+	}
+
+	args := make([]interface{}, len(interests))
+	for i, value := range interests {
+		args[i] = value
+	}
+
+	return &query{Query: queryStr, Args: args}, nil
 }

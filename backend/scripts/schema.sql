@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `friendships` (
 
 CREATE TABLE IF NOT EXISTS `interests` (
     `interest_id`   SERIAL,
-    `value`         VARCHAR(255) NOT NULL, -- TODO: unique
+    `value`         VARCHAR(255) NOT NULL UNIQUE,
 
     PRIMARY KEY (`interest_id`)
 );
