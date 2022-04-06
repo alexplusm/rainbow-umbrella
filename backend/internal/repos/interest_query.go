@@ -72,3 +72,34 @@ WHERE
 
 	return &query{Query: queryStr, Args: args}, nil
 }
+
+func buildInsertListUserInterestQuery(userID uint64, interestIDs []uint64) (*query, error) {
+	queryRaw := `
+INSERT INTO user_interests (user_id, interest_id)
+VALUES
+{{range $index, $el := .InterestIDs}}
+	{{- if eq $index 0 -}}
+	({{$.UserID}}, ?)
+	{{- else -}}
+	,({{$.UserID}}, ?) 
+	{{- end -}}
+{{end}}
+;
+`
+	filter := struct {
+		UserID      uint64
+		InterestIDs []uint64
+	}{UserID: userID, InterestIDs: interestIDs}
+	// TODO: passing UserID is a sql injection risk?
+	queryStr, err := gofnd.ApplyFilterToQuery(queryRaw, &filter)
+	if err != nil {
+		return nil, fmt.Errorf("[buildInsertListUserInterestQuery][1]: %w", err)
+	}
+
+	args := make([]interface{}, 0, 8)
+	for _, value := range interestIDs {
+		args = append(args, value)
+	}
+
+	return &query{Query: queryStr, Args: args}, nil
+}
