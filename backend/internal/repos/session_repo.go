@@ -42,11 +42,19 @@ func (r sessionRepo) Exists(sessionID string) (bool, error) {
 	return value == 1, nil
 }
 
-func (r sessionRepo) RetrieveUserLogin(sessionID string) (string, error) {
-	value, err := r.client.HGet(context.TODO(), sessionID, "login").Result()
+func (r sessionRepo) RetrieveUserLoginIfExist(ctx context.Context, sessionID string) (string, bool, error) {
+	existCount, err := r.client.Exists(ctx, sessionID).Result()
 	if err != nil {
-		return "", fmt.Errorf("[sessionRepo.RetrieveUserLogin][1]: %w", err)
+		return "", false, fmt.Errorf("[sessionRepo.RetrieveUserLoginIfExist][1]: %w", err)
+	}
+	if existCount == 0 {
+		return "", false, nil
 	}
 
-	return value, nil
+	login, err := r.client.HGet(ctx, sessionID, "login").Result()
+	if err != nil {
+		return "", false, fmt.Errorf("[sessionRepo.RetrieveUserLoginIfExist][2]: %w", err)
+	}
+
+	return login, true, nil
 }

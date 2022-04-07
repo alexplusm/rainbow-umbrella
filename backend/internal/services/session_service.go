@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -37,10 +38,10 @@ func (s sessionService) Exists(sessionID string) (bool, error) {
 }
 
 func (s sessionService) RetrieveUserLogin(sessionID string) (string, bool, error) {
-	login, err := s.sessionRepo.RetrieveUserLogin(sessionID)
+	login, ok, err := s.sessionRepo.RetrieveUserLoginIfExist(context.TODO(), sessionID)
 	if err != nil {
 		return "", false, fmt.Errorf("[sessionService.RetrieveUserLogin][1]: %w", err)
 	}
 
-	return login, login != "", nil
+	return login, ok, nil
 }
