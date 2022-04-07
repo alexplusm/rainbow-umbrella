@@ -32,8 +32,7 @@ func main() {
 	userController := injector.InjectUserController()
 	friendshipController := injector.InjectFriendshipController()
 
-	r.Post("/api/v1/users/register",
-		NewMethodMiddleware(http.MethodPost, userController.Register))
+	r.Post("/api/v1/users/register", userController.Register)
 
 	r.Get("/api/v1/users",
 		NewSessionMiddleware(
@@ -41,14 +40,10 @@ func main() {
 		),
 	)
 
-	r.Post("/api/v1/users/login",
-		NewMethodMiddleware(http.MethodPost, userController.Login))
+	r.Post("/api/v1/users/login", userController.Login)
 
 	r.Get("/api/v1/users/{login}",
-		NewSessionMiddleware(
-			injector.InjectSessionService(),
-			NewMethodMiddleware(http.MethodGet, userController.Details),
-		),
+		NewSessionMiddleware(injector.InjectSessionService(), userController.Details),
 	)
 
 	// TODO: add NewSessionMiddleware
@@ -67,18 +62,6 @@ func NewLoggerMiddleware(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("logger!!!")
 		f(w, r)
-	}
-}
-
-func NewMethodMiddleware(method string, handler http.HandlerFunc) http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-		if request.Method != method {
-			writer.WriteHeader(http.StatusMethodNotAllowed)
-			if _, err := writer.Write([]byte(http.StatusText(http.StatusMethodNotAllowed))); err != nil {
-				log.Println("[NewMethodMiddleware]: ", err.Error())
-			}
-		}
-		handler(writer, request)
 	}
 }
 
