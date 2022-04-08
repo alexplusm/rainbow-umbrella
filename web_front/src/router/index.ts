@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "@/stores/user";
 import WelcomeView from '@/views/WelcomeView.vue'
 import UserView from '@/views/UserView.vue'
+import UserListView from '@/views/UserListView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import {useAuthStore} from "@/stores/auth";
 
@@ -12,6 +13,11 @@ const router = createRouter({
       path: '/',
       name: 'welcome',
       component: WelcomeView
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: UserListView
     },
     {
       path: '/not-found',

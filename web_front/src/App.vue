@@ -11,6 +11,9 @@ const appStore = useAppStore();
       <q-btn size="0.8em" flat style="color: #FF0080" label="🦄 & 🌈" />
     </router-link>
 
+    <router-link class="logo" :to="{name: 'users'}">
+      <q-btn size="0.8em" flat style="color: #FF0080" label="Users" />
+    </router-link>
   </header>
   <RouterView class="main"/>
 </template>
@@ -28,6 +31,7 @@ const appStore = useAppStore();
 }
 
 header {
+  display: flex;
   width: 100vw;
   height: 8vh;
 }

@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import Profile from '@/components/Profile.vue'
 import FriendList from '@/components/FriendList.vue'
-import UserList from '@/components/UserList.vue'
 </script>
 
 <template>
   <section>
     <Profile class="profile_component" />
     <FriendList class="friend_list_component"/>
-    <UserList class="user_list_component"/>
   </section>
 </template>
 
@@ -25,11 +23,6 @@ section {
 }
 
 .friend_list_component {
-  width: 300px;
-  margin-left: 2em;
-}
-
-.user_list_component {
   width: 300px;
   margin-left: 2em;
 }
