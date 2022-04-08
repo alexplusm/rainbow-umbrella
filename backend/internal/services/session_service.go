@@ -10,6 +10,8 @@ import (
 	"rainbow-umbrella/internal/objects/bo"
 )
 
+const currentUserCtxKey = "currentUserLogin"
+
 type sessionService struct {
 	sessionRepo interfaces.ISessionRepo
 }
@@ -44,4 +46,13 @@ func (s sessionService) RetrieveUserLogin(sessionID string) (string, bool, error
 	}
 
 	return login, ok, nil
+}
+
+func (s sessionService) SetCurrentUserToCtx(ctx context.Context, login string) context.Context {
+	return context.WithValue(ctx, currentUserCtxKey, login)
+}
+
+func (s sessionService) GetCurrentUserFromCtx(ctx context.Context) (string, bool) {
+	value, ok := ctx.Value(currentUserCtxKey).(string)
+	return value, ok
 }

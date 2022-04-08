@@ -212,6 +212,8 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: culc friendship status
+
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json") // TODO: why don't work
 	if _, err := w.Write(responseBody); err != nil {

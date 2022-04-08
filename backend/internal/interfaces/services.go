@@ -18,6 +18,9 @@ type ISessionService interface {
 	Create(user *bo.User) (string, error)
 	Exists(sessionID string) (bool, error)
 	RetrieveUserLogin(sessionID string) (string, bool, error)
+
+	SetCurrentUserToCtx(ctx context.Context, login string) context.Context
+	GetCurrentUserFromCtx(ctx context.Context) (string, bool)
 }
 
 type IFriendshipService interface {

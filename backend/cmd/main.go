@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -87,8 +86,6 @@ func NewSessionMiddleware(sessionService interfaces.ISessionService, handler htt
 
 		fmt.Println("@@@ [NewSessionMiddleware]: userLogin", userLogin)
 
-		ctx := context.WithValue(r.Context(), "currentUserLogin", userLogin)
-
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
 			if _, err := w.Write([]byte(http.StatusText(http.StatusUnauthorized))); err != nil {
@@ -96,6 +93,8 @@ func NewSessionMiddleware(sessionService interfaces.ISessionService, handler htt
 			}
 			return
 		}
+
+		ctx := sessionService.SetCurrentUserToCtx(r.Context(), userLogin)
 
 		handler(w, r.WithContext(ctx))
 	}
