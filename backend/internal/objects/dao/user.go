@@ -46,14 +46,17 @@ func (o *User) ToBO() (*bo.User, error) {
 		return nil, fmt.Errorf("[User.ToBO][1]: %+v", err)
 	}
 
-	createdAt, err := timeFromDAO(o.CreatedAt)
-	if err != nil {
-		return nil, fmt.Errorf("[User.ToBO][2]: %+v", err)
+	var createdAt time.Time
+	if o.CreatedAt != "" {
+		createdAt, err = timeFromDAO(o.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("[User.ToBO][2]: %+v", err)
+		}
 	}
 
 	return &bo.User{
 		ID:             o.ID,
-		FriendshipID:   o.FriendshipID,
+		FriendshipID:   o.FriendshipID, // TODO: friendship status for current status !!!
 		Login:          o.Login,
 		HashedPassword: o.HashedPassword,
 

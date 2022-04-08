@@ -29,5 +29,5 @@ type IFriendshipRepo interface {
 type IInterestRepo interface {
 	InsertOne(ctx context.Context, value *dao.Interest) error
 	InsertListAndAssignToUser(ctx context.Context, userID uint64, interests []string) error
-	SelectList(tx *sql.Tx, ctx context.Context, userID uint64) ([]string, error)
+	SelectListByUserID(tx *sql.Tx, ctx context.Context, userID uint64) ([]string, error)
 }

@@ -40,7 +40,7 @@ func (r userRepo) InsertOne(ctx context.Context, item *dao.User) (uint64, error)
 func (r userRepo) RetrieveOne(ctx context.Context, login string) (*dao.User, error) {
 	q := buildRetrieveOneUserQuery(login)
 
-	// TODO: нужно ли делать транзакцию для нескольких селектов?
+	// TODO: нужно ли делать транзакцию для нескольких селектов? - da, только нужно выбрать уровень изоляции
 
 	tx, err := r.dbClient.BeginTx(ctx, nil)
 	if err != nil {
@@ -66,7 +66,7 @@ func (r userRepo) RetrieveOne(ctx context.Context, login string) (*dao.User, err
 		return nil, fmt.Errorf("[userRepo.RetrieveOne][3]")
 	}
 
-	interests, err := r.interestRepo.SelectList(tx, ctx, user.ID)
+	interests, err := r.interestRepo.SelectListByUserID(tx, ctx, user.ID)
 	if err != nil {
 		// TODO: rollback?
 		return nil, fmt.Errorf("[userRepo.RetrieveOne][4]")

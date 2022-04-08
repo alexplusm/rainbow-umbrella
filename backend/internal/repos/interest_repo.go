@@ -78,7 +78,33 @@ func (r interestRepo) InsertListAndAssignToUser(ctx context.Context, userID uint
 	return nil
 }
 
-func (r interestRepo) SelectList(tx *sql.Tx, ctx context.Context, userID uint64) ([]string, error) {
-	panic("implements")
-	return nil, nil
+func (r interestRepo) SelectListByUserID(tx *sql.Tx, ctx context.Context, userID uint64) ([]string, error) {
+	var (
+		rows *sql.Rows
+		err  error
+	)
+
+	q := buildSelectListInterestByUserIDQuery(userID)
+
+	if tx != nil {
+		rows, err = tx.Query(q.Query, q.Args...)
+	} else {
+		rows, err = r.dbClient.QueryContext(ctx, q.Query, q.Args...)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("[interestRepo.SelectListByUserID][1]: %w", err)
+	}
+
+	interests := make([]string, 0, 16)
+
+	for rows.Next() {
+		var interest string
+
+		if err = rows.Scan(&interest); err != nil {
+			return nil, fmt.Errorf("[interestRepo.SelectListByUserID][2]: %w", err)
+		}
+		interests = append(interests, interest)
+	}
+
+	return interests, nil
 }

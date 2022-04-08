@@ -50,18 +50,17 @@ func (s userService) LoginExist(login string) (bool, error) {
 }
 
 func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
-	list, err := s.List(&bo.UserFilter{ByLogin: login})
+	user, err := s.userRepo.RetrieveOne(context.TODO(), login)
 	if err != nil {
 		return nil, fmt.Errorf("[userService.RetrieveByLogin][1]: %w", err)
 	}
 
-	if len(list) != 1 {
-		return nil, nil
+	userBO, err := user.ToBO()
+	if err != nil {
+		return nil, fmt.Errorf("[userService.RetrieveByLogin][2]: %w", err)
 	}
 
-	user := list[0]
-
-	return &user, nil
+	return userBO, nil
 }
 
 func (s userService) List(filter *bo.UserFilter) ([]bo.User, error) {

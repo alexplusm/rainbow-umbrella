@@ -20,6 +20,20 @@ VALUES (?)
 	return &query{Query: queryRaw, Args: args}
 }
 
+func buildSelectListInterestByUserIDQuery(userID uint64) *query {
+	queryRaw := `
+SELECT value FROM interests i
+INNER JOIN user_interests ui
+	ON i.interest_id = ui.interest_id
+WHERE
+	ui.user_id = ?
+;
+`
+	args := []interface{}{userID}
+
+	return &query{Query: queryRaw, Args: args}
+}
+
 func buildInsertListInterestQuery(interests []string) (*query, error) {
 	queryRaw := `
 INSERT IGNORE INTO interests (value)

@@ -180,7 +180,9 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
 
+	// TODO: check
 	user, err := c.userService.RetrieveByLogin(login)
+	fmt.Printf("Error: %v\n", err)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
@@ -188,6 +190,8 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+
+	fmt.Printf("USER DETAILS: %+v\n", user)
 
 	if user == nil {
 		w.WriteHeader(http.StatusNotFound)
