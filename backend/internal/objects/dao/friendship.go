@@ -60,3 +60,11 @@ func (o FriendList) ToBO() (*bo.FriendList, error) {
 
 	return friendList, nil
 }
+
+// ---
+
+type FriendshipWithLogin struct {
+	Friendship
+	RequestingUserLogin string
+	TargetingUserLogin  string
+}

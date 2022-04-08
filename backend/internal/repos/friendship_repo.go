@@ -1,6 +1,7 @@
 package repos
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -86,4 +87,37 @@ func (r friendshipRepo) UpdateStatus(id uint64, status string) error {
 	}
 
 	return nil
+}
+
+func (r friendshipRepo) SelectOneByUsersLogin(
+	ctx context.Context, login1, login2 string,
+) (*dao.FriendshipWithLogin, error) {
+	q := buildSelectOneFriendshipQuery(login1, login2)
+
+	row := r.dbClient.QueryRowContext(ctx, q.Query, q.Args...)
+	if err := row.Err(); err != nil {
+		return nil, fmt.Errorf("[friendshipRepo.SelectOneByUsersLogins][1]: %w", err)
+	}
+
+	var (
+		userID1, userID2       uint64
+		userLogin1, userLogin2 string
+	)
+	friendship := new(dao.FriendshipWithLogin)
+
+	err := row.Scan(&friendship.RequestingUserID, &friendship.TargetingUserID, &friendship.Status,
+		&userID1, &userLogin1, &userID2, &userLogin2)
+	if err != nil {
+		return nil, fmt.Errorf("[friendshipRepo.SelectOneByUsersLogins][2]: %w", err)
+	}
+
+	if friendship.RequestingUserID == userID1 {
+		friendship.RequestingUserLogin = userLogin1
+		friendship.TargetingUserLogin = userLogin2
+	} else {
+		friendship.RequestingUserLogin = userLogin2
+		friendship.TargetingUserLogin = userLogin1
+	}
+
+	return friendship, nil
 }
