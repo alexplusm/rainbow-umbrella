@@ -77,3 +77,8 @@ func (r interestRepo) InsertListAndAssignToUser(ctx context.Context, userID uint
 
 	return nil
 }
+
+func (r interestRepo) SelectList(tx *sql.Tx, ctx context.Context, userID uint64) ([]string, error) {
+	panic("implements")
+	return nil, nil
+}

@@ -52,7 +52,7 @@ func (s userService) LoginExist(login string) (bool, error) {
 func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
 	list, err := s.List(&bo.UserFilter{ByLogin: login})
 	if err != nil {
-		return nil, fmt.Errorf("[userService.RetrieveByLogin][1]: %+v", err)
+		return nil, fmt.Errorf("[userService.RetrieveByLogin][1]: %w", err)
 	}
 
 	if len(list) != 1 {

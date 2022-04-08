@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"context"
+	"database/sql"
 
 	"rainbow-umbrella/internal/objects/bo"
 	"rainbow-umbrella/internal/objects/dao"
@@ -10,6 +11,7 @@ import (
 type IUserRepo interface {
 	InsertOne(ctx context.Context, item *dao.User) (uint64, error)
 	List(filter *bo.UserFilter) ([]dao.User, error)
+	RetrieveOne(ctx context.Context, login string) (*dao.User, error)
 }
 
 type ISessionRepo interface {
@@ -27,4 +29,5 @@ type IFriendshipRepo interface {
 type IInterestRepo interface {
 	InsertOne(ctx context.Context, value *dao.Interest) error
 	InsertListAndAssignToUser(ctx context.Context, userID uint64, interests []string) error
+	SelectList(tx *sql.Tx, ctx context.Context, userID uint64) ([]string, error)
 }

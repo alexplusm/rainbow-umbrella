@@ -71,7 +71,7 @@ func (i injector) injectInterestService() interfaces.IInterestService {
 // --- repos
 
 func (i injector) injectUserRepo() interfaces.IUserRepo {
-	return repos.NewUserRepo(i.dbClient)
+	return repos.NewUserRepo(i.dbClient, i.injectInterestRepo())
 }
 
 func (i injector) injectSessionRepo() interfaces.ISessionRepo {

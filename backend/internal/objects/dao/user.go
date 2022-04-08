@@ -20,6 +20,8 @@ type User struct {
 	City      string
 
 	CreatedAt string
+
+	Interests []string
 }
 
 func (o *User) FromBO(value *bo.User) *User {

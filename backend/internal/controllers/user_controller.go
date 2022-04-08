@@ -179,7 +179,6 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
-	fmt.Println("YEP", login)
 
 	user, err := c.userService.RetrieveByLogin(login)
 	if err != nil {

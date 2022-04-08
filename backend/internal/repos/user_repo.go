@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/bo"
@@ -12,10 +13,12 @@ import (
 
 type userRepo struct {
 	dbClient *sql.DB
+
+	interestRepo interfaces.IInterestRepo
 }
 
-func NewUserRepo(dbClient *sql.DB) interfaces.IUserRepo {
-	return &userRepo{dbClient: dbClient}
+func NewUserRepo(dbClient *sql.DB, interestRepo interfaces.IInterestRepo) interfaces.IUserRepo {
+	return &userRepo{dbClient: dbClient, interestRepo: interestRepo}
 }
 
 func (r userRepo) InsertOne(ctx context.Context, item *dao.User) (uint64, error) {
@@ -32,6 +35,50 @@ func (r userRepo) InsertOne(ctx context.Context, item *dao.User) (uint64, error)
 	}
 
 	return uint64(userID), nil
+}
+
+func (r userRepo) RetrieveOne(ctx context.Context, login string) (*dao.User, error) {
+	q := buildRetrieveOneUserQuery(login)
+
+	// TODO: нужно ли делать транзакцию для нескольких селектов?
+
+	tx, err := r.dbClient.BeginTx(ctx, nil)
+	if err != nil {
+		// TODO: rollback?
+		return nil, fmt.Errorf("[userRepo.RetrieveOne][1]")
+	}
+
+	row := tx.QueryRow(q.Query, q.Args...)
+
+	if err := row.Err(); err != nil {
+		// TODO: rollback?
+		return nil, fmt.Errorf("[userRepo.RetrieveOne][2]")
+	}
+
+	user := new(dao.User)
+
+	err = row.Scan(
+		&user.ID, &user.Login,
+		&user.FirstName, &user.LastName, &user.Birthday, &user.Gender, &user.City)
+
+	if err != nil {
+		// TODO: rollback?
+		return nil, fmt.Errorf("[userRepo.RetrieveOne][3]")
+	}
+
+	interests, err := r.interestRepo.SelectList(tx, ctx, user.ID)
+	if err != nil {
+		// TODO: rollback?
+		return nil, fmt.Errorf("[userRepo.RetrieveOne][4]")
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Println(fmt.Errorf("[userRepo.RetrieveOne][5]: %w", err))
+	}
+
+	user.Interests = interests
+
+	return user, nil
 }
 
 func (r userRepo) List(filter *bo.UserFilter) ([]dao.User, error) {

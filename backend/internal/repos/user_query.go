@@ -29,6 +29,20 @@ INSERT INTO users (
 	return &query{Query: queryRaw, Args: args}
 }
 
+func buildRetrieveOneUserQuery(login string) *query {
+	queryRaw := `
+SELECT
+	user_id, login,
+	first_name, last_name, birthday, gender, city
+FROM users
+	WHERE login = ?
+;
+`
+	args := []interface{}{login}
+
+	return &query{Query: queryRaw, Args: args}
+}
+
 func buildListUserQuery(filter *bo.UserFilter) (*query, error) {
 	queryRaw := `
 SELECT

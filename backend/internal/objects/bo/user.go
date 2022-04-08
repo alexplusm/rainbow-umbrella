@@ -20,9 +20,9 @@ type User struct {
 	Gender    string
 	City      string
 
-	CreatedAt time.Time
-
 	Interests []string // TODO: late
+
+	CreatedAt time.Time
 }
 
 func (o *User) CheckPassword(password string) bool {
