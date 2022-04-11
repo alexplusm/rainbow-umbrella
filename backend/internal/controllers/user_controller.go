@@ -230,8 +230,8 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
 	if _, err := w.Write(responseBody); err != nil {
 		log.Print(fmt.Errorf("[userController.Details][5]: %w", err))
 	}

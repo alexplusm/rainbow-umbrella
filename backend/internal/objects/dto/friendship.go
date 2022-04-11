@@ -17,7 +17,7 @@ func (o *Friendship) ToBO() *bo.Friendship {
 	return &bo.Friendship{
 		RequestingUserID: o.RequestingUserID,
 		TargetingUserID:  o.TargetingUserID,
-		Status:           consts.FriendshipStatusNew,
+		Status:           consts.FriendshipStatusWait,
 		CreatedAt:        time.Now(),
 	}
 }

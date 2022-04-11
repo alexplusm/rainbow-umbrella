@@ -63,7 +63,7 @@ func (r friendshipRepo) FriendList(userID uint64) (*dao.FriendList, error) {
 			&user.CreatedAt,
 		)
 
-		if status == consts.FriendshipStatusAccept {
+		if status == consts.FriendshipStatusFriends {
 			friendList.Friends = append(friendList.Friends, *user)
 		} else if requestingUserID == userID {
 			friendList.WaitingForResponse = append(friendList.WaitingForResponse, *user)
@@ -89,13 +89,8 @@ func (r friendshipRepo) UpdateStatus(id uint64, status string) error {
 	return nil
 }
 
-//	 TODO: create same method in friendshipService
-// 		dao.FriendshipWithLogin to BO
-// 		inject friendshipService in userService
-// 		USE IT
 func (r friendshipRepo) SelectOneByUsersID(
-	ctx context.Context, userID1, userID2 uint64,
-) (*dao.Friendship, error) {
+	ctx context.Context, userID1, userID2 uint64) (*dao.Friendship, error) {
 	q := buildSelectOneFriendshipQuery(userID1, userID2)
 
 	row := r.dbClient.QueryRowContext(ctx, q.Query, q.Args...)

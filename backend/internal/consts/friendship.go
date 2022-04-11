@@ -1,7 +1,7 @@
 package consts
 
 const (
-	FriendshipStatusNew     = "new"
-	FriendshipStatusAccept  = "accept"
-	FriendshipStatusDecline = "decline"
+	FriendshipStatusNotFriends = "notFriends"
+	FriendshipStatusWait       = "wait"
+	FriendshipStatusFriends    = "friends"
 )

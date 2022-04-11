@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/bo"
 	"rainbow-umbrella/internal/objects/dao"
@@ -93,7 +94,6 @@ func (s userService) GenerateAvatarFileName(originalName string) string {
 	return fmt.Sprintf("avatar_%v_%v", time.Now().UnixNano(), originalName)
 }
 
-//	TODO: rename
 func (s userService) GetUsersFriendshipStatus(login1, login2 string) (string, error) {
 	users, err := s.listCommonInfo(&bo.UserFilter{ByLogins: []string{login1, login2}})
 	if err != nil {
@@ -101,17 +101,13 @@ func (s userService) GetUsersFriendshipStatus(login1, login2 string) (string, er
 	}
 
 	if len(users) != 2 {
-		return "", nil // NotFriendsOrUndefined
+		return consts.FriendshipStatusNotFriends, nil
 	}
 
 	friendship, err := s.friendshipService.RetrieveByUsersID(users[0].ID, users[1].ID)
 	if err != nil {
 		return "", fmt.Errorf("[userService.GetUsersFriendshipStatus][2]: %w", err)
 	}
-
-	// TODO
-
-	fmt.Printf("friendship: %+v\n\n", friendship)
 
 	return friendship.Status, nil
 }

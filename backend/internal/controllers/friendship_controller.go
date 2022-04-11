@@ -87,9 +87,6 @@ func (c friendshipController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//u1 := friendList.Friends[0]
-	//fmt.Printf("u1: %+v\n", u1)
-
 	responseBody, err := json.Marshal(new(dto.FriendList).FromBO(friendList))
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
@@ -119,7 +116,7 @@ func (c friendshipController) Approve(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("BODYYYYY: %+v", body)
 
-	if err = c.friendshipService.UpdateStatus(body.ID, consts.FriendshipStatusAccept); err != nil {
+	if err = c.friendshipService.UpdateStatus(body.ID, consts.FriendshipStatusFriends); err != nil {
 		processError(w, http.StatusInternalServerError, nil)
 		log.Println(fmt.Errorf("[friendshipController.Approve][3]: %+v", err))
 		return
