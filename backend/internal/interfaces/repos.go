@@ -23,7 +23,7 @@ type ISessionRepo interface {
 
 type IFriendshipRepo interface {
 	InsertOne(friendship *dao.Friendship) error
-	SelectOneByUsersLogin(ctx context.Context, login1, login2 string) (*dao.FriendshipWithLogin, error)
+	SelectOneByUsersID(ctx context.Context, userID1, userID2 uint64) (*dao.Friendship, error)
 	FriendList(userID uint64) (*dao.FriendList, error)
 	UpdateStatus(id uint64, status string) error
 }

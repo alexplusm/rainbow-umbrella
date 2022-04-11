@@ -16,6 +16,15 @@ type Friendship struct {
 	UpdatedAt string
 }
 
+func (o Friendship) ToBO() *bo.Friendship {
+	return &bo.Friendship{
+		ID:               o.ID,
+		RequestingUserID: o.RequestingUserID,
+		TargetingUserID:  o.TargetingUserID,
+		Status:           o.Status,
+	}
+}
+
 func (o *Friendship) FromBO(value *bo.Friendship) *Friendship {
 	o.RequestingUserID = value.RequestingUserID
 	o.TargetingUserID = value.TargetingUserID
@@ -24,6 +33,8 @@ func (o *Friendship) FromBO(value *bo.Friendship) *Friendship {
 
 	return o
 }
+
+// ---
 
 type FriendList struct {
 	Friends            []User

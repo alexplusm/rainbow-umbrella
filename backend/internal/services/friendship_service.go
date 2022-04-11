@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 
 	"rainbow-umbrella/internal/interfaces"
@@ -47,7 +48,10 @@ func (s friendshipService) UpdateStatus(id uint64, status string) error {
 }
 
 func (s friendshipService) RetrieveByUsersID(userID1, userID2 uint64) (*bo.Friendship, error) {
+	friendship, err := s.friendshipRepo.SelectOneByUsersID(context.TODO(), userID1, userID2)
+	if err != nil {
+		return nil, fmt.Errorf("[friendshipService.RetrieveByUsersID][1]: %w", err)
+	}
 
-	//s.friendshipRepo.SelectOneByUsersLogin() // TODO: rm this method
-	return nil, nil
+	return friendship.ToBO(), nil
 }

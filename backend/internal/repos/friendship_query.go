@@ -53,26 +53,18 @@ WHERE friendship_id = ?
 	return &query{Query: queryRaw, Args: args}
 }
 
-func buildSelectOneFriendshipQuery(login1, login2 string) *query {
-	// TODO: VERY STRONG ! how simplify ?
+func buildSelectOneFriendshipQuery(id1, id2 uint64) *query {
 	queryRaw := `
-WITH q1 AS (SELECT user_id, login FROM users WHERE login = ?),
-     q2 AS (SELECT user_id, login FROM users WHERE login = ?)
+WITH users_id AS (SELECT ? AS id1, ? AS id2)
 SELECT
-	requesting_user_id, targeting_user_id, f.status,
-	q1.user_id, q1.login,
-	q2.user_id, q2.login
+    f.requesting_user_id, f.targeting_user_id, f.status
 FROM friendships f
-    INNER JOIN q1
-    ON f.targeting_user_id = q1.user_id OR f.requesting_user_id = q1.user_id
-    INNER JOIN q2
-    ON f.targeting_user_id = q2.user_id OR f.requesting_user_id = q2.user_id
-WHERE
-	f.requesting_user_id = q1.user_id AND f.targeting_user_id = q2.user_id
-	OR f.requesting_user_id = q2.user_id AND f.targeting_user_id = q1.user_id
+INNER JOIN users_id ud
+    ON (f.requesting_user_id = ud.id1 AND f.targeting_user_id = ud.id2)
+        OR (f.requesting_user_id = ud.id2 AND f.targeting_user_id = ud.id1)
 ;
 `
-	args := []interface{}{login1, login2}
+	args := []interface{}{id1, id2}
 
 	return &query{Query: queryRaw, Args: args}
 }

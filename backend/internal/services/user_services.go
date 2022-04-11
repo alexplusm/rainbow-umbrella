@@ -110,6 +110,9 @@ func (s userService) GetUsersFriendshipStatus(login1, login2 string) (string, er
 	}
 
 	// TODO
+
+	fmt.Printf("friendship: %+v\n\n", friendship)
+
 	return friendship.Status, nil
 }
 
