@@ -12,6 +12,7 @@ type IUserService interface {
 	LoginExist(login string) (bool, error)
 	GenerateAvatarFileName(originalName string) string
 	List(filter *bo.UserFilter) ([]bo.User, error)
+	GetUsersFriendshipStatus(login1, login2 string) (string, error)
 }
 
 type ISessionService interface {
@@ -27,6 +28,7 @@ type IFriendshipService interface {
 	Create(value *bo.Friendship) error
 	FriendList(user *bo.User) (*bo.FriendList, error)
 	UpdateStatus(id uint64, status string) error
+	RetrieveByUsersID(userID1, userID2 uint64) (*bo.Friendship, error)
 }
 
 type IInterestService interface {

@@ -89,8 +89,12 @@ func (r friendshipRepo) UpdateStatus(id uint64, status string) error {
 	return nil
 }
 
+//	 TODO: create same method in friendshipService
+// 		dao.FriendshipWithLogin to BO
+// 		inject friendshipService in userService
+// 		USE IT
 func (r friendshipRepo) SelectOneByUsersLogin(
-	ctx context.Context, login1, login2 string,
+	ctx context.Context, login1, login2 string, // TODO: change login to userID
 ) (*dao.FriendshipWithLogin, error) {
 	q := buildSelectOneFriendshipQuery(login1, login2)
 

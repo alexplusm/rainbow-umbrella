@@ -12,6 +12,7 @@ type IUserRepo interface {
 	InsertOne(ctx context.Context, item *dao.User) (uint64, error)
 	List(filter *bo.UserFilter) ([]dao.User, error)
 	RetrieveOne(ctx context.Context, login string) (*dao.User, error)
+	ListCommonInfo(ctx context.Context, filter *bo.UserFilter) ([]dao.UserCommonInfo, error)
 }
 
 type ISessionRepo interface {

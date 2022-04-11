@@ -7,10 +7,30 @@ import (
 	"rainbow-umbrella/internal/objects/bo"
 )
 
+type UserCommonInfo struct {
+	ID        uint64
+	Login     string
+	FirstName string
+	LastName  string
+}
+
+func (o UserCommonInfo) ToBO() *bo.UserCommonInfo {
+	return &bo.UserCommonInfo{
+		ID:        o.ID,
+		Login:     o.Login,
+		FirstName: o.FirstName,
+		LastName:  o.LastName,
+	}
+}
+
+// ---
+
 type User struct {
-	ID             uint64
+	//UserCommonInfo
+
+	ID             uint64 // common info
 	FriendshipID   uint64
-	Login          string
+	Login          string // common info
 	HashedPassword string
 
 	FirstName string

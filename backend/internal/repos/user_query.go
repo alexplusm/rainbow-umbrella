@@ -2,6 +2,7 @@ package repos
 
 import (
 	"fmt"
+	"github.com/alexplusm/gofnd"
 
 	"rainbow-umbrella/internal/objects/bo"
 	"rainbow-umbrella/internal/objects/dao"
@@ -76,4 +77,36 @@ WHERE
 	}
 
 	return &query{Query: q, Args: args}, nil
+}
+
+func buildListUserCommonInfoQuery(filter *bo.UserFilter) (*query, error) {
+	queryRaw := `
+SELECT 
+	user_id, login, first_name, last_name
+FROM users u
+WHERE
+	user_id > 0
+{{- if not .ByLogins -}}
+	AND (
+		{{ range $index, $el := .ByLogins }}
+			{{- if eq $index 0 -}}
+			u.login = (?)
+			{{- else -}}
+			OR u.login = (?)
+			{{- end -}}
+		{{end -}}
+		)
+{{ end -}}
+`
+	queryStr, err := gofnd.ApplyFilterToQuery(queryRaw, filter)
+	if err != nil {
+		return nil, fmt.Errorf("[buildListUserCommonInfoQuery][1]: %w", err)
+	}
+
+	args := make([]interface{}, 0, 8)
+	if len(filter.ByLogins) > 0 {
+		args = append(args, filter.ByLoginsToInterface()...)
+	}
+
+	return &query{Query: queryStr, Args: args}, nil
 }

@@ -13,14 +13,20 @@ import (
 type userService struct {
 	userRepo interfaces.IUserRepo
 
-	interestService interfaces.IInterestService
+	interestService   interfaces.IInterestService
+	friendshipService interfaces.IFriendshipService
 }
 
 func NewUserService(
 	userRepo interfaces.IUserRepo,
 	interestService interfaces.IInterestService,
+	friendshipService interfaces.IFriendshipService,
 ) interfaces.IUserService {
-	return &userService{userRepo: userRepo, interestService: interestService}
+	return &userService{
+		userRepo:          userRepo,
+		interestService:   interestService,
+		friendshipService: friendshipService,
+	}
 }
 
 func (s userService) Register(user *bo.User) error {
@@ -85,4 +91,38 @@ func (s userService) List(filter *bo.UserFilter) ([]bo.User, error) {
 
 func (s userService) GenerateAvatarFileName(originalName string) string {
 	return fmt.Sprintf("avatar_%v_%v", time.Now().UnixNano(), originalName)
+}
+
+//	TODO: rename
+func (s userService) GetUsersFriendshipStatus(login1, login2 string) (string, error) {
+	users, err := s.listCommonInfo(&bo.UserFilter{ByLogins: []string{login1, login2}})
+	if err != nil {
+		return "", fmt.Errorf("[userService.GetUsersFriendshipStatus][1]: %w", err)
+	}
+
+	if len(users) != 2 {
+		return "", nil // NotFriendsOrUndefined
+	}
+
+	friendship, err := s.friendshipService.RetrieveByUsersID(users[0].ID, users[1].ID)
+	if err != nil {
+		return "", fmt.Errorf("[userService.GetUsersFriendshipStatus][2]: %w", err)
+	}
+
+	// TODO
+	return friendship.Status, nil
+}
+
+func (s userService) listCommonInfo(filter *bo.UserFilter) ([]bo.UserCommonInfo, error) {
+	users, err := s.userRepo.ListCommonInfo(context.TODO(), filter)
+	if err != nil {
+		return nil, fmt.Errorf("[userService.listCommonInfo][1]: %w", err)
+	}
+
+	usersBO := make([]bo.UserCommonInfo, 0, len(users))
+	for _, user := range users {
+		usersBO = append(usersBO, *user.ToBO())
+	}
+
+	return usersBO, nil
 }

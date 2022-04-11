@@ -8,14 +8,21 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
-	ID             uint64
-	FriendshipID   uint64
-	Login          string
-	HashedPassword string
-
+type UserCommonInfo struct {
+	ID        uint64
+	Login     string
 	FirstName string
 	LastName  string
+}
+
+type User struct {
+	ID             uint64 // TODO: common
+	FriendshipID   uint64
+	Login          string // TODO: common
+	HashedPassword string
+
+	FirstName string // TODO: common
+	LastName  string // TODO: common
 	Birthday  time.Time
 	Gender    string
 	City      string
@@ -35,9 +42,20 @@ type UserFilter struct {
 	ByLogin      string
 	ExcludeLogin string
 
+	ByLogins []string
+
 	Search string
 	Limit  int
 	Offset int
+}
+
+//	TODO: wtf?
+func (o UserFilter) ByLoginsToInterface() []interface{} {
+	result := make([]interface{}, 0, len(o.ByLogins))
+	for _, login := range o.ByLogins {
+		result = append(result, login)
+	}
+	return result
 }
 
 func (o *UserFilter) Build() *UserFilter {

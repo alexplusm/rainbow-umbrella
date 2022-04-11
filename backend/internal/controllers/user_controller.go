@@ -180,9 +180,8 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
 
-	// TODO: check
 	user, err := c.userService.RetrieveByLogin(login)
-	fmt.Printf("Error: %v\n", err)
+	fmt.Printf("USER DETAILS: %+v\nError: %v\n", user, err)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
@@ -190,9 +189,6 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-
-	fmt.Printf("USER DETAILS: %+v\n", user)
-
 	if user == nil {
 		w.WriteHeader(http.StatusNotFound)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": " + login)); err != nil {
@@ -200,6 +196,13 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+
+	//var friendshipStatus string
+	currUserLogin, _ := c.sessionService.GetCurrentUserFromCtx(r.Context())
+	friendshipStatus, err := c.userService.GetUsersFriendshipStatus(currUserLogin, login)
+	// process error
+
+	fmt.Printf("currUserLogin: %v | friendshipStatus = %v\n\n", currUserLogin, friendshipStatus)
 
 	userDTO := new(dto.User).FromBO(user)
 
@@ -212,10 +215,8 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: culc friendship status
-
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json") // TODO: why don't work
+	w.Header().Set("Content-Type", "application/json")
 	if _, err := w.Write(responseBody); err != nil {
 		log.Printf("[userController.Details][1]")
 	}

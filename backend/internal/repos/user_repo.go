@@ -81,6 +81,7 @@ func (r userRepo) RetrieveOne(ctx context.Context, login string) (*dao.User, err
 	return user, nil
 }
 
+//	 TODO: refactor
 func (r userRepo) List(filter *bo.UserFilter) ([]dao.User, error) {
 	q, err := buildListUserQuery(filter)
 	if err != nil {
@@ -113,4 +114,30 @@ func (r userRepo) List(filter *bo.UserFilter) ([]dao.User, error) {
 	}
 
 	return list, nil
+}
+
+func (r userRepo) ListCommonInfo(ctx context.Context, filter *bo.UserFilter) ([]dao.UserCommonInfo, error) {
+	q, err := buildListUserCommonInfoQuery(filter)
+	if err != nil {
+		return nil, fmt.Errorf("[userRepo.ListCommonInfo][1]: %w", err)
+	}
+
+	users := make([]dao.UserCommonInfo, 0, 64)
+
+	rows, err := r.dbClient.QueryContext(ctx, q.Query, q.Args...)
+	if err != nil {
+		return nil, fmt.Errorf("[userRepo.ListCommonInfo][2]: %w", err)
+	}
+
+	for rows.Next() {
+		user := new(dao.UserCommonInfo)
+
+		err := rows.Scan(&user.ID, &user.Login, &user.FirstName, &user.LastName)
+		if err != nil {
+			return nil, fmt.Errorf("[userRepo.ListCommonInfo][3]: %w", err)
+		}
+		users = append(users, *user)
+	}
+
+	return users, nil
 }
