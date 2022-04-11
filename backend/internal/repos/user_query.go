@@ -30,10 +30,10 @@ INSERT INTO users (
 	return &query{Query: queryRaw, Args: args}
 }
 
-func buildRetrieveOneUserQuery(login string) *query {
+func buildSelectOneUserQuery(login string) *query {
 	queryRaw := `
 SELECT
-	user_id, login,
+	user_id, login, hashed_password,
 	first_name, last_name, birthday, gender, city
 FROM users
 	WHERE login = ?
@@ -86,17 +86,18 @@ SELECT
 FROM users u
 WHERE
 	user_id > 0
-{{- if not .ByLogins -}}
+{{ if .ByLogins -}}
 	AND (
-		{{ range $index, $el := .ByLogins }}
-			{{- if eq $index 0 -}}
+		{{ range $index, $el := .ByLogins -}}
+			{{ if eq $index 0 }}
 			u.login = (?)
-			{{- else -}}
+			{{ else }}
 			OR u.login = (?)
-			{{- end -}}
-		{{end -}}
-		)
+			{{ end }}
+		{{- end -}}
+	)
 {{ end -}}
+;
 `
 	queryStr, err := gofnd.ApplyFilterToQuery(queryRaw, filter)
 	if err != nil {

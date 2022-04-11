@@ -37,43 +37,40 @@ func (r userRepo) InsertOne(ctx context.Context, item *dao.User) (uint64, error)
 	return uint64(userID), nil
 }
 
-func (r userRepo) RetrieveOne(ctx context.Context, login string) (*dao.User, error) {
-	q := buildRetrieveOneUserQuery(login)
+func (r userRepo) SelectOne(ctx context.Context, login string) (*dao.User, error) {
+	q := buildSelectOneUserQuery(login)
 
 	// TODO: нужно ли делать транзакцию для нескольких селектов? - da, только нужно выбрать уровень изоляции
-
 	tx, err := r.dbClient.BeginTx(ctx, nil)
 	if err != nil {
 		// TODO: rollback?
-		return nil, fmt.Errorf("[userRepo.RetrieveOne][1]")
+		return nil, fmt.Errorf("[userRepo.SelectOne][1]")
 	}
 
 	row := tx.QueryRow(q.Query, q.Args...)
 
 	if err := row.Err(); err != nil {
 		// TODO: rollback?
-		return nil, fmt.Errorf("[userRepo.RetrieveOne][2]")
+		return nil, fmt.Errorf("[userRepo.SelectOne][2]")
 	}
 
 	user := new(dao.User)
-
 	err = row.Scan(
-		&user.ID, &user.Login,
+		&user.ID, &user.Login, &user.HashedPassword,
 		&user.FirstName, &user.LastName, &user.Birthday, &user.Gender, &user.City)
-
 	if err != nil {
 		// TODO: rollback?
-		return nil, fmt.Errorf("[userRepo.RetrieveOne][3]")
+		return nil, fmt.Errorf("[userRepo.SelectOne][3]")
 	}
 
 	interests, err := r.interestRepo.SelectListByUserID(tx, ctx, user.ID)
 	if err != nil {
 		// TODO: rollback?
-		return nil, fmt.Errorf("[userRepo.RetrieveOne][4]")
+		return nil, fmt.Errorf("[userRepo.SelectOne][4]")
 	}
 
 	if err := tx.Commit(); err != nil {
-		log.Println(fmt.Errorf("[userRepo.RetrieveOne][5]: %w", err))
+		log.Println(fmt.Errorf("[userRepo.SelectOne][5]: %w", err))
 	}
 
 	user.Interests = interests
@@ -123,6 +120,8 @@ func (r userRepo) ListCommonInfo(ctx context.Context, filter *bo.UserFilter) ([]
 	}
 
 	users := make([]dao.UserCommonInfo, 0, 64)
+
+	fmt.Println("Query: ", q.Query, "\n\n", q.Args)
 
 	rows, err := r.dbClient.QueryContext(ctx, q.Query, q.Args...)
 	if err != nil {

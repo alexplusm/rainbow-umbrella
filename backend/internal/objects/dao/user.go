@@ -33,8 +33,8 @@ type User struct {
 	Login          string // common info
 	HashedPassword string
 
-	FirstName string
-	LastName  string
+	FirstName string // common info
+	LastName  string // common info
 	Birthday  string
 	Gender    string
 	City      string

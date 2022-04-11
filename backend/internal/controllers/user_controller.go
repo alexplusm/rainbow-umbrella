@@ -103,20 +103,19 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println("Error[2]", err)
+		log.Print(fmt.Errorf("[userController.Login][1]: %w", err))
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
-			log.Printf("[userController.Login][1]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][1.1]: %w", err))
 		}
 		return
 	}
 
 	if err := json.Unmarshal(body, user); err != nil {
-		fmt.Println("Error[1]", err)
-		fmt.Println("body=", string(body))
+		log.Print(fmt.Errorf("[userController.Login][2]: %w", err))
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
-			log.Printf("[userController.Login][2]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][2.1]: %w", err))
 		}
 		return
 	}
@@ -125,10 +124,10 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 	userBO, err := c.userService.RetrieveByLogin(user.Login)
 	if err != nil {
-		fmt.Println("Error", err)
+		log.Print(fmt.Errorf("[userController.Login][3]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Login][3]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][3.1]: %w", err))
 		}
 		return
 	}
@@ -136,7 +135,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	if userBO == nil {
 		w.WriteHeader(http.StatusNotFound)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound))); err != nil {
-			log.Printf("[userController.Login][4]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][4]: %w", err))
 		}
 		return
 	}
@@ -146,17 +145,17 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	if !userBO.CheckPassword(user.Password) {
 		w.WriteHeader(http.StatusNotFound)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": invalid password")); err != nil {
-			log.Printf("[userController.Login][4]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][5]: %w", err))
 		}
 		return
 	}
 
 	sessionID, err := c.sessionService.Create(userBO)
 	if err != nil {
-		fmt.Println("Error", err)
+		log.Print(fmt.Errorf("[userController.Login][6]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Login][5]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][6.1]: %w", err))
 		}
 		return
 	}
@@ -164,16 +163,17 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	responseBody := dto.UserLoginResponse{SessionID: sessionID}
 	responseBodyRaw, err := json.Marshal(responseBody)
 	if err != nil {
+		log.Print(fmt.Errorf("[userController.Login][7]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Login][10]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Login][7.1]: %w", err))
 		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(responseBodyRaw); err != nil {
-		log.Printf("[userController.Login][11]: %+v", err)
+		log.Print(fmt.Errorf("[userController.Login][8]: %w", err))
 	}
 }
 
@@ -181,36 +181,51 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
 
 	user, err := c.userService.RetrieveByLogin(login)
-	fmt.Printf("USER DETAILS: %+v\nError: %v\n", user, err)
 	if err != nil {
+		log.Print(fmt.Errorf("[userController.Details][1]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Details][1]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Details][1.1]: %w", err))
 		}
 		return
 	}
 	if user == nil {
+		log.Print(fmt.Errorf("[userController.Details][2]: %w", err))
 		w.WriteHeader(http.StatusNotFound)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": " + login)); err != nil {
-			log.Printf("[userController.Details][1]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Details][2.1]: %w", err))
 		}
 		return
 	}
 
-	//var friendshipStatus string
 	currUserLogin, _ := c.sessionService.GetCurrentUserFromCtx(r.Context())
 	friendshipStatus, err := c.userService.GetUsersFriendshipStatus(currUserLogin, login)
-	// process error
-
-	fmt.Printf("currUserLogin: %v | friendshipStatus = %v\n\n", currUserLogin, friendshipStatus)
+	if err != nil {
+		log.Print(fmt.Errorf("[userController.Details][3]: %w", err))
+		w.WriteHeader(http.StatusInternalServerError)
+		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Print(fmt.Errorf("[userController.Details][3.1]: %w", err))
+		}
+		return
+	}
 
 	userDTO := new(dto.User).FromBO(user)
 
-	responseBody, err := json.Marshal(userDTO)
+	body := map[string]interface{}{
+		"user":             userDTO,
+		"friendshipStatus": friendshipStatus,
+	}
+
+	// TODO: build body !!!
+
+	fmt.Printf("currUserLogin: %v | friendshipStatus = %v\n\n", currUserLogin, friendshipStatus)
+
+	responseBody, err := json.Marshal(body)
 	if err != nil {
+		log.Print(fmt.Errorf("[userController.Details][4]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Details][10]: %+v", err)
+			log.Print(fmt.Errorf("[userController.Details][4.1]: %w", err))
 		}
 		return
 	}
@@ -218,7 +233,7 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	if _, err := w.Write(responseBody); err != nil {
-		log.Printf("[userController.Details][1]")
+		log.Print(fmt.Errorf("[userController.Details][5]: %w", err))
 	}
 }
 

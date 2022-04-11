@@ -56,7 +56,7 @@ func (s userService) LoginExist(login string) (bool, error) {
 }
 
 func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
-	user, err := s.userRepo.RetrieveOne(context.TODO(), login)
+	user, err := s.userRepo.SelectOne(context.TODO(), login)
 	if err != nil {
 		return nil, fmt.Errorf("[userService.RetrieveByLogin][1]: %w", err)
 	}
