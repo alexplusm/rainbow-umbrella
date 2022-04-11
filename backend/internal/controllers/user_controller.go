@@ -5,15 +5,11 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"mime/multipart"
 	"net/http"
 	"net/url"
-	"os"
-	"path"
 
 	"github.com/go-chi/chi/v5"
 
-	"rainbow-umbrella/internal/consts"
 	"rainbow-umbrella/internal/interfaces"
 	"rainbow-umbrella/internal/objects/bo"
 	"rainbow-umbrella/internal/objects/dto"
@@ -249,8 +245,6 @@ func (c userController) List(w http.ResponseWriter, r *http.Request) {
 		SetLimitAndOffset(queryParams.Get("limit"), queryParams.Get("offset")).
 		SetSearch(queryParams.Get("search"))
 
-	fmt.Printf("\nuserFilter: %+v\n\n", userFilter)
-
 	if valueRaw, ok := r.Context().Value("currentUserLogin").(string); ok {
 		userFilter.ExcludeLogin = valueRaw
 	}
@@ -258,7 +252,7 @@ func (c userController) List(w http.ResponseWriter, r *http.Request) {
 	users, err := c.userService.List(userFilter)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[userController.List][1]: %+v", err))
+		log.Println(fmt.Errorf("[userController.List][1]: %w", err))
 		return
 	}
 
@@ -274,40 +268,13 @@ func (c userController) List(w http.ResponseWriter, r *http.Request) {
 	body, err := json.Marshal(bodyRaw)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[userController.List][2]: %+v", err))
+		log.Println(fmt.Errorf("[userController.List][2]: %w", err))
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(body)
-}
-
-// INFO: unused, may be no need
-func (c userController) saveAvatar(fileHeader *multipart.FileHeader) (string, error) {
-	avatarFilePath := path.Join(consts.MediaRootDir, c.userService.GenerateAvatarFileName(fileHeader.Filename))
-
-	file, err := fileHeader.Open()
-	if err != nil {
-		return "", fmt.Errorf("[userController.saveAvatar][1]: %+v", err)
+	if _, err := w.Write(body); err != nil {
+		log.Println(fmt.Errorf("[userController.List][3]: %w", err))
 	}
-
-	avatarFile, err := os.Create(avatarFilePath)
-	if err != nil {
-		return "", fmt.Errorf("[userController.saveAvatar][2]: %+v", err)
-	}
-
-	if _, err := io.Copy(avatarFile, file); err != nil {
-		return "", fmt.Errorf("[userController.saveAvatar][3]: %+v", err)
-	}
-
-	if err := avatarFile.Close(); err != nil {
-		return "", fmt.Errorf("[userController.saveAvatar][4]: %+v", err)
-	}
-
-	if err := file.Close(); err != nil {
-		return "", fmt.Errorf("[userController.saveAvatar][5]: %+v", err)
-	}
-
-	return avatarFilePath, nil
 }

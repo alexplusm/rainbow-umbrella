@@ -63,9 +63,9 @@ WHERE
 `
 	args := make([]interface{}, 0)
 
-	q, err := applyFilterToQuery(queryRaw, filter)
+	q, err := gofnd.ApplyFilterToQuery(queryRaw, filter)
 	if err != nil {
-		return nil, fmt.Errorf("[buildListUserQuery][1]: %+v", err)
+		return nil, fmt.Errorf("[buildListUserQuery][1]: %w", err)
 	}
 
 	if filter.ByLogin != "" {
