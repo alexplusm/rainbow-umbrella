@@ -62,6 +62,10 @@ func (s userService) RetrieveByLogin(login string) (*bo.User, error) {
 		return nil, fmt.Errorf("[userService.RetrieveByLogin][1]: %w", err)
 	}
 
+	if user == nil {
+		return nil, nil
+	}
+
 	userBO, err := user.ToBO()
 	if err != nil {
 		return nil, fmt.Errorf("[userService.RetrieveByLogin][2]: %w", err)

@@ -3,6 +3,7 @@ package repos
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 
@@ -60,7 +61,14 @@ func (r userRepo) SelectOne(ctx context.Context, login string) (*dao.User, error
 		&user.FirstName, &user.LastName, &user.Birthday, &user.Gender, &user.City)
 	if err != nil {
 		// TODO: rollback?
-		return nil, fmt.Errorf("[userRepo.SelectOne][3]")
+		if errors.Is(err, sql.ErrNoRows) {
+			if err := tx.Commit(); err != nil {
+				log.Print(fmt.Errorf("[userRepo.SelectOne][3.1]: %w", err))
+			}
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("[userRepo.SelectOne][3.2]")
 	}
 
 	interests, err := r.interestRepo.SelectListByUserID(tx, ctx, user.ID)

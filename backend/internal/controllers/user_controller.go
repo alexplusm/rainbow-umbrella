@@ -181,6 +181,7 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
 
 	user, err := c.userService.RetrieveByLogin(login)
+	fmt.Println("user, err: ", user, err)
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Details][1]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
