@@ -12,7 +12,8 @@ INSERT INTO friendships (
 ) VALUES (
 	?, ?, ?,
 	?
-);
+)
+;
 `
 	args := []interface{}{
 		value.RequestingUserID, value.TargetingUserID, value.Status,
@@ -34,7 +35,8 @@ INNER JOIN users AS u
 ON u.user_id = f.requesting_user_id OR u.user_id = f.targeting_user_id
 WHERE 
 	u.user_id != ?
-	AND (f.requesting_user_id = ? OR f.targeting_user_id = ?) 
+	AND (f.requesting_user_id = ? OR f.targeting_user_id = ?)
+;
 `
 	args := []interface{}{userID, userID, userID}
 

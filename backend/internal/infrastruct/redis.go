@@ -18,7 +18,7 @@ func NewRedisConn(config *RedisConfig) (*redis.Client, error) {
 	ctx := context.Background()
 
 	if err := client.Ping(ctx).Err(); err != nil {
-		return nil, fmt.Errorf("[NewRedisConn][1]: %+v", err)
+		return nil, fmt.Errorf("[NewRedisConn][1]: %w", err)
 	}
 
 	return client, nil

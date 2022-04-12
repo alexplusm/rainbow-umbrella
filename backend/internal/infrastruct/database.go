@@ -46,8 +46,8 @@ func execSQLScriptFromFile(filePath string, db *sql.DB) error {
 	}
 
 	for _, script := range scripts {
-		if _, err := db.Exec(script); err != nil {
-			return fmt.Errorf("[execSQLScriptFromFile][2]: %v \n%w", script, err)
+		if _, err = db.Exec(script); err != nil {
+			return fmt.Errorf("[execSQLScriptFromFile][2]: %v: %w", script, err)
 		}
 	}
 

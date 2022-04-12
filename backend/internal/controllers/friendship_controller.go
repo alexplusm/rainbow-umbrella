@@ -32,7 +32,7 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		processError(w, http.StatusBadRequest, nil)
-		log.Println(fmt.Errorf("[friendshipController.Create][1]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Create][1]: %w", err))
 		return
 	}
 
@@ -40,29 +40,26 @@ func (c friendshipController) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err = json.Unmarshal(rawBody, body); err != nil {
 		processError(w, http.StatusBadRequest, nil)
-		log.Println(fmt.Errorf("[friendshipController.Create][2]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Create][2]: %w", err))
 		return
 	}
 
-	// TODO: check userID existence
-	fmt.Printf("body: %+v\n", body)
-
 	if err = c.friendshipService.Create(body.ToBO()); err != nil {
 		statusCode := http.StatusInternalServerError
-
-		fmt.Println("MUST BE TRUE: ", errors.Is(err, utils.AppErrorAlreadyExist))
 
 		if errors.Is(err, utils.AppErrorAlreadyExist) {
 			statusCode = http.StatusConflict
 		}
 
 		processError(w, statusCode, nil)
-		log.Println(fmt.Errorf("[friendshipController.Create][3]: %w", err))
+		log.Print(fmt.Errorf("[friendshipController.Create][3]: %w", err))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(http.StatusText(http.StatusOK)))
+	if _, err = w.Write([]byte(http.StatusText(http.StatusOK))); err != nil {
+		log.Print(fmt.Errorf("[friendshipController.Create][4]: %w", err))
+	}
 }
 
 func (c friendshipController) List(w http.ResponseWriter, r *http.Request) {
@@ -71,10 +68,9 @@ func (c friendshipController) List(w http.ResponseWriter, r *http.Request) {
 	user, err := c.userService.RetrieveByLogin(login)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[friendshipController.List][1]: %+v", err))
+		log.Println(fmt.Errorf("[friendshipController.List][1]: %w", err))
 		return
 	}
-
 	if user == nil {
 		processError(w, http.StatusNotFound, nil)
 		return
@@ -83,20 +79,22 @@ func (c friendshipController) List(w http.ResponseWriter, r *http.Request) {
 	friendList, err := c.friendshipService.FriendList(user)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[friendshipController.List][2]: %+v", err))
+		log.Println(fmt.Errorf("[friendshipController.List][2]: %w", err))
 		return
 	}
 
 	responseBody, err := json.Marshal(new(dto.FriendList).FromBO(friendList))
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[friendshipController.List][3]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.List][3]: %w", err))
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(responseBody)
+	if _, err = w.Write(responseBody); err != nil {
+		log.Print(fmt.Errorf("[friendshipController.List][4]: %w", err))
+	}
 }
 
 func (c friendshipController) Approve(w http.ResponseWriter, r *http.Request) {
@@ -105,26 +103,24 @@ func (c friendshipController) Approve(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		processError(w, http.StatusBadRequest, nil)
-		log.Println(fmt.Errorf("[friendshipController.Approve][1]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Approve][1]: %w", err))
 		return
 	}
 	if err = json.Unmarshal(rawBody, body); err != nil {
 		processError(w, http.StatusBadRequest, nil)
-		log.Println(fmt.Errorf("[friendshipController.Approve][2]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Approve][2]: %w", err))
 		return
 	}
 
-	fmt.Printf("BODYYYYY: %+v", body)
-
 	if err = c.friendshipService.UpdateStatus(body.ID, consts.FriendshipStatusFriends); err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[friendshipController.Approve][3]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Approve][3]: %w", err))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	if _, err = w.Write([]byte(http.StatusText(http.StatusOK))); err != nil {
-		log.Println(fmt.Errorf("[friendshipController.Approve][4]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Approve][4]: %w", err))
 	}
 }
 
@@ -134,19 +130,17 @@ func (c friendshipController) Decline(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		processError(w, http.StatusBadRequest, nil)
-		log.Println(fmt.Errorf("[friendshipController.Decline][1]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Decline][1]: %w", err))
 		return
 	}
 	if err = json.Unmarshal(rawBody, body); err != nil {
 		processError(w, http.StatusBadRequest, nil)
-		log.Println(fmt.Errorf("[friendshipController.Decline][2]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Decline][2]: %w", err))
 		return
 	}
 
-	fmt.Printf("BODYYYYY: %+v", body)
-
 	w.WriteHeader(http.StatusOK)
 	if _, err = w.Write([]byte(http.StatusText(http.StatusOK))); err != nil {
-		log.Println(fmt.Errorf("[friendshipController.Decline][3]: %+v", err))
+		log.Print(fmt.Errorf("[friendshipController.Decline][3]: %w", err))
 	}
 }

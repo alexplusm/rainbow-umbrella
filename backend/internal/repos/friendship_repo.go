@@ -27,13 +27,11 @@ func (r friendshipRepo) InsertOne(friendship *dao.Friendship) error {
 	if _, err := r.dbClient.Exec(q.Query, q.Args...); err != nil {
 		if driverErr, ok := err.(*mysql.MySQLError); ok {
 			if driverErr.Number == 1452 {
-				return fmt.Errorf("[friendshipRepo.InsertOne][1]: %w: %v", utils.AppErrorAlreadyExist, err.Error())
+				return fmt.Errorf("[friendshipRepo.InsertOne][1]: %v: %w", err.Error(), utils.AppErrorAlreadyExist)
 			}
 		}
-
 		return fmt.Errorf("[friendshipRepo.InsertOne][2]: %w", err)
 	}
-
 	return nil
 }
 
