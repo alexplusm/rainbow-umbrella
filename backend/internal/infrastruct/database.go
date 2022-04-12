@@ -14,15 +14,15 @@ import (
 func NewDBConn(config *DatabaseConfig) (*sql.DB, error) {
 	db, err := sql.Open("mysql", config.URL)
 	if err != nil {
-		return nil, fmt.Errorf("[NewDBConn][1]: %+v", err)
+		return nil, fmt.Errorf("[NewDBConn][1]: %w", err)
 	}
 
 	if err = db.Ping(); err != nil {
-		return nil, fmt.Errorf("[NewDBConn][2]: %+v", err)
+		return nil, fmt.Errorf("[NewDBConn][2]: %w", err)
 	}
 
 	if err = execSQLScriptFromFile("scripts/schema.sql", db); err != nil {
-		return nil, fmt.Errorf("[NewDBConn][3]: %+v", err)
+		return nil, fmt.Errorf("[NewDBConn][3]: %w", err)
 	}
 
 	return db, nil
@@ -31,7 +31,7 @@ func NewDBConn(config *DatabaseConfig) (*sql.DB, error) {
 func execSQLScriptFromFile(filePath string, db *sql.DB) error {
 	fileContent, err := os.ReadFile(filePath)
 	if err != nil {
-		return fmt.Errorf("[execSQLScriptFromFile][1]: %+v", err)
+		return fmt.Errorf("[execSQLScriptFromFile][1]: %w", err)
 	}
 
 	rawScript := string(fileContent)

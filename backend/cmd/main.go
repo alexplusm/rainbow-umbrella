@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 
@@ -51,8 +52,15 @@ func main() {
 	r.Post("/api/v1/friendships/decline", friendshipController.Decline)
 	r.Get("/api/v1/friendships/{login}", friendshipController.List)
 
+	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
 	log.Printf("Start app on: %v", port)
-	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), r); err != nil {
+	server := &http.Server{
+		Addr:     fmt.Sprintf(":%v", port),
+		Handler:  r,
+		ErrorLog: errorLog,
+	}
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }
