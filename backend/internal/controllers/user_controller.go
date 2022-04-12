@@ -22,31 +22,29 @@ type userController struct {
 
 func NewUserController(
 	userService interfaces.IUserService,
-	sessionService interfaces.ISessionService) interfaces.IUserController {
+	sessionService interfaces.ISessionService,
+) interfaces.IUserController {
 	return &userController{userService: userService, sessionService: sessionService}
 }
 
 func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	// TODO: why we use maxMemory param?
 	if err := r.ParseMultipartForm(1024 * 1024); err != nil {
-		log.Printf("[userController.Register][1]: %v", err.Error())
+		log.Print(fmt.Errorf("[userController.Register][1]: %w", err))
 		return
 	}
-
 	defer func() {
 		// TODO: zochem?
 		if err := r.MultipartForm.RemoveAll(); err != nil {
-			log.Printf("[userController.Register][-1]: %v", err.Error())
+			log.Print(fmt.Errorf("[userController.Register][-1]: %w", err))
 		}
 	}()
 
-	formValue := r.MultipartForm.Value
-
-	user, err := new(dto.User).BuildFromFormValue(formValue)
+	user, err := new(dto.User).BuildFromFormValue(r.MultipartForm.Value)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err = w.Write([]byte(err.Error())); err != nil {
-			log.Printf("[userController.Register][2]: %v", err.Error())
+			log.Print(fmt.Errorf("[userController.Register][2]: %w", err))
 			return
 		}
 		return
@@ -55,41 +53,32 @@ func (c userController) Register(w http.ResponseWriter, r *http.Request) {
 	ok, err := c.userService.LoginExist(user.Login)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Register][3]: %v", err.Error())
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Print(fmt.Errorf("[userController.Register][3]: %w", err))
 		}
-		log.Printf("[userController.Register][3.1]: %v", err.Error())
+		log.Print(fmt.Errorf("[userController.Register][3.1]: %w", err))
 		return
 	}
 	if ok {
 		w.WriteHeader(http.StatusConflict)
-		if _, err := w.Write([]byte("login already exist")); err != nil {
-			log.Printf("[userController.Register][4]: %v", err.Error())
+		if _, err = w.Write([]byte("login already exist")); err != nil {
+			log.Print(fmt.Errorf("[userController.Register][4]: %w", err))
 		}
 		return
 	}
 
-	fmt.Printf("USER: %+v\n\n", user)
-
-	if err := c.userService.Register(user.ToBO()); err != nil {
+	if err = c.userService.Register(user.ToBO()); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
-			log.Printf("[userController.Register][5]: %v", err.Error())
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+			log.Print(fmt.Errorf("[userController.Register][5]: %w", err))
 		}
-		log.Printf("[userController.Register][5.1]: %v", err.Error())
+		log.Print(fmt.Errorf("[userController.Register][5.1]: %w", err))
 		return
 	}
-
-	// INFO: no need -> remove later
-	//avatarFile := r.MultipartForm.File["avatar"]
-	//if len(avatarFile) > 0 {
-	//	avatarPath, err := c.saveAvatar(avatarFile[0])
-	//	fmt.Println(avatarPath, err)
-	//}
 
 	w.WriteHeader(http.StatusCreated)
-	if _, err := w.Write([]byte("user created")); err != nil {
-		log.Printf("[userController.Register][10]: %v", err.Error())
+	if _, err = w.Write([]byte("user created")); err != nil {
+		log.Print(fmt.Errorf("[userController.Register][6]: %w", err))
 		return
 	}
 }
@@ -101,28 +90,26 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Login][1]: %w", err))
 		w.WriteHeader(http.StatusBadRequest)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][1.1]: %w", err))
 		}
 		return
 	}
 
-	if err := json.Unmarshal(body, user); err != nil {
+	if err = json.Unmarshal(body, user); err != nil {
 		log.Print(fmt.Errorf("[userController.Login][2]: %w", err))
 		w.WriteHeader(http.StatusBadRequest)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusBadRequest))); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][2.1]: %w", err))
 		}
 		return
 	}
 
-	fmt.Printf("[userController.Login][1]: user raw %+v\n", user)
-
 	userBO, err := c.userService.RetrieveByLogin(user.Login)
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Login][3]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][3.1]: %w", err))
 		}
 		return
@@ -130,17 +117,15 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 
 	if userBO == nil {
 		w.WriteHeader(http.StatusNotFound)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusNotFound))); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][4]: %w", err))
 		}
 		return
 	}
 
-	fmt.Printf("[userController.Login][1]: userBO %+v\n", userBO)
-
 	if !userBO.CheckPassword(user.Password) {
 		w.WriteHeader(http.StatusNotFound)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": invalid password")); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusNotFound) + ": invalid password")); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][5]: %w", err))
 		}
 		return
@@ -150,7 +135,7 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Login][6]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][6.1]: %w", err))
 		}
 		return
@@ -161,14 +146,14 @@ func (c userController) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Login][7]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Print(fmt.Errorf("[userController.Login][7.1]: %w", err))
 		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write(responseBodyRaw); err != nil {
+	if _, err = w.Write(responseBodyRaw); err != nil {
 		log.Print(fmt.Errorf("[userController.Login][8]: %w", err))
 	}
 }
@@ -177,11 +162,10 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "login")
 
 	user, err := c.userService.RetrieveByLogin(login)
-	fmt.Println("user, err: ", user, err)
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Details][1]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Print(fmt.Errorf("[userController.Details][1.1]: %w", err))
 		}
 		return
@@ -189,7 +173,7 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	if user == nil {
 		log.Print(fmt.Errorf("[userController.Details][2]: %w", err))
 		w.WriteHeader(http.StatusNotFound)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound) + ": " + login)); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusNotFound) + ": " + login)); err != nil {
 			log.Print(fmt.Errorf("[userController.Details][2.1]: %w", err))
 		}
 		return
@@ -200,28 +184,22 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Details][3]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Print(fmt.Errorf("[userController.Details][3.1]: %w", err))
 		}
 		return
 	}
 
-	userDTO := new(dto.User).FromBO(user)
-
 	body := map[string]interface{}{
-		"user":             userDTO,
+		"user":             new(dto.User).FromBO(user),
 		"friendshipStatus": friendshipStatus,
 	}
-
-	// TODO: build body !!!
-
-	fmt.Printf("currUserLogin: %v | friendshipStatus = %v\n\n", currUserLogin, friendshipStatus)
 
 	responseBody, err := json.Marshal(body)
 	if err != nil {
 		log.Print(fmt.Errorf("[userController.Details][4]: %w", err))
 		w.WriteHeader(http.StatusInternalServerError)
-		if _, err := w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
+		if _, err = w.Write([]byte(http.StatusText(http.StatusInternalServerError))); err != nil {
 			log.Print(fmt.Errorf("[userController.Details][4.1]: %w", err))
 		}
 		return
@@ -229,7 +207,7 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write(responseBody); err != nil {
+	if _, err = w.Write(responseBody); err != nil {
 		log.Print(fmt.Errorf("[userController.Details][5]: %w", err))
 	}
 }
@@ -237,7 +215,7 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 func (c userController) List(w http.ResponseWriter, r *http.Request) {
 	queryParams, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
-		log.Printf("[userController.List][01]: %v", err)
+		log.Print(fmt.Errorf("[userController.List][1]: %w", err))
 	}
 
 	userFilter := new(bo.UserFilter).
@@ -252,7 +230,7 @@ func (c userController) List(w http.ResponseWriter, r *http.Request) {
 	users, err := c.userService.List(userFilter)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[userController.List][1]: %w", err))
+		log.Print(fmt.Errorf("[userController.List][2]: %w", err))
 		return
 	}
 
@@ -268,13 +246,13 @@ func (c userController) List(w http.ResponseWriter, r *http.Request) {
 	body, err := json.Marshal(bodyRaw)
 	if err != nil {
 		processError(w, http.StatusInternalServerError, nil)
-		log.Println(fmt.Errorf("[userController.List][2]: %w", err))
+		log.Println(fmt.Errorf("[userController.List][3]: %w", err))
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write(body); err != nil {
-		log.Println(fmt.Errorf("[userController.List][3]: %w", err))
+	if _, err = w.Write(body); err != nil {
+		log.Println(fmt.Errorf("[userController.List][4]: %w", err))
 	}
 }
