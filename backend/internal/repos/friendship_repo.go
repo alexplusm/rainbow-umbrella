@@ -3,6 +3,7 @@ package repos
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/go-sql-driver/mysql"
@@ -100,6 +101,9 @@ func (r friendshipRepo) SelectOneByUsersID(
 	err := row.Scan(
 		&friendship.RequestingUserID, &friendship.TargetingUserID, &friendship.Status)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("[friendshipRepo.SelectOneByUsersLogins][2]: %w", err)
 	}
 

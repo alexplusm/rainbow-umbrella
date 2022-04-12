@@ -52,6 +52,9 @@ func (s friendshipService) RetrieveByUsersID(userID1, userID2 uint64) (*bo.Frien
 	if err != nil {
 		return nil, fmt.Errorf("[friendshipService.RetrieveByUsersID][1]: %w", err)
 	}
+	if friendship == nil {
+		return nil, nil
+	}
 
 	return friendship.ToBO(), nil
 }

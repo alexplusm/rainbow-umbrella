@@ -6,12 +6,12 @@ export const useAppStore = defineStore({
     state: () => ({}),
     getters: {
         logoNavLink() {
-            const authStore = useAuthStore()
+            const login = useAuthStore().$state.login
 
-            if (authStore.$state.login === "") {
+            if (login === "" || login === null) {
                 return {name: 'welcome'};
             }
-            return {name: 'user', params: {login: authStore.$state.login}};
+            return {name: 'user', params: {login}};
         }
     },
     actions: {}

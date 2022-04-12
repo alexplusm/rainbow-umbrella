@@ -2,6 +2,7 @@ package dto
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -11,22 +12,22 @@ import (
 )
 
 type User struct {
-	ID           uint64 `json:"id"`
-	FriendshipID uint64 `json:"friendshipId,omitempty"`
-
+	ID             uint64 `json:"id"`
 	Login          string `json:"login"`
 	Password       string `json:"password,omitempty"`
 	HashedPassword string `json:"hashedPassword,omitempty"`
 
-	Birthday  string `json:"birthday"` // TODO
-	FirstName string `json:"firstName"`
-	Lastname  string `json:"lastName"`
-	Gender    string `json:"gender"`
-	City      string `json:"city"`
+	Birthday  string `json:"birthday,omitempty"`
+	FirstName string `json:"firstName,omitempty"`
+	Lastname  string `json:"lastName,omitempty"`
+	Gender    string `json:"gender,omitempty"`
+	City      string `json:"city,omitempty"`
 
-	Interests []string `json:"interests,omitempty"` // TODO: late
+	Interests []string `json:"interests,omitempty"`
 
-	//AvatarURL string // INFO: may be no need
+	// --- calculated
+
+	Age int `json:"age"`
 }
 
 func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
@@ -41,7 +42,7 @@ func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
-			return nil, fmt.Errorf("password process error: %+v", err)
+			return nil, fmt.Errorf("password process error: %w", err)
 		}
 
 		o.HashedPassword = string(hashedPassword)
@@ -59,6 +60,12 @@ func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
 		o.Lastname = form["lastName"][0]
 	} else {
 		return nil, fmt.Errorf("last name required")
+	}
+
+	if len(form["birthday"]) != 0 {
+		o.Birthday = form["birthday"][0]
+	} else {
+		return nil, fmt.Errorf("birthday required")
 	}
 
 	if len(form["gender"]) != 0 {
@@ -88,40 +95,51 @@ func (o *User) BuildFromFormValue(form map[string][]string) (*User, error) {
 }
 
 func (o User) ToBO() *bo.User {
-	return &bo.User{
+	user := &bo.User{
 		ID:             o.ID,
 		Login:          o.Login,
 		HashedPassword: o.HashedPassword,
 
 		FirstName: o.FirstName,
 		LastName:  o.Lastname,
-		Birthday:  time.Now(), // TODO
 		Gender:    o.Gender,
 		City:      o.City,
 
-		CreatedAt: time.Now(),
-
 		Interests: o.Interests,
+
+		CreatedAt: time.Now(),
 	}
+
+	birthday, err := time.Parse("2006/01/02", o.Birthday)
+	if err != nil {
+		err = fmt.Errorf("error while parsing birthday: %v: %w", o.Birthday, err)
+		log.Print(err)
+	} else {
+		user.Birthday = birthday
+	}
+
+	return user
 }
 
 func (o *User) FromBO(user *bo.User) *User {
 	o.ID = user.ID
-	o.FriendshipID = user.FriendshipID
+
 	o.Login = user.Login
 
-	// TODO: birthday
 	o.FirstName = user.FirstName
 	o.Lastname = user.LastName
 	o.Gender = user.Gender
 	o.City = user.City
 
-	// TODO: interests
+	o.Interests = user.Interests
+
+	o.Age = int(time.Since(user.Birthday) / (time.Hour * 24 * 365))
+
 	return o
 }
 
 // ---
 
 type UserLoginResponse struct {
-	SessionID string `json:"sessionID"`
+	SessionID string `json:"sessionID"` // TODO: sessionId
 }

@@ -190,6 +190,9 @@ func (c userController) Details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("new(dto.User).FromBO(user): %+v\n", new(dto.User).FromBO(user))
+	fmt.Printf("user: %+v\n", user)
+
 	body := map[string]interface{}{
 		"user":             new(dto.User).FromBO(user),
 		"friendshipStatus": friendshipStatus,

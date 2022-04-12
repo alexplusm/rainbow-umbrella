@@ -1,8 +1,8 @@
 export class User {
     id: number;
     avatarUrl: string;
-    friendshipId: number;
-    friendshipStatus: FriendshipStatus;
+    // friendshipId: number;
+    // friendshipStatus: FriendshipStatus;
     login: string;
     firstName: string;
     lastName: string;
@@ -14,16 +14,17 @@ export class User {
     constructor(value: any) {
         this.id = value['id'];
         this.avatarUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
-        this.friendshipId = value['friendshipId'];
-        this.friendshipStatus = FriendshipStatus.NotFriend;
-
         this.login = value['login'];
         this.firstName = value['firstName'];
         this.lastName = value['lastName'];
         this.city = value['city'];
         this.gender = value['gender'];
-        this.age = 23; // TODO: value['age'];
-        this.interests = ["one", "two", "azazazazazaz", "lololololololol", "wtf"];
+        this.age = value['age'];
+        this.interests =  value['interests'];
+
+        // this.friendshipId = value['friendshipId'];
+        // this.friendshipStatus = FriendshipStatus.NotFriend;
+
     }
 }
 
@@ -35,7 +36,7 @@ export interface IFriendList {
 
 export enum FriendshipStatus {
     Myself = "myself",
-    NotFriend = "notFriend",
-    Friend = "friend",
+    NotFriend = "notFriends",
+    Friend = "friends",
     Wait = "wait"
 }

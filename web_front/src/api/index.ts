@@ -69,7 +69,11 @@ async function retrieveUser(login: string, headers: Headers): Promise<IApiRespon
             }
 
             const data = await resp.json();
-            response.data = new User(data);
+
+            console.log("data", data)
+
+            // TODO:
+            response.data = new User(data["user"]);
 
             return response;
         });

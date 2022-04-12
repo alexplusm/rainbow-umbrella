@@ -40,7 +40,7 @@ func (s userService) Register(user *bo.User) error {
 		return nil
 	}
 
-	if err := s.interestService.CreateListForUser(context.TODO(), userID, user.Interests); err != nil {
+	if err = s.interestService.CreateListForUser(context.TODO(), userID, user.Interests); err != nil {
 		return fmt.Errorf("[userService.Register][2]: %w", err)
 	}
 
@@ -103,7 +103,6 @@ func (s userService) GetUsersFriendshipStatus(login1, login2 string) (string, er
 	if err != nil {
 		return "", fmt.Errorf("[userService.GetUsersFriendshipStatus][1]: %w", err)
 	}
-
 	if len(users) != 2 {
 		return consts.FriendshipStatusNotFriends, nil
 	}
@@ -111,6 +110,9 @@ func (s userService) GetUsersFriendshipStatus(login1, login2 string) (string, er
 	friendship, err := s.friendshipService.RetrieveByUsersID(users[0].ID, users[1].ID)
 	if err != nil {
 		return "", fmt.Errorf("[userService.GetUsersFriendshipStatus][2]: %w", err)
+	}
+	if friendship == nil {
+		return consts.FriendshipStatusNotFriends, nil
 	}
 
 	return friendship.Status, nil
